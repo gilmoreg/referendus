@@ -4,6 +4,6 @@ deploy:
   provider: heroku
   api_key:
     secure: kie4716AT0GG3BHfVaTweiEo2+RUPTCl2xzC5yf/mZKlxq5gJFMuuB0WLSU19y1hpKvQX1k40lVoMw+62C+hPwHu8uoX6jgXnr1DgHs+GeNi8Syz1ByPEi/TznKCZ/+0PbkjEv8HpTPQ8SbriNjlQOaOZuFh7Mu1MsfrB0hx8svXS88v6dgiPqwoF98nhaeztv4yWUObkj/MnFDd/+4Se5c60IhAZwN5weUJOp444fzBNhhrwlE51sA/yEuvK+iESncg5YNKVefTMGS/WOkmrPAdPgCtWSCBCqb+Lc6k58XHGMOGWO4u5pHeX8OLT04RdhZQ+0uU18atyNETNqJ/EldhRjh6MNE3Nl7y0fPTaxOeIw8bywzWKvI/9LDJm1NWjkfQfJkVbTBoI4nAgVemmyk4RC/W64RlIKN2nAYxQLvZ9ZtAFjbBUtEz2im+1fNNrpxIFSgcqO6LaWGZitp8d1LR9V5SPgJ+jOz5VhDpKJu3uuNQiJtMlPuC64KpqfI9OW+RzcGzmGIUPYEd/BnHlAknZ+rjJjabjKt2XwKZXeOV9x+8Yhg2Hlr8z9J9IdgGBMJN9Ek6rTY+/jqkhX7JelRk/OYshTLhAuKWmNIx0XNTze7jkiYaGLtKIN6lCpeoXa57WRebqBBCOFu5VRX5lyQZL+JXPJubqfrejSl1T9w=
-  app: referendus
+  app: aqueous-sierra-36847
   on:
     repo: gilmoreg/referendus
