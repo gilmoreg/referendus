@@ -2,11 +2,12 @@ var express = require('express');
 var app = express();
 app.use(express.static('public'));
 
+const {PORT, DATABASE_URL} = require('./config');
+
 function runServer() {
-  const port = process.env.PORT || 8080;
   return new Promise((resolve, reject) => {
-    server = app.listen(port, () => {
-      console.log(`Your app is listening on port ${port}`);
+    server = app.listen(PORT, () => {
+      console.log(`Your app is listening on port ${PORT}`);
       resolve(server);
     }).on('error', err => {
       reject(err)
