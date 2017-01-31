@@ -1,0 +1,22 @@
+{
+  "name": "referendus",
+  "version": "1.0.0",
+  "description": "A lightweight reference manager",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gilmoreg/referendus.git"
+  },
+  "author": "Grayson Gilmore",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gilmoreg/referendus/issues"
+  },
+  "homepage": "https://github.com/gilmoreg/referendus#readme",
+  "dependencies": {
+    "express": "^4.14.1"
+  }
+}
