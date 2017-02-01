@@ -114,4 +114,4 @@ const Books = References.discriminator('Book', bookSchema);
 const Articles = References.discriminator('Article', articleSchema);
 const Websites = References.discriminator('Website', websiteSchema);
 */
-module.exports = {References, Articles, Books, Websites};
+module.exports = {References/*, Articles, Books, Websites*/};
