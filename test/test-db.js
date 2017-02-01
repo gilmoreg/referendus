@@ -260,5 +260,23 @@ describe('Reference API', function() {
         });
     });
 
-    // describe
+    describe('DELETE endpoint', function() {
+        it('should delete a post by id', function() {
+            let ref;
+            return References
+                .findOne()
+                .exec()
+                .then(function(_ref) {
+                    ref = _ref;
+                    return chai.request(app).delete(`/refs/${ref.id}`);
+                })
+                .then(function(res) {
+                    res.should.have.status(204);
+                    return References.findById(ref.id).exec();
+                })
+                .then(function(_ref) {
+                    should.not.exist(_ref);
+                });
+        });
+    });
 });

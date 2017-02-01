@@ -81,4 +81,13 @@ router.post('/', jsonParser, (req, res) => {
 	    });
 });
 
+router.delete('/:id', (req, res) => {
+	logger.log('info',`DELETE ${req.params.id}`);
+	References
+	    .findByIdAndRemove(req.params.id)
+	    .exec()
+	    .then(post => res.status(204).end())
+	    .catch(err => res.status(500).json({message: `Internal server error: ${err}`}));
+});
+
 module.exports = router;
