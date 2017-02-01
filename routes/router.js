@@ -5,4 +5,5 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const morgan = require('morgan');
 const {logger} = require('../logger');
-const {Reference} = require('../models/reference')
+const {References, Articles, Books, Websites} = require('../models/reference');
+

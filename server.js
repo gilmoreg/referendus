@@ -5,42 +5,49 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const morgan = require('morgan');
 const {logger} = require('./logger');
+const {PORT, DATABASE_URL} = require('./config');
 
-
-
+// Middleware
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common', {stream: logger.stream}));
+
+const refRouter = require('./routes/router');
+app.use('/refs', refRouter);
 
 app.use((err, req, res, next) => {
   logger.error(err);
   res.status(500).json({error: 'Something went wrong'}).end();
 });
 
-const {PORT, DATABASE_URL} = require('./config');
-
-function runServer() {
-  return new Promise((resolve, reject) => {
-    server = app.listen(PORT, () => {
-      logger.log(`Your app is listening on port ${PORT}`);
-      resolve(server);
-    }).on('error', err => {
-      reject(err)
+function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+  mongoose.connect(databaseUrl, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        logger.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+      .on('error', err => {
+        mongoose.disconnect();
+        reject(err);
+      });
     });
   });
 }
 
 function closeServer() {
-  return new Promise((resolve, reject) => {
-    logger.log('Closing server');
-    server.close(err => {
-      if (err) {
-        reject(err);
-        // so we don't also call `resolve()`
-        return;
-      }
-      resolve();
-    });
+  return mongoose.disconnect().then(() => {
+     return new Promise((resolve, reject) => {
+       logger.log('Closing server');
+       server.close(err => {
+           if (err) {
+               return reject(err);
+           }
+           resolve();
+       });
+     });
   });
 }
 

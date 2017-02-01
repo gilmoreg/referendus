@@ -58,30 +58,6 @@ const websiteSchema = mongoose.Schema( {
     url: { type:String, required:true }
 }, options);
 
-/*
-    authors: [{
-        author: {
-            firstName: String,
-            middleName: String,
-            lastName: String,
-        }
-    }],
-    year: Number,
-    volume: Number,
-    issue: Number,
-    pages: String,
-    url: String,
-    id: String,
-    tags: [ { tag:String } ],
-    notes: String,
-    edition: String,
-    city: String,
-    publisher: String,
-    pubDate: Date,
-    accessDate: Date,
-
-*/
-
 /*refSchema.virtual('authorFullName').get( function() {
   return `${this.author.firstName} ${this.author.lastName}`;
 });*/
@@ -98,6 +74,7 @@ refSchema.methods.json = function() {
   };
 };
 
+// "type" will refer to the model name, i.e. 'Book' or 'Article' etc.
 const References = mongoose.model('Reference', refSchema);
 const Books = References.discriminator('Book', bookSchema);
 const Articles = References.discriminator('Article', articleSchema);
