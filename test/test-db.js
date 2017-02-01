@@ -279,4 +279,31 @@ describe('Reference API', function() {
                 });
         });
     });
+
+    describe('PUT endpoint', function() {
+        it('should update fields sent over', function() {
+            const updateData = {
+                title: 'magic',
+                notes: 'lasers and fireworks'
+            };
+
+            return References
+                .findOne()
+                .exec()
+                .then(function(ref) {
+                    updateData.id = ref.id;
+                    return chai.request(app)
+                        .put(`/refs/${ref.id}`)
+                        .send(updateData);        
+                })
+                .then(function(res) {
+                    res.should.have.status(204);
+                    return References.findById(updateData.id).exec();
+                })
+                .then(function(ref) {
+                    ref.title.should.equal(updateData.title);
+                    ref.notes.should.equal(updateData.notes);
+                });
+        });
+    });
 });

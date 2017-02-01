@@ -90,4 +90,35 @@ router.delete('/:id', (req, res) => {
 	    .catch(err => res.status(500).json({message: `Internal server error: ${err}`}));
 });
 
+router.put('/:id', jsonParser, (req, res) => {
+	logger.log('info',`PUT ${req.body}`);
+	if (req.params.id !== req.body.id) {
+		const message = (
+		  `Request path id (${req.params.id}) and request body id `
+		  `(${req.body.id}) must match`);
+		logger.log('error',message);
+		return res.status(400).send(message);
+	}
+	logger.log('info',`Updating reference \`${req.params.id}\``);
+	
+	const toUpdate = {};
+	const updateableFields = [
+		'type','title','tag','identifier','notes','authors','year','volume',
+		'issue','pages','url','city','publisher','edition','siteTitle',
+		'accessDate','pubDate'
+	];
+	updateableFields.forEach(field => {
+		if (field in req.body) {
+		  toUpdate[field] = req.body[field];
+		}
+	});
+
+	References
+    	// all key/value pairs in toUpdate will be updated -- that's what `$set` does
+	    .findByIdAndUpdate(req.params.id, {$set: toUpdate})
+	    .exec()
+	    .then(post => res.status(204).end())
+	    .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
+
 module.exports = router;

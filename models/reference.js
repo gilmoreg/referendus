@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const options = { discriminatorKey: 'type' };
+/*const options = { discriminatorKey: 'type' };*/
 
 const refSchema = mongoose.Schema( {
     type: { type: String, required:true },
@@ -32,7 +32,7 @@ const refSchema = mongoose.Schema( {
     siteTitle: String,
     accessDate: Date,
     pubDate: Date
-}, options);
+}/*, options*/);
 
 /*
 const articleSchema = mongoose.Schema( {
