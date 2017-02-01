@@ -19,8 +19,10 @@ function seedRefData() {
     logger.info('seeding ref post data');
     const seedData = [];
 
-    for (let i = 1; i <= 10; i++) {
-        seedData.push(generateRefData());
+    for (let i = 1; i <= 3; i++) {
+        seedData.push(generateArticleData());
+        seedData.push(generateBookData());
+        seedData.push(generateWebsiteData());
     }
     // this will return a promise
     return References.insertMany(seedData);
@@ -37,14 +39,44 @@ function generateAuthorName() {
 // generate an object represnting a ref.
 // can be used to generate seed data for db
 // or request.body data
-function generateRefData() {
+function generateArticleData() {
+    return {
+        'type': 'Article',
+        'title': faker.company.catchPhrase(),
+        'authors': [
+            { 'author': generateAuthorName() },
+            { 'author': generateAuthorName() }
+        ],
+        'year': 2017,
+        'volume': faker.random.number(),
+        'issue': faker.random.number(),
+        'pages': `${faker.random.number()}-${faker.random.number()}`,
+        'url': faker.internet.url()
+    }
+}
+
+function generateBookData() {
     return {
         'type': 'Book',
         'title': faker.company.catchPhrase(),
-        'author': generateAuthorName(),
-        city: faker.address.city(),
-        publisher: faker.company.companyName(),
-        year: 2017
+        'authors': [
+            { 'author': generateAuthorName() },
+            { 'author': generateAuthorName() }
+        ],
+        'city': faker.address.city(),
+        'publisher': faker.company.companyName(),
+        'year': 2017
+    }
+}
+
+function generateWebsiteData() {
+    return {
+        'type': 'Website',
+        'title': faker.company.catchPhrase(),
+        'siteTitle': faker.company.companyName(),
+        'accessDate': faker.date.recent(),
+        'pubDate': faker.date.past(),
+        'url': faker.internet.url()
     }
 }
 
@@ -72,7 +104,6 @@ describe('Reference API', function() {
     });
 
     describe('GET endpoint', function() {
-
         it('should return all existing references', function() {
             logger.log('GET all');
             let res;
@@ -92,5 +123,11 @@ describe('Reference API', function() {
                 });
         });
     
+    });
+
+    describe('POST endpoint', function() {
+        it('should return refs with the right fields', function() {
+            //
+        });
     });
 });
