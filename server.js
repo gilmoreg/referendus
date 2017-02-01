@@ -21,7 +21,8 @@ app.use((err, req, res, next) => {
 });
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
-  mongoose.connect(databaseUrl, err => {
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
       if (err) {
         return reject(err);
       }
