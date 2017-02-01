@@ -154,7 +154,6 @@ describe('Reference API', function() {
                     return References.findById(refPost.id);
                 })
                 .then(function(ref) {
-                    console.log('refPost >>>>>>>\n', refPost, '\n<<<<<<<<<< \n',ref);
                     refPost.id.should.equal(ref.id);
                     refPost.title.should.equal(ref.title);
                     refPost.type.should.equal(ref.type);
@@ -184,6 +183,89 @@ describe('Reference API', function() {
     });
 
     describe('POST endpoint', function() {
+
+        it('should add a new article', function() {
+            const newArticle = generateArticleData();
+            return chai.request(app)
+                .post('/refs')
+                .send(newArticle)
+                .then(function(res) {
+                    res.should.have.status(201);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.include.keys(
+                        'id', 'authors','year','volume','issue','pages');
+                    res.body.title.should.equal(newArticle.title);
+                    // cause Mongo should have created id on insertion
+                    res.body.id.should.not.be.null;
+                    return References.findById(res.body.id);
+                })
+                .then(function(ref) {
+                    ref.title.should.equal(newArticle.title);
+                    ref.year.should.equal(newArticle.year);
+                    ref.volume.should.equal(newArticle.volume);
+                    ref.pages.should.equal(newArticle.pages);
+                    ref.issue.should.equal(newArticle.issue);
+                });
+        });
+
+        it('should add a new book', function() {
+            const newBook = generateBookData();
+            return chai.request(app)
+                .post('/refs')
+                .send(newBook)
+                .then(function(res) {
+                    res.should.have.status(201);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.include.keys(
+                        'id', 'authors','publisher','year','city');
+                    res.body.title.should.equal(newBook.title);
+                    // cause Mongo should have created id on insertion
+                    res.body.id.should.not.be.null;
+                    return References.findById(res.body.id);
+                })
+                .then(function(ref) {
+                    ref.title.should.equal(newBook.title);
+                    ref.year.should.equal(newBook.year);
+                    ref.publisher.should.equal(newBook.publisher);
+                    ref.city.should.equal(newBook.city);
+                });
+        });
+
+        it('should add a new website', function() {
+            const newSite = generateWebsiteData();
+            return chai.request(app)
+                .post('/refs')
+                .send(newSite)
+                .then(function(res) {
+                    res.should.have.status(201);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.include.keys(
+                        'id', 'siteTitle','accessDate','url');
+                    res.body.title.should.equal(newSite.title);
+                    // cause Mongo should have created id on insertion
+                    res.body.id.should.not.be.null;
+                    return References.findById(res.body.id);
+                })
+                .then(function(ref) {
+                    ref.title.should.equal(newSite.title);
+                    ref.siteTitle.should.equal(newSite.siteTitle);
+                    // These dates are stored in different formats; convert both to Unix time for comparison
+                    const resRefAccess = new Date(ref.accessDate).getTime() / 1000;
+                    const refAccess = new Date(newSite.accessDate).getTime() / 1000;
+                    resRefAccess.should.equal(refAccess);
+                    ref.url.should.equal(newSite.url);
+                });
+        });
+
+
         
+        
+        
+
+
+
     });
 });

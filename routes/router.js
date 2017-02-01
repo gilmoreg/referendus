@@ -38,12 +38,15 @@ router.post('/', jsonParser, (req, res) => {
     switch(req.body.type) {
         case 'Article': {
             requiredFields = ['title','authors','year','volume','issue','pages'];
+            break;
         };
         case 'Book': {
             requiredFields = ['title','authors','city','publisher','year']; 
+            break;
         }; 
         case 'Website': {
             requiredFields = ['title','siteTitle','accessDate','url'];
+            break;
         };
         default: {
             return res400Err(`Unknown reference type ${req.body.type}`, res);
@@ -57,15 +60,16 @@ router.post('/', jsonParser, (req, res) => {
 	    }
   	}
   	// if 'authors' is missing altogether that will have been caught above
-    if(req.body.authors.length < 1) {
+    if(req.body.authors && req.body.authors.length < 1) {
         return res400Err(`"authors" must contain at least one author`, res);
     }
 
+    /*
     req.body.authors.forEach(author => {
         if(!('firstName' in author) || !('lastName' in author)) {
             return res400Err(`Missing author first and last name in request body`, res);
         }
-    });
+    });*/
 
 	 References
 	    .create(req.body)
