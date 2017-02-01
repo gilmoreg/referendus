@@ -183,7 +183,6 @@ describe('Reference API', function() {
     });
 
     describe('POST endpoint', function() {
-
         it('should add a new article', function() {
             const newArticle = generateArticleData();
             return chai.request(app)
@@ -259,13 +258,7 @@ describe('Reference API', function() {
                     ref.url.should.equal(newSite.url);
                 });
         });
-
-
-        
-        
-        
-
-
-
     });
+
+    // describe
 });
