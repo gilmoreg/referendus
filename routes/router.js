@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 		.find()
 		.exec() 
 		.then( (refs) => {
-			res.json({posts: refs.map((post)=>{return ref.json();})});
+			res.json({refs: refs.map((ref)=>{return ref.json();})});
 		})
 		.catch( err => {
 			logger.log('error',err);
