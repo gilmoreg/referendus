@@ -15,11 +15,6 @@ chai.use(chaiHttp);
 // TODO is this necessary?
 app.use(morgan('common', {stream: logger.stream}));
 
-function tearDownDb() {
-    logger.warn('Deleting database');
-    return mongoose.connection.dropDatabase();
-}
-
 function seedRefData() {
     logger.info('seeding ref post data');
     const seedData = [];
@@ -53,3 +48,50 @@ function generateRefData() {
     }
 }
 
+function tearDownDb() {
+    logger.warn('Deleting database');
+    return mongoose.connection.dropDatabase();
+}
+
+describe('Reference API', function() {
+
+    before(function() {
+        return runServer(TEST_DATABASE_URL);
+    });
+
+    beforeEach(function() {
+        return seedRefData();
+    });
+
+    afterEach(function() {
+        return tearDownDb();
+    });
+
+    after(function() {
+        return closeServer();
+    });
+
+    describe('GET endpoint', function() {
+        
+
+        it('should return all existing references', function() {
+            logger.log('GET all');
+            let res;
+            return chai.request(app)
+                .get('/refs')
+                .then(function(_res) {
+                    console.info('validating GET response');
+                    // so subsequent .then blocks can access resp obj.
+                    res = _res;
+                    res.should.have.status(200);
+                    // otherwise our db seeding didn't work
+                    res.body.posts.should.have.length.of.at.least(1);
+                    return References.count();
+                })
+                .then(function(count) {
+                    res.body.posts.should.have.length.of(count);
+                });
+        });
+    
+    });
+});
