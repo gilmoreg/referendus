@@ -7,9 +7,35 @@ const refSchema = mongoose.Schema( {
     title: { type: String, required:true },
     tags: [ { tag:String } ],
     id: String,
-    notes: String
+    notes: String,
+    // --- From here on ---
+    // if I can get discriminators to work, these will go in separate schemas 
+    // (see commented code below)
+    // For articles
+    authors: [{
+                author: {
+                    firstName: String,
+                    middleName: String,
+                    lastName: String,
+                }
+            }],
+    year: Number,
+    volume: Number,
+    issue: Number,
+    pages: String,
+    url: String,
+    // For Books
+    city: String,
+    publisher: String,
+    year: Number,
+    edition: String,
+    // For Websites
+    siteTitle: String,
+    accessDate: Date,
+    pubDate: Date
 }, options);
 
+/*
 const articleSchema = mongoose.Schema( {
     authors: 
         { type: [{
@@ -57,12 +83,18 @@ const websiteSchema = mongoose.Schema( {
     pubDate: Date,
     url: { type:String, required:true }
 }, options);
-
+*/
 /*refSchema.virtual('authorFullName').get( function() {
   return `${this.author.firstName} ${this.author.lastName}`;
 });*/
 
 refSchema.methods.json = function() {
+    let jsonObj = {
+        id: this._id,
+        title: this.title,
+    };
+    if(this.tags) jsonObj.tags = this.tags;
+    if(this)
   return {
       title: this.title
 /*
