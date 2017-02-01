@@ -59,17 +59,10 @@ router.post('/', jsonParser, (req, res) => {
             return res400Err(`Missing \`${field}\` in request body`, res);
 	    }
   	}
-  	// if 'authors' is missing altogether that will have been caught above
+
     if(req.body.authors && req.body.authors.length < 1) {
         return res400Err(`"authors" must contain at least one author`, res);
     }
-
-    /*
-    req.body.authors.forEach(author => {
-        if(!('firstName' in author) || !('lastName' in author)) {
-            return res400Err(`Missing author first and last name in request body`, res);
-        }
-    });*/
 
 	 References
 	    .create(req.body)
