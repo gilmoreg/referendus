@@ -8,7 +8,7 @@ const {logger} = require('../logger');
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 
-const {References, Articles, Books, Websites} = require('../models/reference');
+const {References/*, Articles, Books, Websites*/} = require('../models/reference');
 
 chai.use(chaiHttp);
 const should = chai.should();
@@ -122,12 +122,66 @@ describe('Reference API', function() {
                     res.body.refs.should.have.length.of(count);
                 });
         });
-    
+
+        it('should return refs with the right fields', function() {
+            let refPost;
+            return chai.request(app)
+                .get('/refs')
+                .then(function(res) {
+                    res.should.have.status(200);
+                    res.should.be.json;
+                    res.body.refs.should.be.a('array');
+                    res.body.refs.should.have.length.of.at.least(1);
+                    console.log('Examining >>>>>>> ',res.body.refs);
+                    res.body.refs.forEach(function(ref) {
+                        ref.should.be.a('object');
+                        ref.should.include.keys('id','title','type');
+                        switch(ref.type) {
+                            case 'Article': {
+                                ref.should.include.keys('authors','year','volume','issue','pages');
+                            };
+                            case 'Book': {
+                                ref.should.include.keys('authors','city','publisher','year'); 
+                            }; 
+                            case 'Website': {
+                                ref.should.include.keys('siteTitle','accessDate','url');
+                            };
+                        }
+                        refPost = res.body.refs[0];
+                        return References.findById(refPost.id);
+                    })
+                    .then(function(ref) {
+                        refPost.id.should.equal(ref.id);
+                        refPost.title.should.equal(ref.title);
+                        refPost.type.should.equal(ref.type);
+                        switch(ref.type) {
+                            case 'Article': {
+                                // TODO this might not work - fully testing this would be really complicated
+                                refPost.authors.should.equal(ref.authors);
+                                refPost.year.should.equal(ref.year);
+                                refPost.volume.should.equal(ref.volume);
+                                refPost.issue.should.equal(ref.issue);
+                                refPost.pages.should.equal(ref.pages);
+                            }
+                            case 'Book': {
+                                refPost.authors.should.equal(ref.authors);
+                                refPost.city.should.equal(ref.city);
+                                refPost.publisher.should.equal(ref.publisher);
+                                refPost.year.should.equal(ref.year);
+                            }
+                            case 'Website': {
+                                refPost.siteTitle.should.equal(ref.siteTitle);
+                                refPost.accessDate.should.equal(ref.accessDate);
+                                refPost.url.should.equal(ref.url);
+                            }
+                        }
+                    });
+                })
+        });
+
     });
 
     describe('POST endpoint', function() {
-        it('should return refs with the right fields', function() {
-            //
-        });
+        
     });
 });

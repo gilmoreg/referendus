@@ -75,10 +75,11 @@ refSchema.methods.json = function() {
   };
 };
 
-// "type" will refer to the model name, i.e. 'Book' or 'Article' etc.
 const References = mongoose.model('Reference', refSchema);
+/*
+// "type" will refer to the model name, i.e. 'Book' or 'Article' etc.
 const Books = References.discriminator('Book', bookSchema);
 const Articles = References.discriminator('Article', articleSchema);
 const Websites = References.discriminator('Website', websiteSchema);
-
+*/
 module.exports = {References, Articles, Books, Websites};
