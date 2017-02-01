@@ -149,42 +149,38 @@ describe('Reference API', function() {
                                 break;
                             };
                         }
-                        refPost = res.body.refs[0];
-                        console.log('refPost >>>>>>> ', refPost);
-                        return References.findById(refPost.id);
-                    })
-                    .then(function(ref) {
-                        refPost.id.should.equal(ref.id);
-                        refPost.title.should.equal(ref.title);
-                        refPost.type.should.equal(ref.type);
-                        switch(ref.type) {
-                            case 'Article': {
-                                // TODO this might not work - fully testing this would be really complicated
-                                refPost.authors.should.equal(ref.authors);
-                                refPost.year.should.equal(ref.year);
-                                refPost.volume.should.equal(ref.volume);
-                                refPost.issue.should.equal(ref.issue);
-                                refPost.pages.should.equal(ref.pages);
-                                break;
-                            }
-                            case 'Book': {
-                                refPost.authors.should.equal(ref.authors);
-                                refPost.city.should.equal(ref.city);
-                                refPost.publisher.should.equal(ref.publisher);
-                                refPost.year.should.equal(ref.year);
-                                break;
-                            }
-                            case 'Website': {
-                                refPost.siteTitle.should.equal(ref.siteTitle);
-                                refPost.accessDate.should.equal(ref.accessDate);
-                                refPost.url.should.equal(ref.url);
-                                break;
-                            }
-                        }
                     });
+                    refPost = res.body.refs[0];
+                    return References.findById(refPost.id);
                 })
-        });
-
+                .then(function(ref) {
+                    console.log('refPost >>>>>>>\n', refPost, '\n<<<<<<<<<< \n',ref);
+                    refPost.id.should.equal(ref.id);
+                    refPost.title.should.equal(ref.title);
+                    refPost.type.should.equal(ref.type);
+                    switch(ref.type) {
+                        case 'Article': {
+                            refPost.year.should.equal(ref.year);
+                            refPost.volume.should.equal(ref.volume);
+                            refPost.issue.should.equal(ref.issue);
+                            refPost.pages.should.equal(ref.pages);
+                            break;
+                        }
+                        case 'Book': {
+                            refPost.city.should.equal(ref.city);
+                            refPost.publisher.should.equal(ref.publisher);
+                            refPost.year.should.equal(ref.year);
+                            break;
+                        }
+                        case 'Website': {
+                            refPost.siteTitle.should.equal(ref.siteTitle);
+                            refPost.accessDate.should.equal(ref.accessDate);
+                            refPost.url.should.equal(ref.url);
+                            break;
+                        }
+                    }
+                });
+            })
     });
 
     describe('POST endpoint', function() {

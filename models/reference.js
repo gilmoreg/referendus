@@ -114,7 +114,7 @@ refSchema.methods.json = function() {
     return jsonObj;
 };
 
-const References = mongoose.model('Reference', refSchema);
+const References = mongoose.model('Reference', refSchema, 'references');
 /*
 // "type" will refer to the model name, i.e. 'Book' or 'Article' etc.
 const Books = References.discriminator('Book', bookSchema);
