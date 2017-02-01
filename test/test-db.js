@@ -12,6 +12,8 @@ const {TEST_DATABASE_URL} = require('../config');
 const {References, Articles, Books, Websites} = require('../models/reference');
 
 chai.use(chaiHttp);
+const should = chai.should();
+
 // TODO is this necessary?
 app.use(morgan('common', {stream: logger.stream}));
 
@@ -85,11 +87,11 @@ describe('Reference API', function() {
                     res = _res;
                     res.should.have.status(200);
                     // otherwise our db seeding didn't work
-                    res.body.posts.should.have.length.of.at.least(1);
+                    res.body.refs.should.have.length.of.at.least(1);
                     return References.count();
                 })
                 .then(function(count) {
-                    res.body.posts.should.have.length.of(count);
+                    res.body.refs.should.have.length.of(count);
                 });
         });
     
