@@ -2,7 +2,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const mongoose = require('mongoose');
-// TODO is this necessary?
 const morgan = require('morgan');
 const {logger} = require('../logger');
 
@@ -14,7 +13,6 @@ const {References, Articles, Books, Websites} = require('../models/reference');
 chai.use(chaiHttp);
 const should = chai.should();
 
-// TODO is this necessary?
 app.use(morgan('common', {stream: logger.stream}));
 
 function seedRefData() {
@@ -74,7 +72,6 @@ describe('Reference API', function() {
     });
 
     describe('GET endpoint', function() {
-        
 
         it('should return all existing references', function() {
             logger.log('GET all');
