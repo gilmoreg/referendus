@@ -10,11 +10,11 @@ const {References, Articles, Books, Websites} = require('../models/reference');
 router.get('/', (req, res) => {
 	logger.log('info',`GET ${req}`);
 	 
- 	BlogPosts
+ 	References
 		.find()
 		.exec() 
-		.then( (posts) => {
-			res.json({posts: posts.map((post)=>{return post.json();})});
+		.then( (refs) => {
+			res.json({posts: refs.map((post)=>{return ref.json();})});
 		})
 		.catch( err => {
 			logger.log('error',err);

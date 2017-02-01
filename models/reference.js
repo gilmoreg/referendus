@@ -64,6 +64,7 @@ const websiteSchema = mongoose.Schema( {
 
 refSchema.methods.json = function() {
   return {
+      title: this.title
     /*
         id: this._id,
         title: this.title,
