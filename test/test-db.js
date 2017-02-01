@@ -132,22 +132,25 @@ describe('Reference API', function() {
                     res.should.be.json;
                     res.body.refs.should.be.a('array');
                     res.body.refs.should.have.length.of.at.least(1);
-                    console.log('Examining >>>>>>> ',res.body.refs);
                     res.body.refs.forEach(function(ref) {
                         ref.should.be.a('object');
                         ref.should.include.keys('id','title','type');
                         switch(ref.type) {
                             case 'Article': {
                                 ref.should.include.keys('authors','year','volume','issue','pages');
+                                break;
                             };
                             case 'Book': {
-                                ref.should.include.keys('authors','city','publisher','year'); 
+                                ref.should.include.keys('authors','publisher','year','city'); 
+                                break;
                             }; 
                             case 'Website': {
                                 ref.should.include.keys('siteTitle','accessDate','url');
+                                break;
                             };
                         }
                         refPost = res.body.refs[0];
+                        console.log('refPost >>>>>>> ', refPost);
                         return References.findById(refPost.id);
                     })
                     .then(function(ref) {
@@ -162,17 +165,20 @@ describe('Reference API', function() {
                                 refPost.volume.should.equal(ref.volume);
                                 refPost.issue.should.equal(ref.issue);
                                 refPost.pages.should.equal(ref.pages);
+                                break;
                             }
                             case 'Book': {
                                 refPost.authors.should.equal(ref.authors);
                                 refPost.city.should.equal(ref.city);
                                 refPost.publisher.should.equal(ref.publisher);
                                 refPost.year.should.equal(ref.year);
+                                break;
                             }
                             case 'Website': {
                                 refPost.siteTitle.should.equal(ref.siteTitle);
                                 refPost.accessDate.should.equal(ref.accessDate);
                                 refPost.url.should.equal(ref.url);
+                                break;
                             }
                         }
                     });
