@@ -58,7 +58,6 @@ footer p {
 
 .modal-header .close {
     padding: 5px;
-    margin-bottom: 20px;
 }
 
 .modal-body {
@@ -67,10 +66,36 @@ footer p {
 
 .new-button-row {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 .new-button {
     width: 30%;
+}
+
+.modal-form {
+    margin: 20px;
+}
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+#doi {
+    width: 85%;
+    display: inline-block
+}
+
+.doi-search {
+    /* TODO this still looks funny in mobile or desktop */
+    margin-top: -3px;
+    padding-left: 8px;
+    padding-right: 22px;
+    width: 12%;
+}
+
+#add-author {
+    text-align: right;
 }
 
 /* Utility */
