@@ -17,7 +17,7 @@
                 <h1>Referendus</h1>
             </div>
             <div class="col-xs-8 right-header">
-                <button type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true" title="add"></i></button> 
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newModal"><i class="fa fa-plus" aria-hidden="true" title="add"></i></button> 
                 <button type="button" class="btn btn-secondary"><i class="fa fa-search" aria-hidden="true" title = "search"></i></button>
                 <button type="button" class="btn btn-warning"><i class="fa fa-clipboard" aria-hidden="true" title="export"></i></button> 
                 <button type="button" class="btn btn-info" title="login">Login</button>
@@ -60,5 +60,23 @@
         <p>Referendus © 2017 by <a href="https://github.com/gilmoreg/" target="_blank">Grayson Gilmore</a>. All rights reserved.</p>
         <p>Powered by: TODO.</p>
     </footer>
+
+    <!-- Modal -->
+  <div class="modal" id="newModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="new-button-row">
+                <button type="button" class="btn btn-warning new-button">Article</button>
+                <button type="button" class="btn btn-warning new-button">Book</button>
+                <button type="button" class="btn btn-warning new-button">Website</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

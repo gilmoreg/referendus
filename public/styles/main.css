@@ -51,6 +51,33 @@ footer p {
     margin-bottom: 0px;
 }
 
+.modal-header {
+    padding: 0px;
+    border: none;
+}
+
+.modal-header .close {
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+.modal-body {
+    padding: 5px;
+}
+
+.new-button-row {
+    text-align: center;
+}
+
+.new-button {
+    width: 30%;
+}
+
+/* Utility */
+.hidden {
+    display: none;
+}
+
 .black {
     outline: 1px solid black;
 }
