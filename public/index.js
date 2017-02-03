@@ -5,68 +5,6 @@ var formError = function(msg) {
 	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
 }
 
-var generateReference = function(ref) {
-	console.log('generateReference',ref);
-	switch(format) {
-		case 'APA': {
-			switch(ref.type) {
-				case 'Article': { return generateAPAArticle(ref); break; }
-				case 'Book': { return generateAPABook(ref); break; }
-				case 'Website': { return generateAPAWebsite(ref); break; }
-			}
-			break;
-		 };
-		case 'Chicago': {
-			switch(ref.type) {
-				case 'Article': { return generateChicagoArticle(ref); break; }
-				case 'Book': { return generateChicagoBook(ref); break; }
-				case 'Website': { return generateChicagoWebsite(ref); break; }
-			}
-			break;
-		}
-		case 'MLA': {
-			switch(ref.type) {
-				case 'Article': { return generateMLAArticle(ref); break; }
-				case 'Book': { return generateMLABook(ref); break; }
-				case 'Website': { return generateMLAWebsite(ref); break; }
-			}
-			break;
-		}
-		// TODO error
-		default: { return ''; }
-	}
-}
-
-var generateChicagoArticle = function(ref) {
-	var str = '';
-	return str;
-}
-
-var generateChicagoBook = function(ref) {
-	var str = '';
-	return str;
-}
-
-var generateChicagoWebsite = function(ref) {
-	var str = '';
-	return str;	
-}
-
-var generateMLAArticle = function(ref) {
-	var str = '';
-	return str;
-}
-
-var generateMLABook = function(ref) {
-	var str = '';
-	return str;
-}
-
-var generateMLAWebsite = function(ref) {
-	var str = '';
-	return str;	
-}
-
 var refreshList = function() {
 	$('.ref-container').empty();
 	$.ajax({
