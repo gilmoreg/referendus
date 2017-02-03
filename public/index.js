@@ -76,8 +76,8 @@ var refreshList = function() {
 		success: function(data) {
 			console.log('GET data',data);
 			data.refs.forEach(function(ref) {
-				var html = '<div class="ref">'
-							+	'<div class="ref-text green col-xs-9">' + ref + '</div>'
+				var html = '<div class="ref" id="' + ref.id + '">'
+							+	'<div class="ref-text green col-xs-9">' + ref.html + '</div>'
 							+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 							+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
 						+ '</div>';

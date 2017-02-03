@@ -55,14 +55,14 @@ const generateAPAArticle = ref => {
 	str += '<i>' + ref.volume + '</i>';
 	if(ref.pages) str += `, ${ref.pages}.`;
 	else str += '.';
-	return str;
+	return { id:ref.id, html:str };
 }
 
 const generateAPABook = ref => {
 	var str = '';
 	str += `${generateAPAAuthorList(ref.authors)} (${ref.year}). <i>${ref.title}</i>. `;
 	str += `${ref.city}: ${ref.publisher}.`;
-	return str;
+	return { id:ref.id, html:str };
 }
 
 const generateAPAWebsite = ref => {
@@ -70,7 +70,7 @@ const generateAPAWebsite = ref => {
     str += `${generateAPAAuthorList(ref.authors)} `;
     if(ref.pubDate) str += `(${ref.pubDate}). `;
     str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${ref.accessDate} from ${ref.url}.`;
-    return str;
+    return { id:ref.id, html:str };
 }
 
 const generateReference = ref => {
