@@ -34,17 +34,17 @@ const authorList = authors => {
     }
 }
 
-const generateChicagoArticle = ref => {
+const article = ref => {
 	var str = '';
 	return str;
 }
 
-const generateChicagoBook = ref => {
+const book = ref => {
 	var str = '';
 	return str;
 }
 
-const generateChicagoWebsite = ref => {
+const website = ref => {
 	var str = '';
 	return str;	
 }

@@ -19,7 +19,7 @@ const apaName = author => {
 	return str;
 }
 
-const generateAPAAuthorList = authors => {
+const authorList = authors => {
 	if(authors.length<1) return '';
 	let str='';
 	// Single author
@@ -48,9 +48,9 @@ const generateAPAAuthorList = authors => {
 	return str;
 }
 
-const generateAPAArticle = ref => {
+const article = ref => {
 	let str = '';
-	str += `${generateAPAAuthorList(ref.authors)} `;
+	str += `${authorList(ref.authors)} `;
 	str += `(${ref.year}). ${ref.title}. <i>${ref.journal}</i>, `;
 	str += '<i>' + ref.volume + '</i>';
 	if(ref.pages) str += `, ${ref.pages}.`;
@@ -58,16 +58,16 @@ const generateAPAArticle = ref => {
 	return { id:ref.id, html:str };
 }
 
-const generateAPABook = ref => {
+const book = ref => {
 	let str = '';
-	str += `${generateAPAAuthorList(ref.authors)} (${ref.year}). <i>${ref.title}</i>. `;
+	str += `${authorList(ref.authors)} (${ref.year}). <i>${ref.title}</i>. `;
 	str += `${ref.city}: ${ref.publisher}.`;
 	return { id:ref.id, html:str };
 }
 
-const generateAPAWebsite = ref => {
+const wesbite = ref => {
     let str = '';
-    str += `${generateAPAAuthorList(ref.authors)} `;
+    str += `${authorList(ref.authors)} `;
     if(ref.pubDate) str += `(${ref.pubDate}). `;
     str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${ref.accessDate} from ${ref.url}.`;
     return { id:ref.id, html:str };
@@ -75,9 +75,9 @@ const generateAPAWebsite = ref => {
 
 const generateReference = ref => {
     switch(ref.type) {
-        case 'Article': { return generateAPAArticle(ref); break; }
-        case 'Book': { return generateAPABook(ref); break; }
-        case 'Website': { return generateAPAWebsite(ref); }
+        case 'Article': { return article(ref); break; }
+        case 'Book': { return book(ref); break; }
+        case 'Website': { return website(ref); }
     }
 }
 
