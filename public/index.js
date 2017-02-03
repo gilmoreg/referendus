@@ -20,9 +20,21 @@ $(function() {
 	$('.modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
 		var fields = $('.modal-form :input').serializeArray();
-		console.log(fields);
-		$.post('refs/', fields, function(data) {
-			console.log('POST response: ', data);
+		var post = {};
+		fields.forEach(function(field) {
+			post[field.name] = field.value;
+		});
+		console.log(post);
+		$.ajax({
+			url: 'refs/',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			proessData: 'false',
+			data: JSON.stringify(post),
+			success: function(data) {
+				console.log('POST response: ', data);
+			}
 		});
 		// TODO: only if submit was successful
 		$("#newModal").modal('toggle');
