@@ -20,7 +20,6 @@ const apaName = author => {
 }
 
 const generateAPAAuthorList = authors => {
-	console.log('generateAPAAuthorList',authors);
 	if(authors.length<1) return '';
 	var str='';
 	// Single author

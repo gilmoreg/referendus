@@ -19,8 +19,8 @@ const mlaRouter = require('./routes/mla');
 
 app.use('/refs', refRouter);
 app.use('/refs/apa', apaRouter);
-app.use('/refs/chicago', chicagoRouter);
-app.use('/refs/mla', mlaRouter);
+//app.use('/refs/chicago', chicagoRouter);
+//app.use('/refs/mla', mlaRouter);
 
 app.use((err, req, res, next) => {
   logger.error(err);
