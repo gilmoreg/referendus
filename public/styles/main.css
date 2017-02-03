@@ -64,12 +64,12 @@ footer p {
     padding: 5px;
 }
 
-.new-button-row {
+.new-button-row, .format-button-row {
     text-align: center;
     margin-bottom: 10px;
 }
 
-.new-button {
+.new-button, format-button {
     width: 30%;
 }
 
