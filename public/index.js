@@ -22,9 +22,11 @@ $(function() {
 		var fields = $('.modal-form :input').serializeArray();
 		var post = {};
 		fields.forEach(function(field) {
+			// TODO handle special cases:
+			// authors in particular
 			post[field.name] = field.value;
 		});
-		console.log(post);
+
 		$.ajax({
 			url: 'refs/',
 			type: 'POST',
