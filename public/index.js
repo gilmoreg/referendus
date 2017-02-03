@@ -27,7 +27,7 @@ $(function() {
 		var post = {};
 		fields.forEach(function(field) {
 			switch(field.name) {
-				case 'author': {
+				case 'authors': {
 					if(!('authors' in Object.keys(post))) post['authors'] = [];
 					var nameField = field.value.split(',');
 					if(nameField.length<2) {
@@ -39,12 +39,18 @@ $(function() {
 						'lastName': nameField[0].trim()
 					}
 					if(nameField.length>=3) name['middleName'] = nameField[2].trim();
-
 					post['authors'].push({'author': name });
 					break;
 				}
 				case 'tags': {
-
+					var tags = field.value.split(',');
+					if(tags.length<1) break;
+					if(!('tags' in Object.keys(post))) post['tags'] = [];
+					var tagList = [];
+					tags.forEach(function(tag) {
+						tagList.push( { 'tag':tag.trim() } );
+					});
+					post['tags'] = tagList;
 					break;
 				}
 				default: {
