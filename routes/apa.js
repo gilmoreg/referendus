@@ -14,14 +14,14 @@ const res400Err = (msg, res) => {
 
 // https://owl.english.purdue.edu/owl/resource/560/06/
 const apaName = author => {
-	var str = `${author.lastName}, ${author.firstName.charAt(0)}.`;
+	let str = `${author.lastName}, ${author.firstName.charAt(0)}.`;
 	if(author.middleName) str += `${author.middleName.charAt(0)}.`;
 	return str;
 }
 
 const generateAPAAuthorList = authors => {
 	if(authors.length<1) return '';
-	var str='';
+	let str='';
 	// Single author
 	if(authors.length===1) {
 		str += apaName(authors[0].author);
@@ -33,14 +33,14 @@ const generateAPAAuthorList = authors => {
 	// Between 3 and 7 authors
 	else if(authors.length>=3 && authors.length<=7) {
 		// Last author has to be preceded by ampersand, so count up to penultimate only
-		for(var i=0; i<authors.length-1;i++) {
+		for(let i=0; i<authors.length-1;i++) {
 			str += `${apaName(authors[i].author)}, `;
 		}
 		str += `& ${apaName(authors[authors.length-1].author)}. `;
 	}
 	// More than 7 authors
 	else if(authors.length>7) {
-		for(var i=0; i<6;i++) {
+		for(let i=0; i<6;i++) {
 			str += `${apaName(authors[i].author)}, `;
 		}
 		str += `. . . ${apaName(authors[authors.length-1].author)}`;
@@ -49,7 +49,7 @@ const generateAPAAuthorList = authors => {
 }
 
 const generateAPAArticle = ref => {
-	var str = '';
+	let str = '';
 	str += `${generateAPAAuthorList(ref.authors)} `;
 	str += `(${ref.year}). ${ref.title}. <i>${ref.journal}</i>, `;
 	str += '<i>' + ref.volume + '</i>';
@@ -59,14 +59,14 @@ const generateAPAArticle = ref => {
 }
 
 const generateAPABook = ref => {
-	var str = '';
+	let str = '';
 	str += `${generateAPAAuthorList(ref.authors)} (${ref.year}). <i>${ref.title}</i>. `;
 	str += `${ref.city}: ${ref.publisher}.`;
 	return { id:ref.id, html:str };
 }
 
 const generateAPAWebsite = ref => {
-    var str = '';
+    let str = '';
     str += `${generateAPAAuthorList(ref.authors)} `;
     if(ref.pubDate) str += `(${ref.pubDate}). `;
     str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${ref.accessDate} from ${ref.url}.`;
