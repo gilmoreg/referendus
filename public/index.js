@@ -6,7 +6,24 @@ var formError = function(msg) {
 }
 
 var refreshList = function() {
-
+	$('.ref-container').empty();
+	$.ajax({
+		url: 'refs/',
+		type: 'GET',
+		contentType: 'application/json',
+		success: function(data) {
+			console.log(data);
+			data.refs.forEach(function(ref) {
+				var html = '<div class="ref" id="' + ref.id + '">'
+							+	'<div class="ref-text green col-xs-9">' + ref.title + '</div>'
+							+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
+							+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
+						+ '</div>';
+				$('.ref-container').append(html);
+			});
+			
+		}
+	});
 }
 
 $(function() {
@@ -98,6 +115,7 @@ $(function() {
 			data: JSON.stringify(post),
 			success: function(data) {
 				$("#newModal").modal('toggle');
+				refreshList();
 				console.log('POST response: ', data);
 			}
 		});
