@@ -13,7 +13,7 @@ const res400Err = (msg, res) => {
 }
 
 router.post('/', jsonParser, (req, res) => {
-	logger.log('info',`POST ${req.body}`);
+	logger.log('info',`POST ${JSON.stringify(req.body)}`);
 	// validate
 	let requiredFields;
     if(!req.body.type) {
@@ -22,7 +22,7 @@ router.post('/', jsonParser, (req, res) => {
 
     switch(req.body.type) {
         case 'Article': {
-            requiredFields = ['title','authors','year','volume','issue','pages'];
+            requiredFields = ['title','authors','year','journal','volume','issue','pages'];
             break;
         };
         case 'Book': {

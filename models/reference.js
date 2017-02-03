@@ -19,8 +19,9 @@ const refSchema = mongoose.Schema( {
                     lastName: String,
                 }
             }],
+    journal: String,
     year: Number,
-    volume: Number,
+    volume: String,
     issue: String,
     pages: String,
     url: String,

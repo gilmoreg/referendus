@@ -12,3 +12,4 @@ const res400Err = (msg, res) => {
     return res.status(400).send(msg);
 }
 
+module.exports = router;
