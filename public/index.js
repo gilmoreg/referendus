@@ -1,6 +1,12 @@
+var format = 'APA';
+
 var formError = function(msg) {
 	console.log(msg);
 	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
+}
+
+var refreshList = function() {
+
 }
 
 $(function() {
@@ -24,6 +30,24 @@ $(function() {
 		$.get('./addWebsite.html', function(html) {
 			$('.modal-form').html(html);
 		});
+	});
+
+	$('#APA').on('click', function() {
+		format = 'APA';
+		$("#formatModal").modal('toggle');
+		refreshList();
+	});
+
+	$('#Chicago').on('click', function() {
+		format = 'Chicago';
+		$("#formatModal").modal('toggle');
+		refreshList();
+	});
+
+	$('#MLA').on('click', function() {
+		format = 'MLA';
+		$("#formatModal").modal('toggle');
+		refreshList();
 	});
 
 	$('.modal-form').on('submit', 'form', function(e) {
@@ -78,4 +102,6 @@ $(function() {
 			}
 		});
 	});
+
+	refreshList();
 })
