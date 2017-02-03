@@ -2,48 +2,48 @@
     <div class="form-group">
         <label for="doi">ISBN / ASIN</label>
         <div class="form-group">
-            <input class="form-control" type="search" id="doi" placeholder="Sorry, search is disabled">
+            <input class="form-control" type="search" id="doi" name="doi" placeholder="Sorry, search is disabled">
             <button type="submit" class="btn btn-secondary doi-search"><i class="fa fa-search" aria-hidden="true" title = "search"></i></button>
         </div>   
     </div>
     <div class="form-group">
         <label for="authors">* Author(s)</label>
-        <input class="form-control" type="text" id="authors" placeholder="Last, First, Middle" required>
+        <input class="form-control" type="text" id="authors" name="authors" placeholder="Last, First, Middle" required>
         <small id="add-author" class="form-text text-muted">Add an author</small>
     </div>
     <div class="form-group">
         <label for="title">* Title</label>
-        <input class="form-control" type="text" id="title" required>
+        <input class="form-control" type="text" id="title" name="title" required>
     </div>
     <div class="form-group">
         <label for="city">* City</label>
-        <input class="form-control" type="text" id="city" required>
+        <input class="form-control" type="text" id="city" name="city" required>
     </div>
     <div class="form-group">
         <label for="publisher">* Publisher</label>
-        <input class="form-control" type="text" id="publisher" required>
+        <input class="form-control" type="text" id="publisher" name="publisher" required>
     </div>
     <div class="form-group">
         <label for="year">* Year</label>
-        <input class="form-control" type="text" id="year" required>
+        <input class="form-control" type="text" id="year" name="year" required>
     </div>
     <div class="form-group">
         <label for="edition">Edition</label>
-        <input class="form-control" type="text" id="edition">
+        <input class="form-control" type="text" id="edition" name="edition">
     </div>
     <div class="form-group">
         <label for="url">URL</label>
-        <input class="form-control" type="text" id="url">
+        <input class="form-control" type="text" id="url" name="url">
     </div>
     <div class="form-group">
         <label for="tags">Tags</label>
-        <input class="form-control" type="text" id="tags" placeholder="Separate by commas">
+        <input class="form-control" type="text" id="tags" name="tags" placeholder="Separate by commas">
     </div>
     <div class="form-group">
         <label for="notes">Notes</label>
-        <textarea class="form-control" type="text" id="notes" rows="3"></textarea>
+        <textarea class="form-control" type="text" id="notes" name="notes" rows="3"></textarea>
     </div>
     <div class="form-group submit-row">
-        <button type="submit" class="btn btn-warning new-button" id="submitNew">Add</button>
+        <button type="submit" class="btn btn-warning new-button" name="submitNew">Add</button>
     </div>
 </form>

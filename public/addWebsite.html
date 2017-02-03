@@ -1,38 +1,38 @@
 <form>
     <div class="form-group">
         <label for="url">* URL</label>
-        <input class="form-control" type="text" id="url" placeholder="https://" required>
+        <input class="form-control" type="text" id="url" name="url" placeholder="https://" required>
     </div>
     <div class="form-group">
         <label for="authors">Author(s)</label>
-        <input class="form-control" type="text" id="authors" placeholder="Last, First, Middle">
+        <input class="form-control" type="text" id="authors" name="authors" placeholder="Last, First, Middle">
         <small id="add-author" class="form-text text-muted">Add an author</small>
     </div>
     <div class="form-group">
         <label for="title">* Title</label>
-        <input class="form-control" type="text" id="title" required>
+        <input class="form-control" type="text" id="title" name="title" required>
     </div>
     <div class="form-group">
         <label for="site-title">* Site Title</label>
-        <input class="form-control" type="text" id="site-title" required>
+        <input class="form-control" type="text" id="site-title" name="site-title" required>
     </div>
     <div class="form-group">
         <label for="access-date">* Access Date</label>
-        <input class="form-control" type="text" id="access-date" required>
+        <input class="form-control" type="text" id="access-date" name="access-date" required>
     </div>
     <div class="form-group">
         <label for="pub-date">Published Date</label>
-        <input class="form-control" type="text" id="pub-date">
+        <input class="form-control" type="text" id="pub-date" name="pub-date">
     </div>
     <div class="form-group">
         <label for="tags">Tags</label>
-        <input class="form-control" type="text" id="tags" placeholder="Separate by commas">
+        <input class="form-control" type="text" id="tags" name="tags" placeholder="Separate by commas">
     </div>
     <div class="form-group">
         <label for="notes">Notes</label>
-        <textarea class="form-control" type="text" id="notes" rows="3"></textarea>
+        <textarea class="form-control" type="text" id="notes" name="notes" rows="3"></textarea>
     </div>
     <div class="form-group submit-row">
-        <button type="submit" class="btn btn-warning new-button" id="submitNew">Add</button>
+        <button type="submit" class="btn btn-warning new-button" name="submitNew">Add</button>
     </div>
 </form>

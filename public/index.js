@@ -19,8 +19,8 @@ $(function() {
 
 	$('.modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
-		var data = $(this).serialize();
-		console.log($('.modal-form :input').serialize(), data);
+		var data = $('.modal-form :input').serializeArray();
+		
 		$("#newModal").modal('toggle');
 	});
 })
