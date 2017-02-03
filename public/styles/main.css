@@ -81,9 +81,18 @@ footer p {
     margin-bottom: 5px;
 }
 
+.form-control {
+    height: 24px;
+}
+
+label {
+    margin-bottom: 0px;
+    font-size: 12px;
+}
+
 #doi {
     width: 85%;
-    display: inline-block
+    display: inline-block;
 }
 
 .doi-search {
