@@ -79,6 +79,7 @@ $(function() {
 					if(nameField.length<2) {
 						formError('<p>Author name must include last and first name separated by commas</p>');
 						$('#authors').focus();
+						// TODO: the form is still submitting!
 						return false;
 					}
 					var name = {

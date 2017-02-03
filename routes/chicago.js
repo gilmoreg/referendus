@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const {logger} = require('../logger');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
 
+// http://www.press.uchicago.edu/books/turabian/turabian_citationguide.html
 const res400Err = (msg, res) => {
     logger.log('error',msg);
     return res.status(400).send(msg);
