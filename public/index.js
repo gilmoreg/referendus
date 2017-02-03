@@ -5,8 +5,8 @@ var formError = function(msg) {
 	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
 }
 
-// To Mark: there has to be a better way?
 var generateReference = function(ref) {
+	console.log('generateReference',ref);
 	switch(format) {
 		case 'APA': {
 			switch(ref.type) {
@@ -37,90 +37,34 @@ var generateReference = function(ref) {
 	}
 }
 
-var firstFullLastInitials = function(author) {
-	var str = author.lastName + ', ' + author.firstName.charAt(0) + '.';
-	if(author.middleName) str += author.middleName.charAt(0) + '.';
-	return str;
-}
-
-var generateAPAAuthorList = function(authors) {
-	if(authors.length<1) return '';
-	var str='';
-	// Single author
-	if(authors.length===1) {
-		str += firstFullLastInitials(authors[0]);
-	}
-	// Two authors
-	else if(authors.length===2) {
-		str += firstFullLastInitials(authors[0]) + '& ' + firstFullLastInitials(authors[1]);		
-	}
-	// Between 3 and 7 authors
-	else if(authors.length>=3 && authors.length<=7) {
-		// Last author has to be preceded by ampersand, so count up to penultimate only
-		for(var i=0; i<authors.length-1;i++) {
-			str += firstFullLastInitials(authors[i]) + ', ';
-		}
-		str += '& ' + firstFullLastInitials(authors[authors.length-1]) + '. ';
-	}
-	// More than 7 authors
-	else if(authors.length>7) {
-		for(var i=0; i<6;i++) {
-			str += firstFullLastInitials(authors[i]) + ', ';
-		}
-		str += '. . . ' + firstFullLastInitials(authors[authors.length-1]);
-	}
-	return str;
-}
-
-// https://owl.english.purdue.edu/owl/resource/560/06/
-var generateAPAArticle = function(ref) {
-	var str = '';
-	str += generateAPAAuthorList(ref.authors) + ' ';
-	str += '(' + ref.year + '). ' + ref.title + '. ' + '<i>' + ref.journal + '</i>, ';
-	str += '<i>' + ref.volume + '</i>';
-	if(ref.pages) str += ', ' + ref.pages + '.';
-	else str += '.';
-	return str;
-}
-
-var generateAPABook = function(ref) {
-	var str = '';
-	str += generateAPAAuthorList(ref.authors) + ' ';
-	str += '(' + ref.year + '). <i>' + ref.title + '</i>. ';
-	str += ref.city + ': ' + ref.publisher + '.';
-	return str;
-}
-
-var generateAPAWebsite = function(ref) {
-  var str = '';
-  str += generateAPAAuthorList(ref.authors) + ' ';
-  if(ref.pubDate) str += '(' + ref.pubDate + '). ';
-  str += ref.title + '. <i>' + ref.siteTitle + '</i>. Retrieved ' + ref.accessDate + ' from ' + ref.url + '.';
-  return str;
-}
-
 var generateChicagoArticle = function(ref) {
-
+	var str = '';
+	return str;
 }
 
 var generateChicagoBook = function(ref) {
-
+	var str = '';
+	return str;
 }
 
 var generateChicagoWebsite = function(ref) {
-	
+	var str = '';
+	return str;	
 }
 
 var generateMLAArticle = function(ref) {
-
+	var str = '';
+	return str;
 }
 
 var generateMLABook = function(ref) {
-
+	var str = '';
+	return str;
 }
 
 var generateMLAWebsite = function(ref) {
-	
+	var str = '';
+	return str;	
 }
 
 var refreshList = function() {
@@ -133,7 +77,7 @@ var refreshList = function() {
 			console.log(data);
 			data.refs.forEach(function(ref) {
 				var html = '<div class="ref" id="' + ref.id + '">'
-							+	'<div class="ref-text green col-xs-9">' + ref.title + '</div>'
+							+	'<div class="ref-text green col-xs-9">' + generateReference(ref) + '</div>'
 							+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 							+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
 						+ '</div>';

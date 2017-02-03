@@ -12,8 +12,10 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common', {stream: logger.stream}));
 
-const refRouter = require('./routes/router');
+const refRouter = require('./routes/refs');
+const apaRouter = require('./routes/apa');
 app.use('/refs', refRouter);
+app.use('/refs/apa', apaRouter);
 
 app.use((err, req, res, next) => {
   logger.error(err);
