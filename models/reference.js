@@ -21,7 +21,7 @@ const refSchema = mongoose.Schema( {
             }],
     year: Number,
     volume: Number,
-    issue: Number,
+    issue: String,
     pages: String,
     url: String,
     // For Books

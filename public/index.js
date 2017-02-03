@@ -2,12 +2,16 @@ $(function() {
 	$('#newArticle').on('click', function() {
 		$.get('./addArticle.html', function(html) {
 			$('.modal-form').html(html);
+			var today = new Date();
+			$('#year').attr('max', today.getFullYear());
 		});
 	});
 
 	$('#newBook').on('click', function() {
 		$.get('./addBook.html', function(html) {
 			$('.modal-form').html(html);
+			var today = new Date();
+			$('#year').attr('max', today.getFullYear());
 		});
 	});
 
@@ -22,9 +26,12 @@ $(function() {
 		var fields = $('.modal-form :input').serializeArray();
 		var post = {};
 		fields.forEach(function(field) {
-			// TODO handle special cases:
-			// authors in particular
-			post[field.name] = field.value;
+			switch(field.name) {
+
+				default: {
+					post[field.name] = field.value;
+				}
+			}
 		});
 
 		$.ajax({
