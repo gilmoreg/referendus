@@ -12,23 +12,6 @@ const res400Err = (msg, res) => {
     return res.status(400).send(msg);
 }
 
-/*
-router.get('/', (req, res) => {
-	logger.log('info',`GET ${req}`);
-	 
- 	References
-		.find()
-		.exec() 
-		.then( (refs) => {
-			res.json({refs: refs.map((ref)=>{return ref.json();})});
-		})
-		.catch( err => {
-			logger.log('error',err);
-			res.status(500).json({message:'Internal server error'});
-		})
-});
-*/
-
 router.post('/', jsonParser, (req, res) => {
 	logger.log('info',`POST ${req.body}`);
 	// validate
