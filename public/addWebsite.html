@@ -1,13 +1,10 @@
 <form>
     <div class="form-group">
-        <label for="doi">DOI</label>
-        <div class="form-group">
-            <input class="form-control" type="search" id="doi" placeholder="Sorry, search is disabled">
-            <button type="submit" class="btn btn-secondary doi-search"><i class="fa fa-search" aria-hidden="true" title = "search"></i></button>
-        </div>   
+        <label for="url">* URL</label>
+        <input class="form-control" type="text" id="url" placeholder="https://">
     </div>
     <div class="form-group">
-        <label for="authors">* Author(s)</label>
+        <label for="authors">Author(s)</label>
         <input class="form-control" type="text" id="authors" placeholder="Last, First, Middle" required>
         <small id="add-author" class="form-text text-muted">Add an author</small>
     </div>
@@ -16,24 +13,16 @@
         <input class="form-control" type="text" id="title" required>
     </div>
     <div class="form-group">
-        <label for="journal">* Journal</label>
-        <input class="form-control" type="text" id="journal" required>
+        <label for="site-title">* Site Title</label>
+        <input class="form-control" type="text" id="site-title" required>
     </div>
     <div class="form-group">
-        <label for="volume">* Volume</label>
-        <input class="form-control" type="text" id="volume" required>
+        <label for="access-date">* Access Date</label>
+        <input class="form-control" type="text" id="access-date" required>
     </div>
     <div class="form-group">
-        <label for="issue">* Issue</label>
-        <input class="form-control" type="text" id="issue" required>
-    </div>
-    <div class="form-group">
-        <label for="year">* Year</label>
-        <input class="form-control" type="text" id="year" required>
-    </div>
-    <div class="form-group">
-        <label for="pages">Pages</label>
-        <input class="form-control" type="text" id="pages">
+        <label for="pub-date">Published Date</label>
+        <input class="form-control" type="text" id="pub-date" required>
     </div>
     <div class="form-group">
         <label for="tags">Tags</label>
@@ -42,5 +31,8 @@
     <div class="form-group">
         <label for="notes">Notes</label>
         <textarea class="form-control" type="text" id="notes" rows="3"></textarea>
+    </div>
+    <div class="form-group submit-row">
+        <button type="submit" class="btn btn-warning new-button" id="submitNew">Add</button>
     </div>
 </form>

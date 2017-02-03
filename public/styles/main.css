@@ -98,6 +98,11 @@ footer p {
     text-align: right;
 }
 
+.submit-row {
+    text-align: center;
+    margin-top: 10px;
+}
+
 /* Utility */
 .hidden {
     display: none;

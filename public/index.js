@@ -132,4 +132,16 @@ $(function() {
 			$('.modal-form').html(html);
 		});
 	});
+
+	$('#newBook').on('click', function() {
+		$.get('./addBook.html', function(html) {
+			$('.modal-form').html(html);
+		});
+	});
+
+	$('#newWebsite').on('click', function() {
+		$.get('./addWebsite.html', function(html) {
+			$('.modal-form').html(html);
+		});
+	});
 })
