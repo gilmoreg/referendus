@@ -15,11 +15,12 @@ const res400Err = (msg, res) => {
 // http://www.press.uchicago.edu/books/turabian/turabian_citationguide.html
 const lastFirst = author => {
     let str = `${author.lastName}, ${author.firstName}`;
-    if(author.middleName) str += `${author.middleName.charAt(0)}`;
+    if(author.middleName) str += `${author.middleName.charAt(0)}`;   
     return str;
 }
 
 const firstLast = author => {
+    console.log('firstLast',author);
     let str = author.firstName;
     if(author.middleName) str += `${author.middleName.charAt(0)}.`;
     str += ` ${author.lastName}`;
@@ -29,33 +30,35 @@ const firstLast = author => {
 const authorList = authors => {
     if(authors.length<1) return '';
     if(authors.length===1) {
-        return `${lastFirst(authors[0])}.`;
+        return `${lastFirst(authors[0].author)}.`;
     }
     else {
         // Format: Last, First M., and First M. Last.
-        let str = lastFirst(authors[0]);
+        let str = lastFirst(authors[0].author);
         // Last author has to be preceded by 'and', so count up to penultimate only
         for(let i=0;i<authors.length-1;i++) {
-            str += `${firstLast(authors[i])}, `;
+            str += `${firstLast(authors[i].author)}, `;
         }
-        str += `and ${firstLast(authors[authors.length])}.`;
+        str += `and ${firstLast(authors[authors.length].author)}.`;
     }
 }
 
 const article = ref => {
 	var str = authorList(ref.authors);
-    str += ` "${ref.title}." <i>${ref.journal}</i> ${ref.volume}, no. ${ref.issue} (${ref.year}): ${ref.pages}.`;
-	return str;
+    str += ` "${ref.title}." <i>${ref.journal}</i> ${ref.volume}, no. ${ref.issue} (${ref.year})`;
+    if(ref.pages) str += `: ${ref.pages}.`;
+    else str += '.';
+	return { id:ref.id, html:str };
 }
 
 const book = ref => {
 	var str = '';
-	return str;
+	return { id:ref.id, html:str };
 }
 
 const website = ref => {
 	var str = '';
-	return str;	
+	return { id:ref.id, html:str };
 }
 
 const generateReference = ref => {
