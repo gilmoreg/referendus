@@ -1,4 +1,4 @@
-var format = 'APA';
+var format = 'apa';
 
 var formError = function(msg) {
 	console.log(msg);
@@ -70,14 +70,14 @@ var generateMLAWebsite = function(ref) {
 var refreshList = function() {
 	$('.ref-container').empty();
 	$.ajax({
-		url: 'refs/',
+		url: 'refs/' + format,
 		type: 'GET',
 		contentType: 'application/json',
 		success: function(data) {
-			console.log(data);
+			console.log('GET data',data);
 			data.refs.forEach(function(ref) {
 				var html = '<div class="ref" id="' + ref.id + '">'
-							+	'<div class="ref-text green col-xs-9">' + generateReference(ref) + '</div>'
+							+	'<div class="ref-text green col-xs-9">' + ref + '</div>'
 							+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 							+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
 						+ '</div>';
@@ -112,19 +112,19 @@ $(function() {
 	});
 
 	$('#APA').on('click', function() {
-		format = 'APA';
+		format = 'apa';
 		$("#formatModal").modal('toggle');
 		refreshList();
 	});
 
 	$('#Chicago').on('click', function() {
-		format = 'Chicago';
+		format = 'chicago';
 		$("#formatModal").modal('toggle');
 		refreshList();
 	});
 
 	$('#MLA').on('click', function() {
-		format = 'MLA';
+		format = 'mla';
 		$("#formatModal").modal('toggle');
 		refreshList();
 	});
@@ -169,7 +169,7 @@ $(function() {
 		});
 
 		$.ajax({
-			url: 'refs/',
+			url: 'refs/' + format,
 			type: 'POST',
 			contentType: 'application/json',
 			dataType: 'json',

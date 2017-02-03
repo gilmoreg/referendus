@@ -12,6 +12,7 @@ const res400Err = (msg, res) => {
     return res.status(400).send(msg);
 }
 
+/*
 router.get('/', (req, res) => {
 	logger.log('info',`GET ${req}`);
 	 
@@ -26,6 +27,7 @@ router.get('/', (req, res) => {
 			res.status(500).json({message:'Internal server error'});
 		})
 });
+*/
 
 router.post('/', jsonParser, (req, res) => {
 	logger.log('info',`POST ${req.body}`);
