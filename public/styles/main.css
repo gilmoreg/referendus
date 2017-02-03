@@ -112,6 +112,11 @@ label {
     margin-top: 10px;
 }
 
+.modal-message {
+    font-size: 9px;
+    color: red;
+}
+
 /* Utility */
 .hidden {
     display: none;

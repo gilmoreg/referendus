@@ -1,3 +1,8 @@
+var formError = function(msg) {
+	console.log(msg);
+	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
+}
+
 $(function() {
 	$('#newArticle').on('click', function() {
 		$.get('./addArticle.html', function(html) {
@@ -31,8 +36,9 @@ $(function() {
 					if(!('authors' in Object.keys(post))) post['authors'] = [];
 					var nameField = field.value.split(',');
 					if(nameField.length<2) {
-						// TODO error
-						return;
+						formError('<p>Author name must include last and first name separated by commas</p>');
+						$('#authors').focus();
+						return false;
 					}
 					var name = {
 						'firstName': nameField[1].trim(),
@@ -67,10 +73,9 @@ $(function() {
 			proessData: 'false',
 			data: JSON.stringify(post),
 			success: function(data) {
+				$("#newModal").modal('toggle');
 				console.log('POST response: ', data);
 			}
 		});
-		// TODO: only if submit was successful
-		$("#newModal").modal('toggle');
 	});
 })
