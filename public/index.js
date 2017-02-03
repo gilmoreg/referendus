@@ -19,8 +19,12 @@ $(function() {
 
 	$('.modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
-		var data = $('.modal-form :input').serializeArray();
-		
+		var fields = $('.modal-form :input').serializeArray();
+		console.log(fields);
+		$.post('refs/', fields, function(data) {
+			console.log('POST response: ', data);
+		});
+		// TODO: only if submit was successful
 		$("#newModal").modal('toggle');
 	});
 })

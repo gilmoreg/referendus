@@ -1,4 +1,5 @@
-<form action="refs/" method="post">
+<form>
+    <input type="hidden" name="type" value="Article">
     <div class="form-group">
         <label for="doi">DOI</label>
         <div class="form-group">
@@ -8,28 +9,28 @@
     </div>
     <div class="form-group">
         <label for="authors">* Author(s)</label>
-        <input class="form-control" type="text" id="authors" name="authors" placeholder="Last, First, Middle" >
+        <input class="form-control" type="text" id="authors" name="authors" placeholder="Last, First, Middle" required>
         <small id="add-author" class="form-text text-muted">Add an author</small>
     </div>
     <div class="form-group">
         <label for="title">* Title</label>
-        <input class="form-control" type="text" id="title" name="title">
+        <input class="form-control" type="text" id="title" name="title" required>
     </div>
     <div class="form-group">
         <label for="journal">* Journal</label>
-        <input class="form-control" type="text" id="journal" name="journal">
+        <input class="form-control" type="text" id="journal" name="journal" required>
     </div>
     <div class="form-group">
         <label for="volume">* Volume</label>
-        <input class="form-control" type="text" id="volume" name="volume">
+        <input class="form-control" type="text" id="volume" name="volume" required>
     </div>
     <div class="form-group">
         <label for="issue">* Issue</label>
-        <input class="form-control" type="text" id="issue" name="issue">
+        <input class="form-control" type="text" id="issue" name="issue" required>
     </div>
     <div class="form-group">
         <label for="year">* Year</label>
-        <input class="form-control" type="text" id="year" name="year">
+        <input class="form-control" type="text" id="year" name="year" required>
     </div>
     <div class="form-group">
         <label for="pages">Pages</label>

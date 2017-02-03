@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', jsonParser, (req, res) => {
-	logger.log('info',`POST`);
+	logger.log('info',`POST ${req.body}`);
 	// validate
 	let requiredFields;
     if(!req.body.type) {
