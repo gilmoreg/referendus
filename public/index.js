@@ -126,5 +126,10 @@ String.prototype.trunc = String.prototype.trunc ||
       };
 
 $(function() {
-    getAndDisplayReferences();
+    //getAndDisplayReferences();
+	$('#newArticle').on('click', function() {
+		$.get('./addArticle.html', function(html) {
+			$('.modal-form').html(html);
+		});
+	});
 })
