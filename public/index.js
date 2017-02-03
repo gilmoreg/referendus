@@ -125,23 +125,37 @@ String.prototype.trunc = String.prototype.trunc ||
           return (this.length > n) ? this.substr(0,n-1)+'&hellip;' : this;
       };
 
+var addSubmitListener = function() {
+	$('#submitNew').off('submit');
+	$('#submitNew').on('submit', function(e) {
+		e.preventDefault();
+		var data = $('#submitNew :input').serializeArray();
+        console.log(data); //use the console for debugging, F12 in Chrome, not alerts
+	});
+}
+
 $(function() {
     //getAndDisplayReferences();
 	$('#newArticle').on('click', function() {
 		$.get('./addArticle.html', function(html) {
 			$('.modal-form').html(html);
+			addSubmitListener();
 		});
 	});
 
 	$('#newBook').on('click', function() {
 		$.get('./addBook.html', function(html) {
 			$('.modal-form').html(html);
+			addSubmitListener();
 		});
 	});
 
 	$('#newWebsite').on('click', function() {
 		$.get('./addWebsite.html', function(html) {
 			$('.modal-form').html(html);
+			addSubmitListener();
 		});
 	});
+
+	
 })
