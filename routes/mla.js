@@ -12,4 +12,19 @@ const res400Err = (msg, res) => {
     return res.status(400).send(msg);
 }
 
+const generateMLAArticle = ref => {
+	var str = '';
+	return str;
+}
+
+const generateMLABook = ref => {
+	var str = '';
+	return str;
+}
+
+const generateMLAWebsite = ref => {
+	var str = '';
+	return str;	
+}
+
 module.exports = router;

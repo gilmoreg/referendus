@@ -13,7 +13,22 @@ const res400Err = (msg, res) => {
 }
 
 const cName = (author) => {
-    
+
+}
+
+const generateChicagoArticle = ref => {
+	var str = '';
+	return str;
+}
+
+const generateChicagoBook = ref => {
+	var str = '';
+	return str;
+}
+
+const generateChicagoWebsite = ref => {
+	var str = '';
+	return str;	
 }
 
 module.exports = router;
