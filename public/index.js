@@ -27,7 +27,26 @@ $(function() {
 		var post = {};
 		fields.forEach(function(field) {
 			switch(field.name) {
+				case 'author': {
+					if(!('authors' in Object.keys(post))) post['authors'] = [];
+					var nameField = field.value.split(',');
+					if(nameField.length<2) {
+						// TODO error
+						return;
+					}
+					var name = {
+						'firstName': nameField[1].trim(),
+						'lastName': nameField[0].trim()
+					}
+					if(nameField.length>=3) name['middleName'] = nameField[2].trim();
 
+					post['authors'].push({'author': name });
+					break;
+				}
+				case 'tags': {
+
+					break;
+				}
 				default: {
 					post[field.name] = field.value;
 				}
