@@ -83,7 +83,13 @@ $(function() {
 					for(var field in data) {
 						if(data.hasOwnProperty(field)) {
 							if(field==='authors') {
-								// TODO this will be tough
+								// TODO with multiple authors this will be more complicated
+								// because the markup doesn't support it yet
+								if(data[field].length>0) {
+									var author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
+									if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
+									$('#' + field).attr("value", author);
+								}
 							}
 							else if(field==='tags') {
 								var tags = data[field].map(function(t) { return t.tag; });
