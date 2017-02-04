@@ -81,6 +81,7 @@ router.put('/:id', jsonParser, (req, res) => {
 	
 	const toUpdate = {};
 	const updateableFields = [
+		// TODO discriminators would change how this works
 		'type','title','tag','identifier','notes','authors','year','volume',
 		'issue','pages','url','city','publisher','edition','siteTitle',
 		'accessDate','pubDate'

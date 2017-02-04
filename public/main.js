@@ -143,8 +143,8 @@ $(function() {
 				// TODO make this markup consistent with ids vs classes
 				$('#edit-modal-body').on('submit', 'form', function(e) {
 					e.preventDefault();
-					console.log('PUT');
-					var post = buildJSON($('.modal-form :input').serializeArray());
+					var post = buildJSON($('#edit-modal-body :input').serializeArray());
+					post.id = id;
 					$.ajax({
 						url: 'refs/' + id,
 						type: 'PUT',
