@@ -83,7 +83,7 @@ const generateReference = ref => {
 }
 
 router.get('/', (req, res) => {
-	logger.log('info',`GET ${req}`);
+	logger.log('info',`GET /refs/apa ${req}`);
 	 
  	References
 		.find()

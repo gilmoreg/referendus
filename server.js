@@ -13,7 +13,8 @@ app.use(express.static('public'));
 app.use(morgan('common', {stream: logger.stream}));
 
 // Router
-app.use(require('./routes'));
+const {router} = require('./routes');
+app.use(router);
 
 app.use((err, req, res, next) => {
   logger.error(err);
