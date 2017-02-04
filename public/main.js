@@ -74,7 +74,6 @@ $(function() {
 			type: 'GET',
 			contentType: 'application/json',
 			success: function(data) {
-				//$("#newModal").modal('toggle');
 				$.get('./views/' + data.type.toLowerCase() + '.html', function(html) {
 					$('#editModal').modal('show');
 					$('#edit-modal-body').html(html);
@@ -151,7 +150,6 @@ $(function() {
 			type: 'POST',
 			contentType: 'application/json',
 			dataType: 'json',
-			//proessData: 'false',
 			data: JSON.stringify(post),
 			success: function(data) {
 				$("#newModal").modal('toggle');
