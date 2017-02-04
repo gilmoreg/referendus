@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const morgan = require('morgan');
 const {logger} = require('../logger');
+const moment = require('moment');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
 
 const res400Err = (msg, res) => {
@@ -68,8 +69,12 @@ const book = ref => {
 const website = ref => {
     let str = '';
     str += `${authorList(ref.authors)} `;
-    if(ref.pubDate) str += `(${ref.pubDate}). `;
-    str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${ref.accessDate} from ${ref.url}.`;
+    if(ref.pubDate) {
+        const pubDate = moment(ref.pubDate).format('YYYY MMMM D');
+        str += `(${pubDate}). `;
+    }
+    const accessDate = moment(ref.accessDate).format('YYYY MMMM D');
+    str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${accessDate} from ${ref.url}.`;
     return { id:ref.id, html:str };
 }
 
