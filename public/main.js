@@ -83,14 +83,15 @@ $(function() {
 					for(var field in data) {
 						if(data.hasOwnProperty(field)) {
 							if(field==='authors') {
-
+								// TODO this will be tough
+							}
+							else if(field==='tags') {
+								var tags = data[field].map(function(t) { return t.tag; });
+								$('#' + field).attr("value", tags.join(", "));
 							}
 							else {
-								if($('#' + field)) {
-									$('#' + field).attr(field, data[field]);
-								}
+								$('#' + field).attr("value", data[field]);
 							}
-							console.log(field);
 						}
 					}
 				});
