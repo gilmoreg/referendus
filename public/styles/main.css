@@ -39,7 +39,12 @@
 }
 
 .ref-text {
+    white-space: nowrap; 
     overflow: hidden;
+    text-overflow: ellipsis; 
+    min-width: 150px; 
+    max-width: 1000px; 
+    line-height: 20px;
 }
 
 footer {
