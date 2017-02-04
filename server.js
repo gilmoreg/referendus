@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser');
-var express = require('express');
-var app = express();
+let express = require('express');
+let app = express();
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const morgan = require('morgan');
@@ -12,16 +12,8 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common', {stream: logger.stream}));
 
-// TODO add index
-const refRouter = require('./routes/refs');
-const apaRouter = require('./routes/apa');
-const chicagoRouter = require('./routes/chicago');
-const mlaRouter = require('./routes/mla');
-
-app.use('/refs', refRouter);
-app.use('/refs/apa', apaRouter);
-app.use('/refs/chicago', chicagoRouter);
-//app.use('/refs/mla', mlaRouter);
+// Router
+app.use(require('./routes'));
 
 app.use((err, req, res, next) => {
   logger.error(err);
