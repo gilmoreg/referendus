@@ -1,48 +1,58 @@
 <form>
     <div class="form-group">
         <input type="hidden" name="type" value="Book">
-        <label for="doi">ISBN / ASIN</label>
-        <div class="form-group">
-            <input class="form-control" type="search" id="doi" name="doi" placeholder="Sorry, search is disabled">
-            <button type="submit" class="btn btn-secondary doi-search"><i class="fa fa-search" aria-hidden="true" title = "search"></i></button>
-        </div>   
+        <label>ISBN / ASIN
+            <div class="form-group">
+                <input class="form-control" type="search" id="doi" name="doi" placeholder="Sorry, search is disabled">
+                <button type="submit" class="btn btn-secondary doi-search"><i class="fa fa-search" aria-hidden="true" title = "search"></i></button>
+            </div>
+        </label>
     </div>
     <div class="form-group">
-        <label for="authors">* Author(s)</label>
-        <input class="form-control" type="text" id="authors" name="authors" placeholder="Last, First, Middle" required>
-        <small id="add-author" class="form-text text-muted">Add an author</small>
+        <label>* Author(s)
+            <input class="form-control" type="text" id="authors" name="authors" placeholder="Last, First, Middle" required>
+            <small id="add-author" class="form-text text-muted">Add an author</small>
+        </label>
     </div>
     <div class="form-group">
-        <label for="title">* Title</label>
-        <input class="form-control" type="text" id="title" name="title" required>
+        <label>* Title
+            <input class="form-control" type="text" id="title" name="title" required>
+        </label>
     </div>
     <div class="form-group">
-        <label for="city">* City</label>
-        <input class="form-control" type="text" id="city" name="city" required>
+        <label>* City
+            <input class="form-control" type="text" id="city" name="city" required>
+        </label>
     </div>
     <div class="form-group">
-        <label for="publisher">* Publisher</label>
-        <input class="form-control" type="text" id="publisher" name="publisher" required>
+        <label>* Publisher
+            <input class="form-control" type="text" id="publisher" name="publisher" required>
+        </label>
     </div>
     <div class="form-group">
-        <label for="year">* Year</label>
-        <input class="form-control" type="text" id="year" name="year" required>
+        <label>* Year
+            <input class="form-control" type="text" id="year" name="year" required>
+        </label>
     </div>
     <div class="form-group">
-        <label for="edition">Edition</label>
-        <input class="form-control" type="text" id="edition" name="edition">
+        <label>Edition
+            <input class="form-control" type="text" id="edition" name="edition">
+        </label>
     </div>
     <div class="form-group">
-        <label for="url">URL</label>
-        <input class="form-control" type="text" id="url" name="url">
+        <label>URL
+            <input class="form-control" type="text" id="url" name="url">
+        </label>
     </div>
     <div class="form-group">
-        <label for="tags">Tags</label>
-        <input class="form-control" type="text" id="tags" name="tags" placeholder="Separate by commas">
+        <label>Tags
+            <input class="form-control" type="text" id="tags" name="tags" placeholder="Separate by commas">
+        </label>
     </div>
     <div class="form-group">
-        <label for="notes">Notes</label>
-        <textarea class="form-control" type="text" id="notes" name="notes" rows="3"></textarea>
+        <label>Notes
+            <textarea class="form-control" type="text" id="notes" name="notes" rows="3"></textarea>
+        </label>
     </div>
     <div class="form-group submit-row">
         <button type="submit" class="btn btn-warning new-button" name="submitNew">Add</button>
