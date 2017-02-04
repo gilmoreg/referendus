@@ -50,8 +50,7 @@ const authorList = authors => {
 }
 
 const article = ref => {
-	let str = '';
-	str += `${authorList(ref.authors)} `;
+	let str = `${authorList(ref.authors)} `;
 	str += `(${ref.year}). ${ref.title}. <i>${ref.journal}</i>, `;
 	str += '<i>' + ref.volume + '</i>';
 	if(ref.pages) str += `, ${ref.pages}.`;
@@ -60,20 +59,18 @@ const article = ref => {
 }
 
 const book = ref => {
-	let str = '';
-	str += `${authorList(ref.authors)} (${ref.year}). <i>${ref.title}</i>. `;
-	str += `${ref.city}: ${ref.publisher}.`;
+	let str = `${authorList(ref.authors)} (${ref.year}). <i>${ref.title}</i>. ${ref.city}: ${ref.publisher}.`;
 	return { id:ref.id, html:str };
 }
 
 const website = ref => {
-    let str = '';
-    str += `${authorList(ref.authors)} `;
+    // TODO If no author, title moves to the front
+    let str = `${authorList(ref.authors)} `;
     if(ref.pubDate) {
-        const pubDate = moment(ref.pubDate).format('YYYY MMMM D');
+        const pubDate = moment(ref.pubDate).format('YYYY, MMMM D');
         str += `(${pubDate}). `;
     }
-    const accessDate = moment(ref.accessDate).format('YYYY MMMM D');
+    const accessDate = moment(ref.accessDate).format('YYYY, MMMM D');
     str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${accessDate} from ${ref.url}.`;
     return { id:ref.id, html:str };
 }
