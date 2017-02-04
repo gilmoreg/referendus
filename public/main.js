@@ -5,6 +5,46 @@ var formError = function(msg) {
 	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
 }
 
+var buildJSON = function(fields) {
+	var post = {};
+	for(var i=0; i<fields.length;i++) {
+		switch(fields[i].name) {
+			case 'authors': {
+				if(fields[i].value==='') break;
+				if(!('authors' in Object.keys(post))) post['authors'] = [];
+				var nameField = fields[i].value.split(',');
+				if(nameField.length<2) {
+					formError('<p>Author name must include last and first name separated by commas</p>');
+					$('#authors').focus();
+					return;
+				}
+				var name = {
+					'firstName': nameField[1].trim(),
+					'lastName': nameField[0].trim()
+				}
+				if(nameField.length>=3) name['middleName'] = nameField[2].trim();
+				post['authors'].push({'author': name });
+				break;
+			}
+			case 'tags': {
+				var tags = fields[i].value.split(',');
+				if(tags.length<1) break;
+				if(!('tags' in Object.keys(post))) post['tags'] = [];
+				var tagList = [];
+				tags.forEach(function(tag) {
+					tagList.push( { 'tag':tag.trim() } );
+				});
+				post['tags'] = tagList;
+				break;
+			}
+			default: {
+				post[fields[i].name] = fields[i].value;
+			}
+		}
+	};
+	return post;
+}
+
 var refreshList = function() {
 	$('.ref-container').empty();
 	$.ajax({
@@ -20,7 +60,6 @@ var refreshList = function() {
 						+ '</div>';
 				$('.ref-container').append(html);
 			});
-			
 		}
 	});
 }
@@ -77,6 +116,7 @@ $(function() {
 				$.get('./views/' + data.type.toLowerCase() + '.html', function(html) {
 					$('#editModal').modal('show');
 					$('#edit-modal-body').html(html);
+					$('.submit button').html('Update');
 					var today = new Date();
 					$('#year').attr('max', today.getFullYear());
 					for(var field in data) {
@@ -100,51 +140,31 @@ $(function() {
 						}
 					}
 				});
-				refreshList();
+				// TODO make this markup consistent with ids vs classes
+				$('#edit-modal-body').on('submit', 'form', function(e) {
+					e.preventDefault();
+					console.log('PUT');
+					var post = buildJSON($('.modal-form :input').serializeArray());
+					$.ajax({
+						url: 'refs/' + id,
+						type: 'PUT',
+						contentType: 'application/json',
+						dataType: 'json',
+						data: JSON.stringify(post),
+						success: function(data) {
+							$("#editModal").modal('toggle');
+							refreshList();
+							console.log('PUT response: ', data);
+						}
+					});
+				});
 			}
 		});
 	});
 
-	$('.modal-form').on('submit', 'form', function(e) {
+	$('#newModal .modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
-		var fields = $('.modal-form :input').serializeArray();
-		var post = {};
-		for(var i=0; i<fields.length;i++) {
-			switch(fields[i].name) {
-				case 'authors': {
-					if(fields[i].value==='') break;
-					if(!('authors' in Object.keys(post))) post['authors'] = [];
-					var nameField = fields[i].value.split(',');
-					if(nameField.length<2) {
-						formError('<p>Author name must include last and first name separated by commas</p>');
-						$('#authors').focus();
-						return;
-					}
-					var name = {
-						'firstName': nameField[1].trim(),
-						'lastName': nameField[0].trim()
-					}
-					if(nameField.length>=3) name['middleName'] = nameField[2].trim();
-					post['authors'].push({'author': name });
-					break;
-				}
-				case 'tags': {
-					var tags = fields[i].value.split(',');
-					if(tags.length<1) break;
-					if(!('tags' in Object.keys(post))) post['tags'] = [];
-					var tagList = [];
-					tags.forEach(function(tag) {
-						tagList.push( { 'tag':tag.trim() } );
-					});
-					post['tags'] = tagList;
-					break;
-				}
-				default: {
-					post[fields[i].name] = fields[i].value;
-				}
-			}
-		};
-
+		var post = buildJSON($('.modal-form :input').serializeArray());
 		$.ajax({
 			url: 'refs/',
 			type: 'POST',
