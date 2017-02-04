@@ -27,7 +27,7 @@ var refreshList = function() {
 
 $(function() {
 	$('#newArticle').on('click', function() {
-		$.get('./addArticle.html', function(html) {
+		$.get('./views/addArticle.html', function(html) {
 			$('.modal-form').html(html);
 			var today = new Date();
 			$('#year').attr('max', today.getFullYear());
@@ -35,7 +35,7 @@ $(function() {
 	});
 
 	$('#newBook').on('click', function() {
-		$.get('./addBook.html', function(html) {
+		$.get('./views/addBook.html', function(html) {
 			$('.modal-form').html(html);
 			var today = new Date();
 			$('#year').attr('max', today.getFullYear());
@@ -43,7 +43,7 @@ $(function() {
 	});
 
 	$('#newWebsite').on('click', function() {
-		$.get('./addWebsite.html', function(html) {
+		$.get('./views/addWebsite.html', function(html) {
 			$('.modal-form').html(html);
 		});
 	});
