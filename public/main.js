@@ -153,6 +153,7 @@ $(function() {
 						data: JSON.stringify(post),
 						success: function(data) {
 							$("#editModal").modal('toggle');
+							$('#edit-modal-body').off('submit');
 							refreshList();
 							console.log('PUT response: ', data);
 						}
@@ -173,6 +174,7 @@ $(function() {
 			data: JSON.stringify(post),
 			success: function(data) {
 				$("#newModal").modal('toggle');
+				$('#newModal .modal-form').off('submit');
 				refreshList();
 				console.log('POST response: ', data);
 			}
