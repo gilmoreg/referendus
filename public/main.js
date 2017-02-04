@@ -70,18 +70,16 @@ $(function() {
 		e.preventDefault();
 		var fields = $('.modal-form :input').serializeArray();
 		var post = {};
-		fields.forEach(function(field) {
-			switch(field.name) {
+		for(var i=0; i<fields.length;i++) {
+			switch(fields[i].name) {
 				case 'authors': {
-					if(field.value==='') break;
+					if(fields[i].value==='') break;
 					if(!('authors' in Object.keys(post))) post['authors'] = [];
-					var nameField = field.value.split(',');
+					var nameField = fields[i].value.split(',');
 					if(nameField.length<2) {
 						formError('<p>Author name must include last and first name separated by commas</p>');
 						$('#authors').focus();
-						// TODO: the form is still submitting!
-						return false;
-						break;
+						return;
 					}
 					var name = {
 						'firstName': nameField[1].trim(),
@@ -92,7 +90,7 @@ $(function() {
 					break;
 				}
 				case 'tags': {
-					var tags = field.value.split(',');
+					var tags = fields[i].value.split(',');
 					if(tags.length<1) break;
 					if(!('tags' in Object.keys(post))) post['tags'] = [];
 					var tagList = [];
@@ -103,10 +101,10 @@ $(function() {
 					break;
 				}
 				default: {
-					post[field.name] = field.value;
+					post[fields[i].name] = fields[i].value;
 				}
 			}
-		});
+		};
 
 		$.ajax({
 			url: 'refs/',
