@@ -12,7 +12,6 @@ var refreshList = function() {
 		type: 'GET',
 		contentType: 'application/json',
 		success: function(data) {
-			console.log('GET data',data);
 			data.refs.forEach(function(ref) {
 				var html = '<div class="ref" id="' + ref.id + '">'
 							+	'<div class="ref-text green col-xs-9">' + ref.html + '</div>'
@@ -74,6 +73,7 @@ $(function() {
 		fields.forEach(function(field) {
 			switch(field.name) {
 				case 'authors': {
+					if(field.value==='') break;
 					if(!('authors' in Object.keys(post))) post['authors'] = [];
 					var nameField = field.value.split(',');
 					if(nameField.length<2) {
@@ -81,6 +81,7 @@ $(function() {
 						$('#authors').focus();
 						// TODO: the form is still submitting!
 						return false;
+						break;
 					}
 					var name = {
 						'firstName': nameField[1].trim(),

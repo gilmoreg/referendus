@@ -52,12 +52,16 @@ const article = ref => {
 }
 
 const book = ref => {
-	var str = '';
+	var str = authorList(ref.authors);
+    str += `, <i>${ref.title}</i> (${ref.city}: ${ref.publisher}, ${ref.year})`;
+    if(ref.pages) str += `, ${ref.pages}`;
+    str += '.';
 	return { id:ref.id, html:str };
 }
 
 const website = ref => {
-	var str = '';
+	var str = authorList(ref.authors);
+    str += `. "${ref.title}." ${ref.siteTitle}. Last modified ${ref.pubDate}. Accessed ${ref.accessDate}. ${ref.url}.`;
 	return { id:ref.id, html:str };
 }
 

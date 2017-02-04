@@ -65,7 +65,7 @@ const book = ref => {
 	return { id:ref.id, html:str };
 }
 
-const wesbite = ref => {
+const website = ref => {
     let str = '';
     str += `${authorList(ref.authors)} `;
     if(ref.pubDate) str += `(${ref.pubDate}). `;
