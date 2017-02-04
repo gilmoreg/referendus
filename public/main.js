@@ -76,10 +76,23 @@ $(function() {
 			success: function(data) {
 				//$("#newModal").modal('toggle');
 				$.get('./views/' + data.type.toLowerCase() + '.html', function(html) {
-					$('.modal-form').html(html);
+					$('#editModal').modal('show');
+					$('#edit-modal-body').html(html);
 					var today = new Date();
 					$('#year').attr('max', today.getFullYear());
-					//
+					for(var field in data) {
+						if(data.hasOwnProperty(field)) {
+							if(field==='authors') {
+
+							}
+							else {
+								if($('#' + field)) {
+									$('#' + field).attr(field, data[field]);
+								}
+							}
+							console.log(field);
+						}
+					}
 				});
 				refreshList();
 			}
