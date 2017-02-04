@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common', {stream: logger.stream}));
 
+// TODO add index
 const refRouter = require('./routes/refs');
 const apaRouter = require('./routes/apa');
 const chicagoRouter = require('./routes/chicago');
