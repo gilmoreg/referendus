@@ -40,13 +40,13 @@ const article = ref => {
 	str += ` "${ref.title}." <i>${ref.journal}</i>, ${ref.volume}, ${ref.issue}, ${ref.year}`;
 	if(ref.pages) str += `. ${ref.pages}`;
 	str += '.';
-	return str;
+	return { id:ref.id, html:str };
 }
 
 const book = ref => {
 	var str = authorList(ref.authors);
 	str += ` <i>${ref.title}</i>. ${ref.publisher}, ${ref.year}.`;
-	return str;
+	return { id:ref.id, html:str };
 }
 
 const website = ref => {
@@ -66,7 +66,7 @@ const website = ref => {
 		const accessDate = moment(ref.accessDate).format('DD MMM. YYYY');
 		str += ` Accessed ${accessDate}.`;
 	}
-	return str;
+	return { id:ref.id, html:str };
 }
 
 const generateReference = ref => {
