@@ -19,7 +19,6 @@ const lastFirst = author => {
 }
 
 const firstLast = author => {
-    console.log('firstLast',author);
     let str = author.firstName;
     if(author.middleName) str += `${author.middleName.charAt(0)}.`;
     str += ` ${author.lastName}`;

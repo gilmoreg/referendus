@@ -3,7 +3,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-const morgan = require('morgan');
 const {logger} = require('../logger');
 const moment = require('moment');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
