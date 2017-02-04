@@ -27,7 +27,7 @@ var refreshList = function() {
 
 $(function() {
 	$('#newArticle').on('click', function() {
-		$.get('./views/addArticle.html', function(html) {
+		$.get('./views/article.html', function(html) {
 			$('.modal-form').html(html);
 			var today = new Date();
 			$('#year').attr('max', today.getFullYear());
@@ -35,7 +35,7 @@ $(function() {
 	});
 
 	$('#newBook').on('click', function() {
-		$.get('./views/addBook.html', function(html) {
+		$.get('./views/book.html', function(html) {
 			$('.modal-form').html(html);
 			var today = new Date();
 			$('#year').attr('max', today.getFullYear());
@@ -43,7 +43,7 @@ $(function() {
 	});
 
 	$('#newWebsite').on('click', function() {
-		$.get('./views/addWebsite.html', function(html) {
+		$.get('./views/website.html', function(html) {
 			$('.modal-form').html(html);
 		});
 	});
@@ -64,6 +64,12 @@ $(function() {
 		format = 'mla';
 		$("#formatModal").modal('toggle');
 		refreshList();
+	});
+
+	$('.ref-container').on('click','.ref-edit', function(e) {
+		e.preventDefault();
+		var id = $(event.target).closest('.ref').attr('id');
+		console.log(id);
 	});
 
 	$('.modal-form').on('submit', 'form', function(e) {
