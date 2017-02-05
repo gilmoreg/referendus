@@ -64,6 +64,79 @@ var refreshList = function() {
 	});
 }
 
+var editModalClick = function(id) {
+	$('.modal-form').on('submit', 'form', function(e) {
+		e.preventDefault();
+		var post = buildJSON($('.modal-form :input').serializeArray());
+		post.id = id;
+		$.ajax({
+			url: 'refs/' + id,
+			type: 'PUT',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(post),
+			success: function(data) {
+				$("#refModal").modal('toggle');
+				$('.modal-form').off('submit');
+				refreshList();
+			}
+			// TODO error
+		});
+	});
+}
+
+var editModal = function(id) {
+	$.ajax({
+		url: 'ref/' + id,
+		type: 'GET',
+		contentType: 'application/json',
+		success: function(data) {
+			$.get('./views/' + data.type.toLowerCase() + '.html', function(partial) {
+				$('#refModal').modal('show');
+				$('.modal-form').html(partial);
+				$('.submit button').html('Update');
+				$('.new-button-row').hide();
+				var today = new Date();
+				$('#year').attr('max', today.getFullYear());
+				for(var field in data) {
+					switch(field) {
+						case 'authors': {
+							console.log('authors',data[field]);
+							if(data[field].length>0) {
+								var author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
+								if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
+								$('#' + field).attr("value", author);
+							}
+							break;
+						}
+						case 'tags': {
+							var tags = data[field].map(function(t) { return t.tag; });
+							$('#' + field).attr("value", tags.join(", "));
+							break;
+						}
+						case 'accessDate': {
+							console.log('accessDate',data[field]);
+							document.getElementById(field).valueAsDate = new Date(data[field]);
+							break;
+						}
+						case 'pubDate': {
+							console.log('pubDate',data[field]);
+							document.getElementById(field).valueAsDate = new Date(data[field]);
+							break;
+						}
+						default: {
+							console.log('default',data[field]);
+							$('#' + field).attr("value", data[field]);
+						}
+					}
+				}
+			});
+			// TODO make this markup consistent with ids vs classes
+			editModalClick(id);
+		}
+	});
+}
+
 $(function() {
 	$('#newArticle').on('click', function() {
 		$.get('./views/article.html', function(html) {
@@ -105,89 +178,18 @@ $(function() {
 		refreshList();
 	});
 
-// TODO make the markup consistent
-	$('#newModal').on('hide.bs.modal', function () {
-		$('#newModal .modal-form').off('submit');
+	$('#refModal').on('hide.bs.modal', function () {
+		$('#refModal .modal-form').off('submit');
 		$('.modal-form').empty();
-	});
-
-	$('#editModal').on('hide.bs.modal', function () {
-		$('#edit-modal-body').off('submit');
-		$('#edit-modal-body').empty();
 	});
 
 	$('.ref-container').on('click','.ref-edit', function(e) {
 		e.preventDefault();
-		//$('#edit-modal-body').empty();
 		var id = $(event.target).closest('.ref').attr('data-id');
-		$.ajax({
-			url: 'ref/' + id,
-			type: 'GET',
-			contentType: 'application/json',
-			success: function(data) {
-				$.get('./views/' + data.type.toLowerCase() + '.html', function(html) {
-					$('#editModal').modal('show');
-					$('#edit-modal-body').html(html);
-					$('.submit button').html('Update');
-					var today = new Date();
-					$('#year').attr('max', today.getFullYear());
-					for(var field in data) {
-						switch(field) {
-							case 'authors': {
-								console.log('authors',data[field]);
-								if(data[field].length>0) {
-									var author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
-									if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
-									$('#' + field).attr("value", author);
-								}
-								break;
-							}
-							case 'tags': {
-								var tags = data[field].map(function(t) { return t.tag; });
-								$('#' + field).attr("value", tags.join(", "));
-								break;
-							}
-							case 'accessDate': {
-								console.log('accessDate',data[field]);
-								document.getElementById(field).valueAsDate = new Date(data[field]);
-								break;
-							}
-							case 'pubDate': {
-								console.log('pubDate',data[field]);
-								document.getElementById(field).valueAsDate = new Date(data[field]);
-								break;
-							}
-							default: {
-								console.log('default',data[field]);
-								$('#' + field).attr("value", data[field]);
-							}
-						}
-					}
-				});
-				// TODO make this markup consistent with ids vs classes
-				$('#edit-modal-body').on('submit', 'form', function(e) {
-					e.preventDefault();
-					var post = buildJSON($('#edit-modal-body :input').serializeArray());
-					post.id = id;
-					$.ajax({
-						url: 'refs/' + id,
-						type: 'PUT',
-						contentType: 'application/json',
-						dataType: 'json',
-						data: JSON.stringify(post),
-						success: function(data) {
-							$("#editModal").modal('toggle');
-							$('#edit-modal-body').off('submit');
-							refreshList();
-							console.log('PUT response: ', data);
-						}
-					});
-				});
-			}
-		});
+		editModal(id);
 	});
 
-	$('#newModal .modal-form').on('submit', 'form', function(e) {
+	$('#refModal .modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
 		var post = buildJSON($('.modal-form :input').serializeArray());
 		$.ajax({
@@ -197,10 +199,11 @@ $(function() {
 			dataType: 'json',
 			data: JSON.stringify(post),
 			success: function(data) {
-				$("#newModal").modal('toggle');
-				$('#newModal .modal-form').off('submit');
+				$("#refModal").modal('toggle');
+				$('.new-button-row').show();
+				$('.submit button').html('Add');
+				$('#refModal .modal-form').off('submit');
 				refreshList();
-				console.log('POST response: ', data);
 			}
 		});
 	});
