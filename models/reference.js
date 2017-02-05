@@ -100,6 +100,7 @@ refSchema.methods.json = function() {
     if(this.tags) jsonObj.tags = this.tags;
     if(this.identifier) jsonObj.identifier = this.identifier;
     if(this.notes) jsonObj.notes = this.notes;
+    if(this.journal) jsonObj.journal = this.journal;
     if(this.year) jsonObj.year = this.year;
     if(this.volume) jsonObj.volume = this.volume;
     if(this.issue) jsonObj.issue = this.issue;

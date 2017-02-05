@@ -108,14 +108,17 @@ $(function() {
 // TODO make the markup consistent
 	$('#newModal').on('hide.bs.modal', function () {
 		$('#newModal .modal-form').off('submit');
+		$('.modal-form').empty();
 	});
 
 	$('#editModal').on('hide.bs.modal', function () {
 		$('#edit-modal-body').off('submit');
+		$('#edit-modal-body').empty();
 	});
 
 	$('.ref-container').on('click','.ref-edit', function(e) {
 		e.preventDefault();
+		//$('#edit-modal-body').empty();
 		var id = $(event.target).closest('.ref').attr('id');
 		$.ajax({
 			url: 'ref/' + id,
@@ -124,29 +127,38 @@ $(function() {
 			success: function(data) {
 				$.get('./views/' + data.type.toLowerCase() + '.html', function(html) {
 					$('#editModal').modal('show');
-					$('#edit-modal-body').empty().html(html);
+					$('#edit-modal-body').html(html);
 					$('.submit button').html('Update');
 					var today = new Date();
 					$('#year').attr('max', today.getFullYear());
 					for(var field in data) {
-						if(data.hasOwnProperty(field)) {
-							if(field==='authors') {
-								// TODO with multiple authors this will be more complicated
-								// because the markup doesn't support it yet
+						switch(field) {
+							case 'authors': {
+								console.log('authors',data[field]);
 								if(data[field].length>0) {
 									var author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
 									if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
 									$('#' + field).attr("value", author);
 								}
+								break;
 							}
-							else if(field==='tags') {
+							case 'tags': {
 								var tags = data[field].map(function(t) { return t.tag; });
 								$('#' + field).attr("value", tags.join(", "));
+								break;
 							}
-							else if(field==='accessDate' || field==='pubDate') {
+							case 'accessDate': {
+								console.log('accessDate',data[field]);
 								document.getElementById(field).valueAsDate = new Date(data[field]);
+								break;
 							}
-							else {
+							case 'pubDate': {
+								console.log('pubDate',data[field]);
+								document.getElementById(field).valueAsDate = new Date(data[field]);
+								break;
+							}
+							default: {
+								console.log('default',data[field]);
 								$('#' + field).attr("value", data[field]);
 							}
 						}
