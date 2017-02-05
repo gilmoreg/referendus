@@ -48,8 +48,9 @@ function generateArticleData() {
             { 'author': generateAuthorName() }
         ],
         'year': 2017,
-        'volume': faker.random.number(),
-        'issue': faker.random.number(),
+        'journal': faker.company.companyName(),
+        'volume': `${faker.random.number()}`,
+        'issue': `${faker.random.number()}`,
         'pages': `${faker.random.number()}-${faker.random.number()}`,
         'url': faker.internet.url()
     }
@@ -118,7 +119,7 @@ describe('Reference API', function() {
                         ref.should.include.keys('id','title','type');
                         switch(ref.type) {
                             case 'Article': {
-                                ref.should.include.keys('authors','year','volume','issue','pages');
+                                ref.should.include.keys('authors','year','journal','volume','issue','pages');
                                 break;
                             };
                             case 'Book': {
@@ -142,6 +143,7 @@ describe('Reference API', function() {
                         case 'Article': {
                             refPost.year.should.equal(ref.year);
                             refPost.volume.should.equal(ref.volume);
+                            refPost.journal.should.equal(ref.journal);
                             refPost.issue.should.equal(ref.issue);
                             refPost.pages.should.equal(ref.pages);
                             break;
