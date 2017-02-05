@@ -134,6 +134,10 @@ $(function() {
 								var tags = data[field].map(function(t) { return t.tag; });
 								$('#' + field).attr("value", tags.join(", "));
 							}
+							else if(field==='accessDate' || field==='pubDate') {
+								document.getElementById(field).valueAsDate = new Date(data[field]);
+							}
+							// TODO: dates not working right
 							else {
 								$('#' + field).attr("value", data[field]);
 							}
