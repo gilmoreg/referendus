@@ -104,25 +104,6 @@ describe('Reference API', function() {
     });
 
     describe('GET endpoint', function() {
-        it('should return all existing references', function() {
-            logger.log('GET all');
-            let res;
-            return chai.request(app)
-                .get('/refs')
-                .then(function(_res) {
-                    console.info('validating GET response');
-                    // so subsequent .then blocks can access resp obj.
-                    res = _res;
-                    res.should.have.status(200);
-                    // otherwise our db seeding didn't work
-                    res.body.refs.should.have.length.of.at.least(1);
-                    return References.count();
-                })
-                .then(function(count) {
-                    res.body.refs.should.have.length.of(count);
-                });
-        });
-
         it('should return refs with the right fields', function() {
             let refPost;
             return chai.request(app)
