@@ -17,7 +17,7 @@ Author. Title. Title of container (self contained if book), Other contributors (
 */
 const authorName = author => {
 	let str = `${author.lastName}, ${author.firstName}`;
-    if(author.middleName) str += `${author.middleName.charAt(0)}`;   
+    if(author.middleName) str += ` ${author.middleName.charAt(0)}`;   
     return str;
 }
 
@@ -56,7 +56,7 @@ const website = ref => {
 		ref.url = ref.url.replace('https://', '');
 	}
 	var str = authorList(ref.authors);
-	str += ` <i>${ref.title}</i>. ${ref.siteName}`;	
+	str += ` <i>${ref.title}</i>. ${ref.siteTitle}`;	
 	if(ref.pubDate) {
 		const pubDate = moment(ref.pubDate).format('D MMM. YYYY');
 		str += `, ${pubDate}`;
