@@ -162,6 +162,10 @@ var editModal = function(id) {
 	});
 }
 
+var deleteModal = function(id) {
+	$('#deleteModal').toggle('modal');
+}
+
 $(function() {
 	$('#newRef').on('click', function() {
 		newModal();
@@ -213,13 +217,19 @@ $(function() {
 		$('.modal-form').empty();
 	});
 
+	// Edit button event handler
 	$('.ref-container').on('click','.ref-edit', function(e) {
 		e.preventDefault();
 		var id = $(event.target).closest('.ref').attr('data-id');
 		editModal(id);
 	});
 
-	
+	// Delete button event handler
+	$('.ref-container').on('click', '.ref-del', function(e) {
+		e.preventDefault();
+		var id = $(event.target).closest('.ref').attr('data-id');
+		deleteModal(id);
+	});
 
 	refreshList();	
 })
