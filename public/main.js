@@ -164,6 +164,7 @@ var editModal = function(id) {
 
 var deleteModal = function(id) {
 	$('#deleteModal').toggle('modal');
+	
 }
 
 $(function() {
