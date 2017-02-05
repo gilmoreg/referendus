@@ -58,12 +58,12 @@ const website = ref => {
 	var str = authorList(ref.authors);
 	str += ` <i>${ref.title}</i>. ${ref.siteName}`;	
 	if(ref.pubDate) {
-		const pubDate = moment(ref.pubDate).format('DD MMM. YYYY');
+		const pubDate = moment(ref.pubDate).format('D MMM. YYYY');
 		str += `, ${pubDate}`;
 	}
 	str += `, ${ref.url}.`;
 	if(ref.accessDate) {
-		const accessDate = moment(ref.accessDate).format('DD MMM. YYYY');
+		const accessDate = moment(ref.accessDate).format('D MMM. YYYY');
 		str += ` Accessed ${accessDate}.`;
 	}
 	return { id:ref.id, type:ref.type, html:str };

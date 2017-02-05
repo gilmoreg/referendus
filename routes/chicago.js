@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const {logger} = require('../logger');
+const moment = require('moment');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
 
 const res400Err = (msg, res) => {
@@ -61,7 +62,16 @@ const website = ref => {
 	const authors = authorList(ref.authors);
     let str = '';
     if(authors) str += `${authors}. `;
-    str += `"${ref.title}." ${ref.siteTitle}. Last modified ${ref.pubDate}. Accessed ${ref.accessDate}. ${ref.url}.`;
+    str += `"${ref.title}." ${ref.siteTitle}. `;
+    if(ref.pubDate) {
+        const pubDate = moment(ref.pubDate).format('MMMM D, YYYY');
+        str += `Last modified ${pubDate}. `;
+    }
+    if(ref.accessDate) {
+        const accessDate = moment(ref.accessDate).format('MMMM D, YYYY');
+        str += `Accessed ${accessDate}. `;
+    }
+    str += `${ref.url}.`;
 	return { id:ref.id, type:ref.type, html:str };
 }
 
