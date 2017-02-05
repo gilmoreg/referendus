@@ -16,7 +16,7 @@ var buildJSON = function(fields) {
 				if(nameField.length<2) {
 					formError('<p>Author name must include last and first name separated by commas</p>');
 					$('#authors').focus();
-					return;
+					return undefined;
 				}
 				var name = {
 					'firstName': nameField[1].trim(),
@@ -105,6 +105,7 @@ $(function() {
 		refreshList();
 	});
 
+// TODO make the markup consistent
 	$('#newModal').on('hide.bs.modal', function () {
 		$('#newModal .modal-form').off('submit');
 	});
