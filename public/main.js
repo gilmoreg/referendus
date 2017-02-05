@@ -61,11 +61,40 @@ var refreshList = function() {
 				$('.ref-container').append(html);
 			});
 		}
+		// TODO error
 	});
 }
 
+// TODO can I avoid duplication in the click functions?
+var newModalSubmit = function() {
+	$('#refModal .modal-form').on('submit', 'form', function(e) {
+		e.preventDefault();
+		var post = buildJSON($('.modal-form :input').serializeArray());
+		$.ajax({
+			url: 'refs/',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(post),
+			success: function(data) {
+				$("#refModal").modal('toggle');
+				$('#refModal .modal-form').off('submit');
+				refreshList();
+			}
+			// TODO error
+		});
+	});
+}
+
+var newModal = function() {
+	$("#refModal").modal('toggle');
+	$('.new-button-row').show();
+	$('.submit button').html('Add');
+	newModalSubmit();
+}
+
 var editModalClick = function(id) {
-	$('.modal-form').on('submit', 'form', function(e) {
+	$('#refModal .modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
 		var post = buildJSON($('.modal-form :input').serializeArray());
 		post.id = id;
@@ -114,13 +143,9 @@ var editModal = function(id) {
 							$('#' + field).attr("value", tags.join(", "));
 							break;
 						}
-						case 'accessDate': {
-							console.log('accessDate',data[field]);
-							document.getElementById(field).valueAsDate = new Date(data[field]);
-							break;
-						}
+						case 'accessDate': 
 						case 'pubDate': {
-							console.log('pubDate',data[field]);
+							console.log('accessDate',data[field]);
 							document.getElementById(field).valueAsDate = new Date(data[field]);
 							break;
 						}
@@ -131,13 +156,18 @@ var editModal = function(id) {
 					}
 				}
 			});
-			// TODO make this markup consistent with ids vs classes
 			editModalClick(id);
 		}
+		// TODO error
 	});
 }
 
 $(function() {
+	$('#newRef').on('click', function() {
+		console.log('new');
+		newModal();
+	});
+
 	$('#newArticle').on('click', function() {
 		$.get('./views/article.html', function(html) {
 			$('.modal-form').html(html);
@@ -160,6 +190,7 @@ $(function() {
 		});
 	});
 
+	// TODO can I avoid duplication here?
 	$('#APA').on('click', function() {
 		format = 'apa';
 		$("#formatModal").modal('toggle');
@@ -189,25 +220,7 @@ $(function() {
 		editModal(id);
 	});
 
-	$('#refModal .modal-form').on('submit', 'form', function(e) {
-		e.preventDefault();
-		var post = buildJSON($('.modal-form :input').serializeArray());
-		$.ajax({
-			url: 'refs/',
-			type: 'POST',
-			contentType: 'application/json',
-			dataType: 'json',
-			data: JSON.stringify(post),
-			success: function(data) {
-				$("#refModal").modal('toggle');
-				$('.new-button-row').show();
-				$('.submit button').html('Add');
-				$('#refModal .modal-form').off('submit');
-				refreshList();
-			}
-		});
-	});
-
-	refreshList();
 	
+
+	refreshList();	
 })
