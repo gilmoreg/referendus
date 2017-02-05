@@ -310,3 +310,48 @@ $(function() {
 
 	refreshList();	
 })
+
+var References = (function() {
+
+	var collection = [];
+
+	var fetchRemote = function(id) {
+		var url = '';
+		if(id) url = 'ref/' + id;
+		else url = 'refs/';
+		$.ajax({
+			url: this.url,
+			type: 'GET',
+			contentType: 'application/json',
+			success: function(data) {
+				return data;
+			},
+			error: function(msg) {
+				console.log('fetchRemote error', msg);
+			}
+		});
+	}
+
+	return {
+		create: function(ref) {
+			
+		},
+		getAll: function() {
+
+		},
+		// Clipboard will not allow copying after an AJAX call, so just get what we have
+		getAllLocal: function() {
+				
+		},
+		getByID: function(id) {
+
+		},
+		update: function(id) {
+
+		},
+		delete: function(id) {
+
+		}
+	};
+
+}());
