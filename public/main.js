@@ -53,7 +53,7 @@ var refreshList = function() {
 		contentType: 'application/json',
 		success: function(data) {
 			data.refs.forEach(function(ref) {
-				var html = '<div class="ref" id="' + ref.id + '">'
+				var html = '<div class="ref" data-id="' + ref.id + '">'
 							+	'<div class="ref-text green col-xs-9">' + ref.html + '</div>'
 							+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 							+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
@@ -119,7 +119,7 @@ $(function() {
 	$('.ref-container').on('click','.ref-edit', function(e) {
 		e.preventDefault();
 		//$('#edit-modal-body').empty();
-		var id = $(event.target).closest('.ref').attr('id');
+		var id = $(event.target).closest('.ref').attr('data-id');
 		$.ajax({
 			url: 'ref/' + id,
 			type: 'GET',
