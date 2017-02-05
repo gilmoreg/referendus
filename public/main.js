@@ -168,7 +168,17 @@ var closeDeleteModal = function() {
 }
 
 var deleteRef = function(id) {
-	//
+	$.ajax({
+		url: 'refs/' + id,
+		type: 'DELETE',
+		success: function(data) {
+			closeDeleteModal();
+		},
+		error: function(msg) {
+			console.log('error deleting', msg);
+			closeDeleteModal();
+		}
+	});
 	refreshList();
 }
 
