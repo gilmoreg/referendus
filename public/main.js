@@ -105,6 +105,14 @@ $(function() {
 		refreshList();
 	});
 
+	$('#newModal').on('hide.bs.modal', function () {
+		$('#newModal .modal-form').off('submit');
+	});
+
+	$('#editModal').on('hide.bs.modal', function () {
+		$('#edit-modal-body').off('submit');
+	});
+
 	$('.ref-container').on('click','.ref-edit', function(e) {
 		e.preventDefault();
 		var id = $(event.target).closest('.ref').attr('id');
@@ -115,7 +123,7 @@ $(function() {
 			success: function(data) {
 				$.get('./views/' + data.type.toLowerCase() + '.html', function(html) {
 					$('#editModal').modal('show');
-					$('#edit-modal-body').html(html);
+					$('#edit-modal-body').empty().html(html);
 					$('.submit button').html('Update');
 					var today = new Date();
 					$('#year').attr('max', today.getFullYear());
@@ -137,7 +145,6 @@ $(function() {
 							else if(field==='accessDate' || field==='pubDate') {
 								document.getElementById(field).valueAsDate = new Date(data[field]);
 							}
-							// TODO: dates not working right
 							else {
 								$('#' + field).attr("value", data[field]);
 							}
