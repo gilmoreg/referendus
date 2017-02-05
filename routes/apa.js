@@ -54,12 +54,12 @@ const article = ref => {
 	str += '<i>' + ref.volume + '</i>';
 	if(ref.pages) str += `, ${ref.pages}.`;
 	else str += '.';
-	return { id:ref.id, html:str };
+	return { id:ref.id, type:ref.type, html:str };
 }
 
 const book = ref => {
 	let str = `${authorList(ref.authors)} (${ref.year}). <i>${ref.title}</i>. ${ref.city}: ${ref.publisher}.`;
-	return { id:ref.id, html:str };
+	return { id:ref.id, type:ref.type, html:str };
 }
 
 const website = ref => {
@@ -71,7 +71,7 @@ const website = ref => {
     }
     const accessDate = moment(ref.accessDate).format('YYYY, MMMM D');
     str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${accessDate} from ${ref.url}.`;
-    return { id:ref.id, html:str };
+    return { id:ref.id, type:ref.type, html:str };
 }
 
 const generateReference = ref => {

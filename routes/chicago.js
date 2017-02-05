@@ -46,7 +46,7 @@ const article = ref => {
     str += ` "${ref.title}." <i>${ref.journal}</i> ${ref.volume}, no. ${ref.issue} (${ref.year})`;
     if(ref.pages) str += `: ${ref.pages}.`;
     else str += '.';
-	return { id:ref.id, html:str };
+	return { id:ref.id, type:ref.type, html:str };
 }
 
 const book = ref => {
@@ -54,13 +54,13 @@ const book = ref => {
     str += `, <i>${ref.title}</i> (${ref.city}: ${ref.publisher}, ${ref.year})`;
     if(ref.pages) str += `, ${ref.pages}`;
     str += '.';
-	return { id:ref.id, html:str };
+	return { id:ref.id, type:ref.type, html:str };
 }
 
 const website = ref => {
 	var str = authorList(ref.authors);
     str += `. "${ref.title}." ${ref.siteTitle}. Last modified ${ref.pubDate}. Accessed ${ref.accessDate}. ${ref.url}.`;
-	return { id:ref.id, html:str };
+	return { id:ref.id, type:ref.type, html:str };
 }
 
 const generateReference = ref => {

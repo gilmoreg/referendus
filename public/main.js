@@ -53,8 +53,14 @@ var refreshList = function() {
 		contentType: 'application/json',
 		success: function(data) {
 			data.refs.forEach(function(ref) {
+				var type = '';
+				switch(ref.type) {
+					case 'Article': type = '<span class="label label-primary">Article</span>'; break;
+					case 'Book': type ='<span class="label label-danger">Book</span>'; break;
+					case 'Website': type = '<span class="label label-success">Website</span>'
+				}
 				var html = '<div class="ref" data-id="' + ref.id + '">'
-							+	'<div class="ref-text green col-xs-9">' + ref.html + '</div>'
+							+	'<div class="ref-text green col-xs-9">' + type + ' ' + ref.html + '</div>'
 							+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 							+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
 						+ '</div>';
