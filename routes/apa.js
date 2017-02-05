@@ -63,14 +63,22 @@ const book = ref => {
 }
 
 const website = ref => {
-    // TODO If no author, title moves to the front
-    let str = `${authorList(ref.authors)} `;
-    if(ref.pubDate) {
-        const pubDate = moment(ref.pubDate).format('YYYY, MMMM D');
-        str += `(${pubDate}). `;
-    }
+	const authors = authorList(ref.authors);
+	let str = '';
+	let pubDate = '';
+    if(ref.pubDate) pubDate = moment(ref.pubDate).format('YYYY, MMMM D');
+	else pubDate = 'n.d.';
     const accessDate = moment(ref.accessDate).format('YYYY, MMMM D');
-    str += `${ref.title}, <i>${ref.siteTitle}</i>. Retrieved ${accessDate} from ${ref.url}.`;
+	// Author, A. (date). Title of document. Retrieved from http://URL
+	if(authors) {
+		str += `${authors} (${pubDate}). ${ref.title},`;
+	}
+	// If no author, title moves to the front
+	else {
+		str += `${ref.title}. (${pubDate}).`;
+	}
+	str += ` <i>${ref.siteTitle}</i>. Retrieved ${accessDate} from ${ref.url}.`;
+    
     return { id:ref.id, type:ref.type, html:str };
 }
 

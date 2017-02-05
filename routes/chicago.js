@@ -58,8 +58,10 @@ const book = ref => {
 }
 
 const website = ref => {
-	var str = authorList(ref.authors);
-    str += `. "${ref.title}." ${ref.siteTitle}. Last modified ${ref.pubDate}. Accessed ${ref.accessDate}. ${ref.url}.`;
+	const authors = authorList(ref.authors);
+    let str = '';
+    if(authors) str += `${authors}. `;
+    str += `"${ref.title}." ${ref.siteTitle}. Last modified ${ref.pubDate}. Accessed ${ref.accessDate}. ${ref.url}.`;
 	return { id:ref.id, type:ref.type, html:str };
 }
 
