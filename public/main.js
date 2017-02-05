@@ -45,6 +45,21 @@ var buildJSON = function(fields) {
 	return post;
 }
 
+var buildHTML = function(ref) {
+	var type = '';
+	switch(ref.type) {
+		case 'Article': type = '<span class="label label-primary">Article</span>'; break;
+		case 'Book': type ='<span class="label label-danger">Book</span>'; break;
+		case 'Website': type = '<span class="label label-success">Website</span>'
+	}
+	var html = '<div class="ref" data-id="' + ref.id + '">'
+				+	'<div class="ref-text green col-xs-9">' + type + ' ' + ref.html + '</div>'
+				+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
+				+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
+			+ '</div>';
+	return html;
+}
+
 var refreshList = function() {
 	$('.ref-container').empty();
 	$.ajax({
@@ -53,21 +68,12 @@ var refreshList = function() {
 		contentType: 'application/json',
 		success: function(data) {
 			data.refs.forEach(function(ref) {
-				var type = '';
-				switch(ref.type) {
-					case 'Article': type = '<span class="label label-primary">Article</span>'; break;
-					case 'Book': type ='<span class="label label-danger">Book</span>'; break;
-					case 'Website': type = '<span class="label label-success">Website</span>'
-				}
-				var html = '<div class="ref" data-id="' + ref.id + '">'
-							+	'<div class="ref-text green col-xs-9">' + type + ' ' + ref.html + '</div>'
-							+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
-							+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
-						+ '</div>';
-				$('.ref-container').append(html);
+				$('.ref-container').append(buildHTML(ref));
 			});
+		},
+		error: function(msg) {
+			console.log('refresh error', msg);
 		}
-		// TODO error
 	});
 }
 
@@ -195,9 +201,43 @@ var deleteModal = function(id) {
 	});
 }
 
+var testText = function() {
+	return "Press, B. (2017). Bacon Press's Big Debut. <i>Journal 12</i>, <i>2</i>, 33-45.<br><br>Mister, T. A. (1970, February 28). Boring, <i>None other than</i>. Retrieved 2017, March 3 from https://whatever.com.Last, F. (2009). <i>Title</i>. Boston: BC.edu.";
+}
+
+var copyToClipboard = function() {
+	var text = testText();
+	clipboard.copy({'text/html':text}).then(
+					function(){console.log("success");},
+					function(err){console.log("failure", err);}
+				);
+	$.ajax({
+			url: 'refs/' + format,
+			type: 'GET',
+			contentType: 'application/json',
+			success: function(data) {
+				data.refs.forEach(function(ref) {
+					text += ref.html;
+				});
+				console.log(text);
+				clipboard.copy({'text/html':"<i>text</i>"}).then(
+					function(){console.log("success");},
+					function(err){console.log("failure", err);}
+				);
+			},
+			error: function(msg) {
+				console.log('error copying', msg);
+			}
+		});
+}
+
 $(function() {
 	$('#newRef').on('click', function() {
 		newModal();
+	});
+
+	$('#copy').on('click', function() {
+		copyToClipboard();
 	});
 
 	$('#newArticle').on('click', function() {
