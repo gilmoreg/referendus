@@ -162,9 +162,21 @@ var editModal = function(id) {
 	});
 }
 
+var closeDeleteModal = function() {
+	$('#deleteModal').hide('modal');
+	$('#yesDelete').off('click');
+}
+
+var deleteRef = function(id) {
+	//
+	refreshList();
+}
+
 var deleteModal = function(id) {
-	$('#deleteModal').toggle('modal');
-	
+	$('#deleteModal').show('modal');
+	$('#yesDelete').on('click', function(e) {
+		deleteRef(id);
+	});
 }
 
 $(function() {
@@ -218,6 +230,14 @@ $(function() {
 		$('.modal-form').empty();
 	});
 
+	$('#deleteModal .close').on('click', function () {
+		closeDeleteModal();
+	});
+
+	$('#noDelete').on('click', function(e) {
+		closeDeleteModal();
+	});
+	
 	// Edit button event handler
 	$('.ref-container').on('click','.ref-edit', function(e) {
 		e.preventDefault();
