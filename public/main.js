@@ -164,7 +164,6 @@ var editModal = function(id) {
 
 $(function() {
 	$('#newRef').on('click', function() {
-		console.log('new');
 		newModal();
 	});
 
