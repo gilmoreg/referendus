@@ -14,7 +14,7 @@ const res400Err = (msg, res) => {
 // http://www.press.uchicago.edu/books/turabian/turabian_citationguide.html
 const lastFirst = author => {
     let str = `${author.lastName}, ${author.firstName}`;
-    if(author.middleName) str += `${author.middleName.charAt(0)}`;   
+    if(author.middleName) str += ` ${author.middleName.charAt(0)}`;   
     return str;
 }
 

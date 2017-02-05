@@ -15,7 +15,7 @@ const res400Err = (msg, res) => {
 // https://owl.english.purdue.edu/owl/resource/560/06/
 const apaName = author => {
 	let str = `${author.lastName}, ${author.firstName.charAt(0)}.`;
-	if(author.middleName) str += `${author.middleName.charAt(0)}.`;
+	if(author.middleName) str += ` ${author.middleName.charAt(0)}.`;
 	return str;
 }
 
