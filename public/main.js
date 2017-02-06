@@ -315,7 +315,6 @@ var References = (function() {
 
 	var collection = [];
 
-
 	var dbCreate = function(ref) {
 		return $.ajax({
 			url: 'refs/',
@@ -360,26 +359,39 @@ var References = (function() {
 		create: function(ref) {
 			collection.push(ref);
 			localStorage.setItem('refs',JSON.stringify(collection));
-			dbCreate(ref)
-				.done(function() {
-					console.log('POST success');
-				})
-				.fail(function(msg) {
-					console.log('POST error', msg);
-				});
+			return new Promise( (resolve,reject) => {
+				dbCreate(ref)
+					.done(function() { resolve(); })
+					.fail(function(msg) { reject();	});
+			});
 		},
 		getAll: function() {
-
+			return new Promise( (resolve,reject) => {
+				dbGet()
+					.done(function(data) { resolve(data); })
+					.fail(function(msg) { reject();	});
+			});
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
 		getAllLocal: function() {
-				
+			return collection;
 		},
 		getByID: function(id) {
-
+			return new Promise( (resolve,reject) => {
+				dbGet(id)
+					.done(function(data) { resolve(data); })
+					.fail(function(msg) { reject();	});
+			});
 		},
-		update: function(id) {
-
+		update: function(id, ref) {
+			const index = colection.findIndex( (r) => { return r.id===id; } );
+			collection[index] = ref;
+			localStorage.setItem('refs',JSON.stringify(collection));
+			return new Promise( (resolve,reject) => {
+				dbUpdate(id, ref)
+					.done(function(data) { resolve(data); })
+					.fail(function(msg) { reject();	});
+			});
 		},
 		delete: function(id) {
 			collection = collection.filter(function(ref) {
@@ -387,13 +399,11 @@ var References = (function() {
 				return true;
 			});
 			localStorage.setItem('refs',JSON.stringify(collection));
-			dbDelete(id)
-				.done(function() {
-					console.log('DELETE success');
-				})
-				.fail(function(msg) {
-					console.log('DELETE error', msg);
-				});
+			return new Promise( (resolve,reject) => {
+				dbDelete(id)
+					.done(function() { resolve(); })
+					.fail(function(msg) { reject();	});
+			});
 		}
 	};
 
