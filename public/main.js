@@ -1,4 +1,4 @@
-const format = 'apa';
+let format = 'apa';
 
 const formError = (msg) => {
 	console.log(msg);
