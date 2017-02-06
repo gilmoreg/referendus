@@ -3,9 +3,13 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-const {logger} = require('../logger');
+const {logger} = require('../../logger');
 const moment = require('moment');
-const {References/*, Articles, Books, Websites*/} = require('../models/reference');
+const {References/*, Articles, Books, Websites*/} = require('../../models/reference');
+const passport = require('passport');
+const auth = require('../passport/auth');
+
+router.use(auth);
 
 const res400Err = (msg, res) => {
     logger.log('error',msg);
@@ -90,9 +94,8 @@ const generateReference = ref => {
     }
 }
 
-router.get('/', (req, res) => {
+router.get('/', passport.authenticate('local'), (req, res) => {
 	logger.log('info',`GET /refs/apa ${req}`);
-	 
  	References
 		.find()
 		.exec() 

@@ -12,15 +12,11 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  firstName: {type: String, default: ""},
-  lastName: {type: String, default: ""}
 });
 
 UserSchema.methods.json = function() {
   return {
-    username: this.username || '',
-    firstName: this.firstName || '',
-    lastName: this.lastName || ''
+    username: this.username || ''
   };
 }
 

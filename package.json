@@ -20,6 +20,7 @@
     "bcryptjs": "^2.4.0",
     "body-parser": "^1.16.0",
     "express": "^4.14.1",
+    "express-session": "^1.15.0",
     "moment": "^2.17.1",
     "mongo": "^0.1.0",
     "mongoose": "^4.8.1",
@@ -27,6 +28,7 @@
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {

@@ -3,9 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-const {logger} = require('../logger');
+const {logger} = require('../../logger');
 const moment = require('moment');
-const {References/*, Articles, Books, Websites*/} = require('../models/reference');
+const {References/*, Articles, Books, Websites*/} = require('../../models/reference');
 
 const res400Err = (msg, res) => {
     logger.log('error',msg);
