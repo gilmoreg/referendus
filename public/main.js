@@ -47,12 +47,12 @@ const buildJSON = (fields) => {
 
 const buildHTML = (ref) => {
 	let type = '';
-	switch(ref.type) {
+	switch(ref.data.type) {
 		case 'Article': type = '<span class="label label-primary">Article</span>'; break;
 		case 'Book': type ='<span class="label label-danger">Book</span>'; break;
 		case 'Website': type = '<span class="label label-success">Website</span>'
 	}
-	let html = '<div class="ref" data-id="' + ref.id + '">'
+	let html = '<div class="ref" data-id="' + ref.data._id + '">'
 				+	'<div class="ref-text green col-xs-9">' + type + ' ' + ref.html + '</div>'
 				+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 				+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
@@ -104,39 +104,39 @@ const editModalClick = (id) => {
 }
 
 const editModal = (id) => {
-	References.getByID(id).then( (data) => {
-		$.get('./views/' + data.type.toLowerCase() + '.html', (partial) => {
+	References.getByID(id).then( (ref) => {
+		console.log('editModal',ref);
+		$.get('./views/' + ref.data.type.toLowerCase() + '.html', (partial) => {
 			$('#refModal').modal('show');
 			$('.modal-form').html(partial);
 			$('.submit button').html('Update');
 			$('.new-button-row').hide();
 			const today = new Date();
 			$('#year').attr('max', today.getFullYear());
-			for(let field in data) {
+			for(let field in ref.data) {
 				switch(field) {
 					case 'authors': {
-						console.log('authors',data[field]);
-						if(data[field].length>0) {
-							let author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
-							if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
+						if(ref.data[field].length>0) {
+							let author = ref.data[field][0].author.lastName + ', ' + ref.data[field][0].author.firstName;
+							if(ref.data[field][0].author.middleName) author += ', ' + ref.data[field][0].author.middleName;
 							$('#' + field).attr("value", author);
 						}
 						break;
 					}
 					case 'tags': {
-						const tags = data[field].map((t) => { return t.tag; });
+						const tags = ref.data[field].map((t) => { return t.tag; });
 						$('#' + field).attr("value", tags.join(", "));
 						break;
 					}
 					case 'accessDate': 
 					case 'pubDate': {
-						console.log('accessDate',data[field]);
-						document.getElementById(field).valueAsDate = new Date(data[field]);
+						console.log('accessDate',ref.data[field]);
+						document.getElementById(field).valueAsDate = new Date(ref.data[field]);
 						break;
 					}
 					default: {
-						console.log('default',data[field]);
-						$('#' + field).attr("value", data[field]);
+						console.log('default',ref.data[field]);
+						$('#' + field).attr("value", ref.data[field]);
 					}
 				}
 			}
@@ -324,17 +324,21 @@ const References = (() => {
 		getAllLocal: () => {
 			return collection;
 		},
-		getByID: (id) => {
-			// if it's in local storage, return that
-			const index = collection.findIndex( (r) => { return r.id===id; } );
+		getByID: (id) => {	
 			return new Promise( (resolve,reject) => {
+				// if it's in local storage, return that
+				const index = collection.findIndex( (r) => { return r.data._id===id; } );
+				console.log('getByID',index,collection);
+				if(index!==-1) {
+					resolve(collection[index]);
+				}
 				dbGet(id)
 					.done((data) => { resolve(data); })
 					.fail((msg) => { reject();	});
 			});
 		},
 		update: (id, ref) => {
-			const index = collection.findIndex( (r) => { return r.id===id; } );
+			const index = collection.findIndex( (r) => { return r.data._id===id; } );
 			collection[index] = ref;
 			localStorage.setItem('refs',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
@@ -345,7 +349,7 @@ const References = (() => {
 		},
 		delete: (id) => {
 			collection = collection.filter((ref) => {
-				if(ref.id===id) return false;
+				if(ref.data._id===id) return false;
 				return true;
 			});
 			localStorage.setItem('refs',JSON.stringify(collection));
