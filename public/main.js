@@ -68,21 +68,8 @@ var refreshList = function() {
 			$('.ref-container').append(buildHTML(ref));
 		});
 	}, (msg) => { console.log('refreshList() error', msg); });
-
-	/*$.ajax({
-		url: 'refs/' + format,
-		type: 'GET',
-		contentType: 'application/json',
-		success: function(data) {
-			
-		},
-		error: function(msg) {
-			console.log('refresh error', msg);
-		}
-	});*/
 }
 
-// TODO can I avoid duplication in the click functions?
 var newModalSubmit = function() {
 	$('#refModal .modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
@@ -93,20 +80,6 @@ var newModalSubmit = function() {
 			$('#refModal .modal-form').off('submit');
 			refreshList();
 		}, (msg) => { console.log('newModalSubmit() error', msg); });
-
-		/*$.ajax({
-			url: 'refs/',
-			type: 'POST',
-			contentType: 'application/json',
-			dataType: 'json',
-			data: JSON.stringify(post),
-			success: function(data) {
-				$("#refModal").modal('toggle');
-				$('#refModal .modal-form').off('submit');
-				refreshList();
-			}
-			// TODO error
-		});*/
 	});
 }
 
@@ -127,20 +100,6 @@ var editModalClick = function(id) {
 			$('.modal-form').off('submit');
 			refreshList();
 		}, (msg) => { console.log('editModalClick() error', msg); });
-
-		/*$.ajax({
-			url: 'refs/' + id,
-			type: 'PUT',
-			contentType: 'application/json',
-			dataType: 'json',
-			data: JSON.stringify(post),
-			success: function(data) {
-				$("#refModal").modal('toggle');
-				$('.modal-form').off('submit');
-				refreshList();
-			}
-			// TODO error
-		});*/
 	});
 }
 
@@ -184,52 +143,6 @@ var editModal = function(id) {
 		});
 		editModalClick(id);
 	}, (msg) => { console.log('editModal() error', msg); });
-
-	/*$.ajax({
-		url: 'ref/' + id,
-		type: 'GET',
-		contentType: 'application/json',
-		success: function(data) {
-			$.get('./views/' + data.type.toLowerCase() + '.html', function(partial) {
-				$('#refModal').modal('show');
-				$('.modal-form').html(partial);
-				$('.submit button').html('Update');
-				$('.new-button-row').hide();
-				var today = new Date();
-				$('#year').attr('max', today.getFullYear());
-				for(var field in data) {
-					switch(field) {
-						case 'authors': {
-							console.log('authors',data[field]);
-							if(data[field].length>0) {
-								var author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
-								if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
-								$('#' + field).attr("value", author);
-							}
-							break;
-						}
-						case 'tags': {
-							var tags = data[field].map(function(t) { return t.tag; });
-							$('#' + field).attr("value", tags.join(", "));
-							break;
-						}
-						case 'accessDate': 
-						case 'pubDate': {
-							console.log('accessDate',data[field]);
-							document.getElementById(field).valueAsDate = new Date(data[field]);
-							break;
-						}
-						default: {
-							console.log('default',data[field]);
-							$('#' + field).attr("value", data[field]);
-						}
-					}
-				}
-			});
-			editModalClick(id);
-		}
-		// TODO error
-	});*/
 }
 
 var closeDeleteModal = function() {
@@ -244,17 +157,6 @@ var deleteRef = function(id) {
 		console.log('deleteRef() error', msg); 
 		closeDeleteModal();
 	});
-	/*$.ajax({
-		url: 'refs/' + id,
-		type: 'DELETE',
-		success: function(data) {
-			closeDeleteModal();
-		},
-		error: function(msg) {
-			console.log('error deleting', msg);
-			closeDeleteModal();
-		}
-	});*/
 	refreshList();
 }
 
