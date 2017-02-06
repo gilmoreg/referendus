@@ -262,7 +262,6 @@ $(() => {
 const References = (() => {
 
 	let collection = [];
-
 	const dbCreate = (ref) => {
 		return $.ajax({
 			url: 'refs/',
@@ -272,7 +271,6 @@ const References = (() => {
 			data: JSON.stringify(ref)
 		});
 	}
-
 	const dbGet = (id) => {
 		let url = '';
 		if(id) url = 'ref/' + id;
@@ -283,7 +281,6 @@ const References = (() => {
 			contentType: 'application/json'
 		});
 	}
-
 	const dbUpdate = (id, ref) => {
 		return $.ajax({
 			url: 'refs/' + id,
@@ -293,14 +290,12 @@ const References = (() => {
 			data: JSON.stringify(ref)
 		});
 	}	
-
 	const dbDelete = (id) => {
 		return $.ajax({
 			url: 'refs/' + id,
 			type: 'DELETE'
 		});
 	}
-
 	// TODO: throughout, assuming we want to manipulate local storage even if server is not available
 	// This would mean that once the server is available, work might be lost
 	return {
