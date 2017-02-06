@@ -63,7 +63,6 @@ const buildHTML = (ref) => {
 const refreshList = () => {
 	$('.ref-container').empty();
 	References.getAll().then( (data) => {
-		console.log('refreshList',data);
 		data.refs.forEach((ref) => {
 			$('.ref-container').append(buildHTML(ref));
 		});
@@ -75,7 +74,6 @@ const newModalSubmit = () => {
 		e.preventDefault();
 		const post = buildJSON($('.modal-form :input').serializeArray());
 		References.create(post).then( (data) => {
-			console.log('newModalSubmit', data);
 			$("#refModal").modal('toggle');
 			$('#refModal .modal-form').off('submit');
 			refreshList();
@@ -105,7 +103,6 @@ const editModalClick = (id) => {
 
 const editModal = (id) => {
 	References.getByID(id).then( (ref) => {
-		console.log('editModal',ref);
 		$.get('./views/' + ref.data.type.toLowerCase() + '.html', (partial) => {
 			$('#refModal').modal('show');
 			$('.modal-form').html(partial);
@@ -130,12 +127,10 @@ const editModal = (id) => {
 					}
 					case 'accessDate': 
 					case 'pubDate': {
-						console.log('accessDate',ref.data[field]);
 						document.getElementById(field).valueAsDate = new Date(ref.data[field]);
 						break;
 					}
 					default: {
-						console.log('default',ref.data[field]);
 						$('#' + field).attr("value", ref.data[field]);
 					}
 				}
@@ -174,7 +169,7 @@ const copyToClipboard = () => {
 		text += ref.html + '<br><br>';
 	});
 	clipboard.copy( {'text/html':text} ).then(
-					() => {console.log("success");},
+					() => {},
 					(err) => {console.log("failure", err);}
 				);
 }
@@ -328,7 +323,6 @@ const References = (() => {
 			return new Promise( (resolve,reject) => {
 				// if it's in local storage, return that
 				const index = collection.findIndex( (r) => { return r.data._id===id; } );
-				console.log('getByID',index,collection);
 				if(index!==-1) {
 					resolve(collection[index]);
 				}
