@@ -265,10 +265,15 @@ var deleteModal = function(id) {
 	});
 }
 
-var copyToClipboard = function() {
-	clipboard.copy( {'text/html':References.getAllLocal()} ).then(
-					function(){console.log("success");},
-					function(err){console.log("failure", err);}
+const copyToClipboard = () => {
+	const collection = References.getAllLocal();
+	let text = '';
+	collection.forEach((ref) => {
+		text += ref.html + '<br><br>';
+	});
+	clipboard.copy( {'text/html':text} ).then(
+					() => {console.log("success");},
+					(err) => {console.log("failure", err);}
 				);
 }
 
@@ -406,18 +411,24 @@ var References = (function() {
 					.fail(function(msg) { reject();	});
 			});
 		},
+		// If we are getting the whole set, we should update the localstorage
 		getAll: function() {
 			return new Promise( (resolve,reject) => {
 				dbGet()
-					.done(function(data) { resolve(data); })
+					.done(function(data) { 
+						collection = data;
+						localStorage.setItem('refs',JSON.stringify(collection));
+						resolve(data);
+					})
 					.fail(function(msg) { reject();	});
 			});
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
 		getAllLocal: function() {
-			return collection;
+			return collection.refs;
 		},
 		getByID: function(id) {
+
 			return new Promise( (resolve,reject) => {
 				dbGet(id)
 					.done(function(data) { resolve(data); })
