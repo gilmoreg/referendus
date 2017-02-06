@@ -315,7 +315,6 @@ const References = (() => {
 		},
 		// If we are getting the whole set, assume we mean the server
 		getAll: function() {
-			debugger;
 			return new Promise( (resolve,reject) => {
 				dbGet()
 					.done(function(data) { 
@@ -328,13 +327,11 @@ const References = (() => {
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
 		getAllLocal: function() {
-			debugger;
 			return collection;
 		},
 		getByID: function(id) {
-			debugger;
 			// if it's in local storage, return that
-			const index = colection.findIndex( (r) => { return r.id===id; } );
+			const index = collection.findIndex( (r) => { return r.id===id; } );
 			return new Promise( (resolve,reject) => {
 				dbGet(id)
 					.done(function(data) { resolve(data); })
