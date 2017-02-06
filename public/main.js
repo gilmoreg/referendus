@@ -254,7 +254,6 @@ $(() => {
 })
 
 const References = (() => {
-
 	let collection = [];
 	const dbCreate = (ref) => {
 		return $.ajax({
@@ -353,5 +352,4 @@ const References = (() => {
 			});
 		}
 	};
-
 })();
