@@ -315,24 +315,8 @@ var References = (function() {
 
 	var collection = [];
 
-	var fetchRemote = function(id) {
-		var url = '';
-		if(id) url = 'ref/' + id;
-		else url = 'refs/';
-		$.ajax({
-			url: this.url,
-			type: 'GET',
-			contentType: 'application/json',
-			success: function(data) {
-				return data;
-			},
-			error: function(msg) {
-				console.log('fetchRemote error', msg);
-			}
-		});
-	}
 
-	var createRemote = function(ref) {
+	var dbCreate = function(ref) {
 		return $.ajax({
 			url: 'refs/',
 			type: 'POST',
@@ -342,13 +326,43 @@ var References = (function() {
 		});
 	}
 
+	var dbGet = function(id) {
+		var url = '';
+		if(id) url = 'ref/' + id;
+		else url = 'refs/';
+		return $.ajax({
+			url: this.url,
+			type: 'GET',
+			contentType: 'application/json'
+		});
+	}
+
+	var dbUpdate = function(id, ref) {
+		return $.ajax({
+			url: 'refs/' + id,
+			type: 'PUT',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(ref)
+		});
+	}	
+
+	var dbDelete = function(id) {
+		return $.ajax({
+			url: 'refs/' + id,
+			type: 'DELETE'
+		});
+	}
+
+	// TODO: throughout, assuming we want to manipulate local storage even if server is not available
+	// This would mean that once the server is available, work might be lost
 	return {
 		create: function(ref) {
-			createRemote(ref)
+			collection.push(ref);
+			localStorage.setItem('refs',JSON.stringify(collection));
+			dbCreate(ref)
 				.done(function() {
 					console.log('POST success');
-					collection.push(ref);
-					localStorage.setItem('refs',JSON.stringify(collection));
 				})
 				.fail(function(msg) {
 					console.log('POST error', msg);
@@ -368,7 +382,18 @@ var References = (function() {
 
 		},
 		delete: function(id) {
-
+			collection = collection.filter(function(ref) {
+				if(ref.id===id) return false;
+				return true;
+			});
+			localStorage.setItem('refs',JSON.stringify(collection));
+			dbDelete(id)
+				.done(function() {
+					console.log('DELETE success');
+				})
+				.fail(function(msg) {
+					console.log('DELETE error', msg);
+				});
 		}
 	};
 
