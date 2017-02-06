@@ -205,7 +205,6 @@ $(() => {
 		});
 	});
 
-	// TODO can I avoid duplication here?
 	$('#APA').on('click', () => {
 		format = 'apa';
 		$("#formatModal").modal('toggle');
@@ -291,7 +290,7 @@ const References = (() => {
 			type: 'DELETE'
 		});
 	}
-	// TODO: throughout, assuming we want to manipulate local storage even if server is not available
+	// Throughout, assuming we want to manipulate local storage even if server is not available
 	// This would mean that once the server is available, work might be lost
 	return {
 		create: (ref) => {
