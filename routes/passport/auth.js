@@ -10,6 +10,7 @@ router.post('/login',
     (req, res) => {
     // If this function gets called, authentication was successful.
     // `req.user` contains the authenticated user.
+    console.log('login successful');
     res.redirect('/'); // TODO
 });
 

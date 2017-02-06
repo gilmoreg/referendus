@@ -6,8 +6,6 @@ const LocalStrategy = require('passport-local').Strategy
 const {User} = require('../../models/user');
 const {logger} = require('../../logger');
 
-logger.log('info','passport init');
-
 passport.use(new LocalStrategy(
   (username, password, callback) => {
     logger.log('info','attempting LocalStrategy');
@@ -24,9 +22,10 @@ passport.use(new LocalStrategy(
         console.log('info','LocalStrategy',err,user);
         return callback(null, false); 
       }
-
+      console.log('going to check password');
       // Make sure the password is correct
       user.validatePassword(password, (err, isMatch) => {
+        // We never make it here
         console.log('info','validatePassword',err,isMatch);
         if (err) { 
           console.log('info','validatePassword',err,isMatch);
