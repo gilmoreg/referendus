@@ -1,41 +1,44 @@
 const express = require('express');
 const router = express.Router();
+const session = require('express-session')
 const passport = require('passport');
-const {BasicStrategy} = require('passport-http');
+const LocalStrategy = require('passport-local').Strategy
 const {User} = require('../../models/user');
 const {logger} = require('../../logger');
 
-passport.use(new BasicStrategy(
+logger.log('info','passport init');
+
+passport.use(new LocalStrategy(
   (username, password, callback) => {
-    logger.log('info','attempting BasicStrategy');
+    logger.log('info','attempting LocalStrategy');
     User.findOne({ username: username }, (err, user) => {
-      logger.log('info','attempting findOne err', err);
-      logger.log('info','attempting findOne user', user);
+      console.log('info','attempting findOne err', err);
+      console.log('info','attempting findOne user', user);
       if (err) { 
-        logger.log('info','BasicStrategy',err,user);
+        console.log('info','LocalStrategy',err,user);
         return callback(err); 
       }
 
       // No user found with that username
       if (!user) { 
-        logger.log('info','BasicStrategy',err,user);
+        console.log('info','LocalStrategy',err,user);
         return callback(null, false); 
       }
 
       // Make sure the password is correct
       user.validatePassword(password, (err, isMatch) => {
-        logger.log('info','validatePassword',err,isMatch);
+        console.log('info','validatePassword',err,isMatch);
         if (err) { 
-          logger.log('info','validatePassword',err,isMatch);
+          console.log('info','validatePassword',err,isMatch);
           return callback(err); 
         }
 
         // Password did not match
         if (!isMatch) { 
-          logger.log('info','validatePassword',err,match);
+          console.log('info','validatePassword',err,match);
           return callback(null, false); 
         }
-        logger.log('info','validatePassword success',user);
+        console.log('info','validatePassword success',user);
         // Success
         return callback(null, user);
       });
@@ -43,7 +46,10 @@ passport.use(new BasicStrategy(
   }
 ));
 
-router.use(express.session({ secret: 'keyboard puma' }));
+router.use(session({  secret: 'keyboard puma',
+                      resave: true,
+                      saveUninitialized: true }
+                    ));
 router.use(passport.initialize());
 router.use(passport.session());
 

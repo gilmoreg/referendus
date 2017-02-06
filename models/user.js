@@ -21,10 +21,25 @@ UserSchema.methods.json = function() {
 }
 
 UserSchema.methods.validatePassword = function(password) {
-  return bcrypt.compare(password, this.password);
+  console.log('validating password');
+  //return bcrypt.compare(password, this.password);
+  bcrypt.compare(password, this.password, (err, res) => {
+    if(err) {
+      console.log('bcrypt err', err);
+    }
+    if(res) {
+      console.log('bcrypt res', res);
+      return;
+    }
+    else {
+      console.log('bcrypt - something went wrong');
+      return;
+    }
+  });
 }
 
 UserSchema.statics.hashPassword = function(password) {
+  console.log('hashing password');
   return bcrypt.hash(password, 10);
 }
 

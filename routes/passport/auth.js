@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const {BasicStrategy} = require('passport-http');
+//const {LocalStrategy} = require('passport-http');
 const {User} = require('../../models/user');
 const {logger} = require('../../logger');
 
@@ -10,7 +10,7 @@ router.post('/login',
     (req, res) => {
     // If this function gets called, authentication was successful.
     // `req.user` contains the authenticated user.
-    res.redirect('/users/' + req.user.username); // TODO
+    res.redirect('/'); // TODO
 });
 
 router.post('/signup', (req, res) => {

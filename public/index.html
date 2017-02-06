@@ -11,20 +11,70 @@
 </head>
 <body>
     <noscript><p>This site requires Javascript to be enabled to function properly.</p></noscript>
-    <header>
-        <div class="black col-xs-12">
-            <div class="col-xs-4 page-title">
-                <h1>Referendus</h1>
-            </div>
-            <div class="col-xs-8 right-header">
-                <button type="button" class="btn btn-primary" id="newRef" title="new reference"><i class="fa fa-plus" aria-hidden="true" title="add"></i></button> 
-                <button type="button" class="btn btn-secondary"><i class="fa fa-search" aria-hidden="true" title ="search"></i></button>
-                <button type="button" class="btn btn-warning" id="copy"><i class="fa fa-clipboard" aria-hidden="true" title="export"></i></button> 
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#formatModal" title="change format"><i class="fa fa-cog" aria-hidden="true"></i></button> 
-                <button type="button" class="btn btn-info" title="login"><i class="fa fa-sign-in" aria-hidden="true"></i></button>
-            </div>
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Referendus</a>
         </div>
-    </header>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Login <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
+                                <div class="form-group">
+                                        <label class="sr-only" for="username">Username</label>
+                                        <input type="text" class="form-control" id="username" placeholder="Username" required>
+                                </div>
+                                <div class="form-group">
+                                        <label class="sr-only" for="password">Password</label>
+                                        <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                </div>
+                                <div class="form-group">
+                                        <button class="btn btn-primary btn-block">Sign In</button>
+                                        <button class="btn btn-success btn-block">Sign Up</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Format <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li id="APA"><a href="#"><i class="fa fa-check" aria-hidden="true"></i>APA</a></li>
+                <li id="Chicago"><a href="#"><i class="fa fa-check" aria-hidden="true"></i>Chicago/Turabian</a></li>
+                <li id="MLA"><a href="#"><i class="fa fa-check" aria-hidden="true"></i>MLA</a></li>
+            </ul>
+            </li>
+        </ul>
+        <ul class="navbar-form navbar-right">
+            <button type="button" class="btn btn-warning" id="copy"><i class="fa fa-clipboard" aria-hidden="true" title="export"></i></button> 
+        </ul>
+        <ul class="navbar-form navbar-right">
+                <button type="button" class="btn btn-secondary"><i class="fa fa-search" aria-hidden="true" title ="search"></i></button>
+        </ul>
+        <ul class="navbar-form navbar-right">
+                <button type="button" class="btn btn-primary" id="newRef" title="new reference"><i class="fa fa-plus" aria-hidden="true" title="add"></i></button> 
+        </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+    </nav>
     <section>
         <div class="red ref-container col-xs-12"></div>
     </section>
@@ -48,24 +98,6 @@
                     </div>
                     <div class="modal-message"></div>
                     <div class="modal-form"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Select Format Modal -->
-    <div class="modal" id="formatModal" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="format-button-row">
-                        <button type="button" class="btn btn-warning format-button" id="APA">APA</button>
-                        <button type="button" class="btn btn-warning format-button" id="Chicago">Chicago/Turabian</button>
-                        <button type="button" class="btn btn-warning format-button" id="MLA">MLA</button>
-                    </div>
                 </div>
             </div>
         </div>
