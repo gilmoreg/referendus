@@ -21,18 +21,14 @@ UserSchema.methods.json = function() {
 }
 
 UserSchema.methods.validatePassword = function(password, cb) {
-  console.log('validating password');
   bcrypt.compare(password, this.password, (err, res) => {
     if(err) {
-      console.log('bcrypt err', err);
       cb(err, false);
     }
     if(res) {
-      console.log('bcrypt res', res);
       cb(null, true);
     }
     else {
-      console.log('bcrypt - something went wrong');
       cb(err, false);
     }
   })
