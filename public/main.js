@@ -332,9 +332,27 @@ var References = (function() {
 		});
 	}
 
+	var createRemote = function(ref) {
+		return $.ajax({
+			url: 'refs/',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(ref)
+		});
+	}
+
 	return {
 		create: function(ref) {
-			
+			createRemote(ref)
+				.done(function() {
+					console.log('POST success');
+					collection.push(ref);
+					localStorage.setItem('refs',JSON.stringify(collection));
+				})
+				.fail(function(msg) {
+					console.log('POST error', msg);
+				});
 		},
 		getAll: function() {
 
