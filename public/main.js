@@ -318,7 +318,7 @@ var References = (function() {
 			return new Promise( (resolve,reject) => {
 				dbGet()
 					.done(function(data) { 
-						collection = data;
+						collection = data.refs;
 						localStorage.setItem('refs',JSON.stringify(collection));
 						resolve(data);
 					})
@@ -330,7 +330,6 @@ var References = (function() {
 			return collection.refs;
 		},
 		getByID: function(id) {
-
 			return new Promise( (resolve,reject) => {
 				dbGet(id)
 					.done(function(data) { resolve(data); })
