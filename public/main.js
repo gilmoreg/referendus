@@ -263,7 +263,7 @@ const References = (() => {
 
 	let collection = [];
 
-	var dbCreate = function(ref) {
+	const dbCreate = (ref) => {
 		return $.ajax({
 			url: 'refs/',
 			type: 'POST',
@@ -273,7 +273,7 @@ const References = (() => {
 		});
 	}
 
-	var dbGet = function(id) {
+	const dbGet = (id) => {
 		var url = '';
 		if(id) url = 'ref/' + id;
 		else url = 'refs/' + format;
@@ -284,7 +284,7 @@ const References = (() => {
 		});
 	}
 
-	var dbUpdate = function(id, ref) {
+	const dbUpdate = (id, ref) => {
 		return $.ajax({
 			url: 'refs/' + id,
 			type: 'PUT',
@@ -294,7 +294,7 @@ const References = (() => {
 		});
 	}	
 
-	var dbDelete = function(id) {
+	const dbDelete = (id) => {
 		return $.ajax({
 			url: 'refs/' + id,
 			type: 'DELETE'
@@ -304,29 +304,29 @@ const References = (() => {
 	// TODO: throughout, assuming we want to manipulate local storage even if server is not available
 	// This would mean that once the server is available, work might be lost
 	return {
-		create: function(ref) {
+		create: (ref) => {
 			collection.push(ref);
 			localStorage.setItem('refs',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				dbCreate(ref)
-					.done(function() { resolve(); })
-					.fail(function(msg) { reject();	});
+					.done(() => { resolve(); })
+					.fail((msg) => { reject(); });
 			});
 		},
 		// If we are getting the whole set, assume we mean the server
-		getAll: function() {
+		getAll: () => {
 			return new Promise( (resolve,reject) => {
 				dbGet()
-					.done(function(data) { 
+					.done((data) => { 
 						collection = data.refs;
 						localStorage.setItem('refs',JSON.stringify(collection));
 						resolve(data);
 					})
-					.fail(function(msg) { reject();	});
+					.fail((msg) => { reject();	});
 			});
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
-		getAllLocal: function() {
+		getAllLocal: () => {
 			return collection;
 		},
 		getByID: function(id) {
@@ -334,30 +334,30 @@ const References = (() => {
 			const index = collection.findIndex( (r) => { return r.id===id; } );
 			return new Promise( (resolve,reject) => {
 				dbGet(id)
-					.done(function(data) { resolve(data); })
-					.fail(function(msg) { reject();	});
+					.done((data) => { resolve(data); })
+					.fail((msg) => { reject();	});
 			});
 		},
-		update: function(id, ref) {
+		update: (id, ref) => {
 			const index = collection.findIndex( (r) => { return r.id===id; } );
 			collection[index] = ref;
 			localStorage.setItem('refs',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				dbUpdate(id, ref)
-					.done(function(data) { resolve(data); })
-					.fail(function(msg) { reject();	});
+					.done((data) => { resolve(data); })
+					.fail((msg) => { reject();	});
 			});
 		},
-		delete: function(id) {
-			collection = collection.filter(function(ref) {
+		delete: (id) => {
+			collection = collection.filter((ref) => {
 				if(ref.id===id) return false;
 				return true;
 			});
 			localStorage.setItem('refs',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				dbDelete(id)
-					.done(function() { resolve(); })
-					.fail(function(msg) { reject();	});
+					.done(() => { resolve(); })
+					.fail((msg) => { reject();	});
 			});
 		}
 	};
