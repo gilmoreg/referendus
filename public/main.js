@@ -63,6 +63,7 @@ var buildHTML = function(ref) {
 var refreshList = function() {
 	$('.ref-container').empty();
 	References.getAll().then( (data) => {
+		console.log('refreshList',data);
 		data.refs.forEach(function(ref) {
 			$('.ref-container').append(buildHTML(ref));
 		});
@@ -368,9 +369,9 @@ var References = (function() {
 	var dbGet = function(id) {
 		var url = '';
 		if(id) url = 'ref/' + id;
-		else url = 'refs/';
+		else url = 'refs/' + format;
 		return $.ajax({
-			url: this.url,
+			url: url,
 			type: 'GET',
 			contentType: 'application/json'
 		});
