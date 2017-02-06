@@ -1,24 +1,24 @@
-var format = 'apa';
+const format = 'apa';
 
-var formError = function(msg) {
+const formError = (msg) => {
 	console.log(msg);
 	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
 }
 
-var buildJSON = function(fields) {
-	var post = {};
-	for(var i=0; i<fields.length;i++) {
+const buildJSON = (fields) => {
+	let post = {};
+	for(let i=0; i<fields.length;i++) {
 		switch(fields[i].name) {
 			case 'authors': {
 				if(fields[i].value==='') break;
 				if(!('authors' in Object.keys(post))) post['authors'] = [];
-				var nameField = fields[i].value.split(',');
+				const nameField = fields[i].value.split(',');
 				if(nameField.length<2) {
 					formError('<p>Author name must include last and first name separated by commas</p>');
 					$('#authors').focus();
 					return undefined;
 				}
-				var name = {
+				const name = {
 					'firstName': nameField[1].trim(),
 					'lastName': nameField[0].trim()
 				}
@@ -27,11 +27,11 @@ var buildJSON = function(fields) {
 				break;
 			}
 			case 'tags': {
-				var tags = fields[i].value.split(',');
+				const tags = fields[i].value.split(',');
 				if(tags.length<1) break;
 				if(!('tags' in Object.keys(post))) post['tags'] = [];
-				var tagList = [];
-				tags.forEach(function(tag) {
+				const tagList = [];
+				tags.forEach((tag) => {
 					tagList.push( { 'tag':tag.trim() } );
 				});
 				post['tags'] = tagList;
@@ -45,14 +45,14 @@ var buildJSON = function(fields) {
 	return post;
 }
 
-var buildHTML = function(ref) {
-	var type = '';
+const buildHTML = (ref) => {
+	let type = '';
 	switch(ref.type) {
 		case 'Article': type = '<span class="label label-primary">Article</span>'; break;
 		case 'Book': type ='<span class="label label-danger">Book</span>'; break;
 		case 'Website': type = '<span class="label label-success">Website</span>'
 	}
-	var html = '<div class="ref" data-id="' + ref.id + '">'
+	let html = '<div class="ref" data-id="' + ref.id + '">'
 				+	'<div class="ref-text green col-xs-9">' + type + ' ' + ref.html + '</div>'
 				+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 				+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
@@ -60,20 +60,20 @@ var buildHTML = function(ref) {
 	return html;
 }
 
-var refreshList = function() {
+const refreshList = () => {
 	$('.ref-container').empty();
 	References.getAll().then( (data) => {
 		console.log('refreshList',data);
-		data.refs.forEach(function(ref) {
+		data.refs.forEach((ref) => {
 			$('.ref-container').append(buildHTML(ref));
 		});
 	}, (msg) => { console.log('refreshList() error', msg); });
 }
 
-var newModalSubmit = function() {
-	$('#refModal .modal-form').on('submit', 'form', function(e) {
+const newModalSubmit = () => {
+	$('#refModal .modal-form').on('submit', 'form', (e) => {
 		e.preventDefault();
-		var post = buildJSON($('.modal-form :input').serializeArray());
+		const post = buildJSON($('.modal-form :input').serializeArray());
 		References.create(post).then( (data) => {
 			console.log('newModalSubmit', data);
 			$("#refModal").modal('toggle');
@@ -83,17 +83,17 @@ var newModalSubmit = function() {
 	});
 }
 
-var newModal = function() {
+const newModal = () => {
 	$("#refModal").modal('toggle');
 	$('.new-button-row').show();
 	$('.submit button').html('Add');
 	newModalSubmit();
 }
 
-var editModalClick = function(id) {
-	$('#refModal .modal-form').on('submit', 'form', function(e) {
+const editModalClick = (id) => {
+	$('#refModal .modal-form').on('submit', 'form', (e) => {
 		e.preventDefault();
-		var post = buildJSON($('.modal-form :input').serializeArray());
+		let post = buildJSON($('.modal-form :input').serializeArray());
 		post.id = id;
 		References.update(id, post).then( (data) => {
 			$("#refModal").modal('toggle');
@@ -103,28 +103,28 @@ var editModalClick = function(id) {
 	});
 }
 
-var editModal = function(id) {
+const editModal = (id) => {
 	References.getByID(id).then( (data) => {
-		$.get('./views/' + data.type.toLowerCase() + '.html', function(partial) {
+		$.get('./views/' + data.type.toLowerCase() + '.html', (partial) => {
 			$('#refModal').modal('show');
 			$('.modal-form').html(partial);
 			$('.submit button').html('Update');
 			$('.new-button-row').hide();
-			var today = new Date();
+			const today = new Date();
 			$('#year').attr('max', today.getFullYear());
-			for(var field in data) {
+			for(let field in data) {
 				switch(field) {
 					case 'authors': {
 						console.log('authors',data[field]);
 						if(data[field].length>0) {
-							var author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
+							let author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
 							if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
 							$('#' + field).attr("value", author);
 						}
 						break;
 					}
 					case 'tags': {
-						var tags = data[field].map(function(t) { return t.tag; });
+						const tags = data[field].map((t) => { return t.tag; });
 						$('#' + field).attr("value", tags.join(", "));
 						break;
 					}
@@ -145,12 +145,12 @@ var editModal = function(id) {
 	}, (msg) => { console.log('editModal() error', msg); });
 }
 
-var closeDeleteModal = function() {
+const closeDeleteModal = () => {
 	$('#deleteModal').hide('modal');
 	$('#yesDelete').off('click');
 }
 
-var deleteRef = function(id) {
+const deleteRef = (id) => {
 	References.delete(id).then( (data) => {
 		closeDeleteModal();
 	}, (msg) => { 
@@ -160,9 +160,9 @@ var deleteRef = function(id) {
 	refreshList();
 }
 
-var deleteModal = function(id) {
+const deleteModal = (id) => {
 	$('#deleteModal').show('modal');
-	$('#yesDelete').on('click', function(e) {
+	$('#yesDelete').on('click', (e) => {
 		deleteRef(id);
 	});
 }
@@ -179,80 +179,80 @@ const copyToClipboard = () => {
 				);
 }
 
-$(function() {
-	$('#newRef').on('click', function() {
+$(() => {
+	$('#newRef').on('click', () => {
 		newModal();
 	});
 
-	$('#copy').on('click', function() {
+	$('#copy').on('click', () => {
 		copyToClipboard();
 	});
 
-	$('#newArticle').on('click', function() {
-		$.get('./views/article.html', function(html) {
+	$('#newArticle').on('click', () => {
+		$.get('./views/article.html', (html) => {
 			$('.modal-form').html(html);
-			var today = new Date();
+			const today = new Date();
 			$('#year').attr('max', today.getFullYear());
 		});
 	});
 
-	$('#newBook').on('click', function() {
-		$.get('./views/book.html', function(html) {
+	$('#newBook').on('click', () => {
+		$.get('./views/book.html', (html) => {
 			$('.modal-form').html(html);
-			var today = new Date();
+			const today = new Date();
 			$('#year').attr('max', today.getFullYear());
 		});
 	});
 
-	$('#newWebsite').on('click', function() {
-		$.get('./views/website.html', function(html) {
+	$('#newWebsite').on('click', () => {
+		$.get('./views/website.html', (html) => {
 			$('.modal-form').html(html);
 		});
 	});
 
 	// TODO can I avoid duplication here?
-	$('#APA').on('click', function() {
+	$('#APA').on('click', () => {
 		format = 'apa';
 		$("#formatModal").modal('toggle');
 		refreshList();
 	});
 
-	$('#Chicago').on('click', function() {
+	$('#Chicago').on('click', () => {
 		format = 'chicago';
 		$("#formatModal").modal('toggle');
 		refreshList();
 	});
 
-	$('#MLA').on('click', function() {
+	$('#MLA').on('click', () => {
 		format = 'mla';
 		$("#formatModal").modal('toggle');
 		refreshList();
 	});
 
-	$('#refModal').on('hide.bs.modal', function () {
+	$('#refModal').on('hide.bs.modal', () => {
 		$('#refModal .modal-form').off('submit');
 		$('.modal-form').empty();
 	});
 
-	$('#deleteModal .close').on('click', function () {
+	$('#deleteModal .close').on('click', () => {
 		closeDeleteModal();
 	});
 
-	$('#noDelete').on('click', function(e) {
+	$('#noDelete').on('click', (e) => {
 		closeDeleteModal();
 	});
 	
 	// Edit button event handler
-	$('.ref-container').on('click','.ref-edit', function(e) {
+	$('.ref-container').on('click','.ref-edit', (e) => {
 		e.preventDefault();
-		var id = $(event.target).closest('.ref').attr('data-id');
+		const id = $(event.target).closest('.ref').attr('data-id');
 		editModal(id);
 	});
 
 	// Delete button event handler
-	$('.ref-container').on('click', '.ref-del', function(e) {
+	$('.ref-container').on('click', '.ref-del', (e) => {
 		e.preventDefault();
-		var id = $(event.target).closest('.ref').attr('data-id');
+		const id = $(event.target).closest('.ref').attr('data-id');
 		deleteModal(id);
 	});
 
@@ -274,7 +274,7 @@ const References = (() => {
 	}
 
 	const dbGet = (id) => {
-		var url = '';
+		let url = '';
 		if(id) url = 'ref/' + id;
 		else url = 'refs/' + format;
 		return $.ajax({
@@ -329,7 +329,7 @@ const References = (() => {
 		getAllLocal: () => {
 			return collection;
 		},
-		getByID: function(id) {
+		getByID: (id) => {
 			// if it's in local storage, return that
 			const index = collection.findIndex( (r) => { return r.id===id; } );
 			return new Promise( (resolve,reject) => {
