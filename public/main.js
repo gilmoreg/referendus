@@ -62,19 +62,23 @@ var buildHTML = function(ref) {
 
 var refreshList = function() {
 	$('.ref-container').empty();
-	$.ajax({
+	References.getAll().then( (data) => {
+		data.refs.forEach(function(ref) {
+			$('.ref-container').append(buildHTML(ref));
+		});
+	}, (msg) => { console.log('refreshList() error', msg); });
+
+	/*$.ajax({
 		url: 'refs/' + format,
 		type: 'GET',
 		contentType: 'application/json',
 		success: function(data) {
-			data.refs.forEach(function(ref) {
-				$('.ref-container').append(buildHTML(ref));
-			});
+			
 		},
 		error: function(msg) {
 			console.log('refresh error', msg);
 		}
-	});
+	});*/
 }
 
 // TODO can I avoid duplication in the click functions?
@@ -82,7 +86,14 @@ var newModalSubmit = function() {
 	$('#refModal .modal-form').on('submit', 'form', function(e) {
 		e.preventDefault();
 		var post = buildJSON($('.modal-form :input').serializeArray());
-		$.ajax({
+		References.create(post).then( (data) => {
+			console.log('newModalSubmit', data);
+			$("#refModal").modal('toggle');
+			$('#refModal .modal-form').off('submit');
+			refreshList();
+		}, (msg) => { console.log('newModalSubmit() error', msg); });
+
+		/*$.ajax({
 			url: 'refs/',
 			type: 'POST',
 			contentType: 'application/json',
@@ -94,7 +105,7 @@ var newModalSubmit = function() {
 				refreshList();
 			}
 			// TODO error
-		});
+		});*/
 	});
 }
 
@@ -110,7 +121,13 @@ var editModalClick = function(id) {
 		e.preventDefault();
 		var post = buildJSON($('.modal-form :input').serializeArray());
 		post.id = id;
-		$.ajax({
+		References.update(id, post).then( (data) => {
+			$("#refModal").modal('toggle');
+			$('.modal-form').off('submit');
+			refreshList();
+		}, (msg) => { console.log('editModalClick() error', msg); });
+
+		/*$.ajax({
 			url: 'refs/' + id,
 			type: 'PUT',
 			contentType: 'application/json',
@@ -122,12 +139,52 @@ var editModalClick = function(id) {
 				refreshList();
 			}
 			// TODO error
-		});
+		});*/
 	});
 }
 
 var editModal = function(id) {
-	$.ajax({
+	References.getByID(id).then( (data) => {
+		$.get('./views/' + data.type.toLowerCase() + '.html', function(partial) {
+			$('#refModal').modal('show');
+			$('.modal-form').html(partial);
+			$('.submit button').html('Update');
+			$('.new-button-row').hide();
+			var today = new Date();
+			$('#year').attr('max', today.getFullYear());
+			for(var field in data) {
+				switch(field) {
+					case 'authors': {
+						console.log('authors',data[field]);
+						if(data[field].length>0) {
+							var author = data[field][0].author.lastName + ', ' + data[field][0].author.firstName;
+							if(data[field][0].author.middleName) author += ', ' + data[field][0].author.middleName;
+							$('#' + field).attr("value", author);
+						}
+						break;
+					}
+					case 'tags': {
+						var tags = data[field].map(function(t) { return t.tag; });
+						$('#' + field).attr("value", tags.join(", "));
+						break;
+					}
+					case 'accessDate': 
+					case 'pubDate': {
+						console.log('accessDate',data[field]);
+						document.getElementById(field).valueAsDate = new Date(data[field]);
+						break;
+					}
+					default: {
+						console.log('default',data[field]);
+						$('#' + field).attr("value", data[field]);
+					}
+				}
+			}
+		});
+		editModalClick(id);
+	}, (msg) => { console.log('editModal() error', msg); });
+
+	/*$.ajax({
 		url: 'ref/' + id,
 		type: 'GET',
 		contentType: 'application/json',
@@ -171,7 +228,7 @@ var editModal = function(id) {
 			editModalClick(id);
 		}
 		// TODO error
-	});
+	});*/
 }
 
 var closeDeleteModal = function() {
@@ -180,7 +237,13 @@ var closeDeleteModal = function() {
 }
 
 var deleteRef = function(id) {
-	$.ajax({
+	References.delete(id).then( (data) => {
+		closeDeleteModal();
+	}, (msg) => { 
+		console.log('deleteRef() error', msg); 
+		closeDeleteModal();
+	});
+	/*$.ajax({
 		url: 'refs/' + id,
 		type: 'DELETE',
 		success: function(data) {
@@ -190,7 +253,7 @@ var deleteRef = function(id) {
 			console.log('error deleting', msg);
 			closeDeleteModal();
 		}
-	});
+	});*/
 	refreshList();
 }
 
@@ -201,34 +264,11 @@ var deleteModal = function(id) {
 	});
 }
 
-var testText = function() {
-	return "Press, B. (2017). Bacon Press's Big Debut. <i>Journal 12</i>, <i>2</i>, 33-45.<br><br>Mister, T. A. (1970, February 28). Boring, <i>None other than</i>. Retrieved 2017, March 3 from https://whatever.com.Last, F. (2009). <i>Title</i>. Boston: BC.edu.";
-}
-
 var copyToClipboard = function() {
-	var text = testText();
-	clipboard.copy({'text/html':text}).then(
+	clipboard.copy( {'text/html':References.getAllLocal()} ).then(
 					function(){console.log("success");},
 					function(err){console.log("failure", err);}
 				);
-	$.ajax({
-			url: 'refs/' + format,
-			type: 'GET',
-			contentType: 'application/json',
-			success: function(data) {
-				data.refs.forEach(function(ref) {
-					text += ref.html;
-				});
-				console.log(text);
-				clipboard.copy({'text/html':"<i>text</i>"}).then(
-					function(){console.log("success");},
-					function(err){console.log("failure", err);}
-				);
-			},
-			error: function(msg) {
-				console.log('error copying', msg);
-			}
-		});
 }
 
 $(function() {
