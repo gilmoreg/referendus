@@ -259,9 +259,9 @@ $(function() {
 	refreshList();	
 })
 
-var References = (function() {
+const References = (() => {
 
-	var collection = [];
+	let collection = [];
 
 	var dbCreate = function(ref) {
 		return $.ajax({
@@ -313,8 +313,9 @@ var References = (function() {
 					.fail(function(msg) { reject();	});
 			});
 		},
-		// If we are getting the whole set, we should update the localstorage
+		// If we are getting the whole set, assume we mean the server
 		getAll: function() {
+			debugger;
 			return new Promise( (resolve,reject) => {
 				dbGet()
 					.done(function(data) { 
@@ -327,9 +328,13 @@ var References = (function() {
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
 		getAllLocal: function() {
-			return collection.refs;
+			debugger;
+			return collection;
 		},
 		getByID: function(id) {
+			debugger;
+			// if it's in local storage, return that
+			const index = colection.findIndex( (r) => { return r.id===id; } );
 			return new Promise( (resolve,reject) => {
 				dbGet(id)
 					.done(function(data) { resolve(data); })
@@ -337,7 +342,7 @@ var References = (function() {
 			});
 		},
 		update: function(id, ref) {
-			const index = colection.findIndex( (r) => { return r.id===id; } );
+			const index = collection.findIndex( (r) => { return r.id===id; } );
 			collection[index] = ref;
 			localStorage.setItem('refs',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
@@ -360,4 +365,4 @@ var References = (function() {
 		}
 	};
 
-}());
+})();
