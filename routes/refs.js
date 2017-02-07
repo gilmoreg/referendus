@@ -8,11 +8,22 @@ const {logger} = require('../logger');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
 
 const res400Err = (msg, res) => {
-    logger.log('error',msg);
+    logger.error(msg);
     return res.status(400).send(msg);
 }
 
-router.get('/', jsonParser, (req, res) => {
+const isAuthenticated = (req, res, next) => {
+	if(req.isAuthenticated()){
+        return next();
+    } else{
+		res.redirect("/");
+    }
+}
+
+router.get('/', isAuthenticated, jsonParser, (req, res) => {
+	if(!req.body.user) {
+        return res400Err(`Missing "user" in request body`, res);
+    }
 	References
 		.find()
 		.exec()
@@ -26,7 +37,7 @@ router.get('/', jsonParser, (req, res) => {
     	});
 });
 
-router.post('/', jsonParser, (req, res) => {
+router.post('/', isAuthenticated, jsonParser, (req, res) => {
 	logger.log('info',`POST ${JSON.stringify(req.body)}`);
 	// validate
 	let requiredFields;
@@ -36,15 +47,15 @@ router.post('/', jsonParser, (req, res) => {
 
     switch(req.body.type) {
         case 'Article': {
-            requiredFields = ['title','authors','year','journal','volume','issue','pages'];
+            requiredFields = ['user', 'title','authors','year','journal','volume','issue','pages'];
             break;
         };
         case 'Book': {
-            requiredFields = ['title','authors','city','publisher','year']; 
+            requiredFields = ['user', 'title','authors','city','publisher','year']; 
             break;
         }; 
         case 'Website': {
-            requiredFields = ['title','siteTitle','accessDate','url'];
+            requiredFields = ['user', 'title','siteTitle','accessDate','url'];
             break;
         };
         default: {
@@ -73,7 +84,7 @@ router.post('/', jsonParser, (req, res) => {
 	    });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', isAuthenticated, (req, res) => {
 	logger.log('info',`DELETE ${req.params.id}`);
 	References
 	    .findByIdAndRemove(req.params.id)
@@ -82,7 +93,8 @@ router.delete('/:id', (req, res) => {
 	    .catch(err => res.status(500).json({message: `Internal server error: ${err}`}));
 });
 
-router.put('/:id', jsonParser, (req, res) => {
+// TODO must match user somehow? Or else users could modify other user's references if they guess the id?
+router.put('/:id', isAuthenticated, jsonParser, (req, res) => {
 	logger.log('info',`PUT ${req.body}`);
 	if (req.params.id !== req.body.id) {
 		const message = (

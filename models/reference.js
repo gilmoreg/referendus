@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 /*const options = { discriminatorKey: 'type' };*/
 
 const refSchema = mongoose.Schema( {
+    user: { type: String, required:true },
     type: { type: String, required:true },
     title: { type: String, required:true },
     tags: [ { tag:String } ],

@@ -6,7 +6,15 @@ const jsonParser = bodyParser.json();
 const {logger} = require('../logger');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
 
-router.get('/:id', (req, res) => {
+const isAuthenticated = (req, res, next) => {
+	if(req.isAuthenticated()){
+        return next();
+    } else{
+		res.redirect("/");
+    }
+}
+
+router.get('/:id', isAuthenticated, (req, res) => {
 	logger.log('info',`GET /refs ${req.params.id}`);
 	References
 		.findById(req.params.id)
