@@ -6,7 +6,6 @@ const jsonParser = bodyParser.json();
 const {logger} = require('../../logger');
 const moment = require('moment');
 const {References/*, Articles, Books, Websites*/} = require('../../models/reference');
-const passport = require('passport');
 
 const res400Err = (msg, res) => {
     logger.log('error',msg);
