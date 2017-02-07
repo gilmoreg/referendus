@@ -1,4 +1,5 @@
 let format = 'apa';
+let user = '';
 
 const formError = (msg) => {
 	console.log(msg);
@@ -181,6 +182,7 @@ const signoutHandler = () => {
 			url: 'auth/logout',
 			type: 'GET',
 			success: () => {
+				user = '';
 				$('#login-nav').show();
 				$('#logout').hide();
 				refreshList();
@@ -280,6 +282,7 @@ $(() => {
 			dataType: 'json',
 			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
 			success: () => {
+				user = $('#username').val();
 				$('#login-nav').hide();
 				$('#logout').show();
 				signoutHandler();
@@ -299,6 +302,7 @@ $(() => {
 			dataType: 'json',
 			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
 			success: () => {
+				user = $('#username').val();
 				$('#login-nav').hide();
 				$('#logout').show();
 				signoutHandler();
@@ -369,7 +373,7 @@ const References = (() => {
 						localStorage.setItem('refs',JSON.stringify(collection));
 						resolve(data);
 					})
-					.fail((msg) => { reject();	});
+					.fail((msg) => { reject(); });
 			});
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
