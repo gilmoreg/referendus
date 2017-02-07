@@ -254,7 +254,7 @@ $(() => {
 	// Login event handler
 	$('#login-nav').on('submit', (e) => {
 		e.preventDefault();
-		$('.dropdown.open .dropdown-toggle').dropdown('toggle');
+		$('.dropdown.open .dropdown-toggle').dropdown('toggle'); // might not want to do this yet in case there's a message needs displayed
 		$.ajax({
 			url: 'auth/login',
 			type: 'POST',
@@ -264,6 +264,24 @@ $(() => {
 			success: () => {
 				// TODO what..
 				console.log('login successful');
+				refreshList();
+			},
+			error: (msg) => { console.log('error logging in',msg); } // TODO real error handler
+		});
+	});
+
+	$('#signup').on('click', (e) => {
+		e.preventDefault();
+		$('.dropdown.open .dropdown-toggle').dropdown('toggle'); // might not want to do this yet in case there's a message needs displayed
+		$.ajax({
+			url: 'auth/signup',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
+			success: () => {
+				// TODO what...
+				console.log('signup successful');
 				refreshList();
 			},
 			error: (msg) => { console.log('error logging in',msg); } // TODO real error handler

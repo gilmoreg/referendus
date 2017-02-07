@@ -15,6 +15,7 @@ router.post('/login',
 });
 
 router.post('/signup', (req, res) => {
+    console.log('creating user');
     if (!req.body) {
         return res.status(400).json({message: 'No request body'});
     }
@@ -40,31 +41,42 @@ router.post('/signup', (req, res) => {
         return res.status(422).json({message: 'Incorrect field length: password'});
     }
     // check for existing user
+    console.log('checking for existing user');
     return User
         .find({username})
         .count()
         .exec()
         .then(count => {
             if (count > 0) {
-            return res.status(422).json({message: 'username already taken'});
+                console.log('username already taken');
+                //res.status(422).json({message: 'username already taken'});
+                throw new Error('username already taken');
+                return null;
             }
             // if no existing user, hash password
+            console.log('no existing user found, hashing password');
             return User.hashPassword(password)
     })
     .then(hash => {
+        console.log('password hashed, updating db');
         return User
         .create({
             username: username,
-            password: hash,
-            firstName: firstName,
-            lastName: lastName
+            password: hash
         })
     })
     .then(user => {
-        return res.status(201).json(user.apiRepr());
+        console.log('created user, logging in');
+        req.login(user, (err) => {
+            if(!err) {
+                return res.status(201).json(user.json());
+            }
+            else { throw new Error(`${err}`) }
+        })
     })
     .catch(err => {
-        res.status(500).json({message: 'Internal server error', details: err})
+        console.log('error creating user', err);
+        res.status(500).json({message: 'Internal server error', details:`${err}`})
     });
 });
 
