@@ -77,7 +77,15 @@ const generateReference = ref => {
 	}
 }
 
-router.get('/', (req, res) => {
+const isAuthenticated = (req, res, next) => {
+	if(req.isAuthenticated()){
+        return next();
+    } else{
+		res.redirect("/");
+    }
+}
+
+router.get('/', isAuthenticated, (req, res) => {
 	logger.log('info',`GET /refs/mla ${req}`);
 	 
  	References

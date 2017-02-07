@@ -91,13 +91,9 @@ const generateReference = ref => {
 }
 
 const isAuthenticated = (req, res, next) => {
-	console.log('checking auth');
 	if(req.isAuthenticated()){
-		console.log('is authed');
-        //if user is looged in, req.isAuthenticated() will return true 
         return next();
     } else{
-		console.log('not logged in');
 		res.redirect("/");
     }
 }
