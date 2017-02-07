@@ -63,6 +63,7 @@ const buildHTML = (ref) => {
 const refreshList = () => {
 	$('.ref-container').empty();
 	References.getAll().then( (data) => {
+		if(!data.refs) return; // TODO something more serious
 		data.refs.forEach((ref) => {
 			$('.ref-container').append(buildHTML(ref));
 		});
@@ -250,6 +251,25 @@ $(() => {
 		deleteModal(id);
 	});
 
+	// Login event handler
+	$('#login-nav').on('submit', (e) => {
+		e.preventDefault();
+		$('.dropdown.open .dropdown-toggle').dropdown('toggle');
+		$.ajax({
+			url: 'auth/login',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
+			success: () => {
+				// TODO what..
+				console.log('login successful');
+				refreshList();
+			},
+			error: (msg) => { console.log('error logging in',msg); } // TODO real error handler
+		});
+	});
+
 	refreshList();	
 })
 
@@ -302,6 +322,7 @@ const References = (() => {
 			});
 		},
 		// If we are getting the whole set, assume we mean the server
+		// TODO this may not be true in all cases
 		getAll: () => {
 			return new Promise( (resolve,reject) => {
 				dbGet()

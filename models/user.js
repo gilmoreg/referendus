@@ -31,8 +31,7 @@ UserSchema.methods.validatePassword = function(password, cb) {
     else {
       cb(err, false);
     }
-  })
-    
+  }) 
 }
 
 UserSchema.statics.hashPassword = function(password) {

@@ -91,7 +91,19 @@ const generateReference = ref => {
     }
 }
 
-router.get('/', passport.authenticate('local'), (req, res) => {
+const isAuthenticated = (req, res, next) => {
+	console.log('checking auth');
+	if(req.isAuthenticated()){
+		console.log('is authed');
+        //if user is looged in, req.isAuthenticated() will return true 
+        return next();
+    } else{
+		console.log('not logged in');
+		res.redirect("/");
+    }
+}
+
+router.get('/', isAuthenticated, (req, res) => {
 	logger.log('info',`GET /refs/apa ${req}`);
  	References
 		.find()
