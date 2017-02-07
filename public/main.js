@@ -175,7 +175,25 @@ const copyToClipboard = () => {
 				);
 }
 
+const signoutHandler = () => {
+	$('#signout').off('click').on('click', (e) => {
+		$.ajax({
+			url: 'auth/logout',
+			type: 'GET',
+			success: () => {
+				$('#login-nav').show();
+				$('#logout').hide();
+				refreshList();
+			},
+			error: (msg) => { console.log('error logging out',msg); } // TODO real error handler
+		});
+		
+	});
+}
+
 $(() => {
+	$('#logout').hide();
+
 	$('#newRef').on('click', () => {
 		newModal();
 	});
@@ -262,8 +280,9 @@ $(() => {
 			dataType: 'json',
 			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
 			success: () => {
-				// TODO what..
-				console.log('login successful');
+				$('#login-nav').hide();
+				$('#logout').show();
+				signoutHandler();
 				refreshList();
 			},
 			error: (msg) => { console.log('error logging in',msg); } // TODO real error handler
@@ -280,11 +299,12 @@ $(() => {
 			dataType: 'json',
 			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
 			success: () => {
-				// TODO what...
-				console.log('signup successful');
+				$('#login-nav').hide();
+				$('#logout').show();
+				signoutHandler();
 				refreshList();
 			},
-			error: (msg) => { console.log('error logging in',msg); } // TODO real error handler
+			error: (msg) => { console.log('error signing up',msg); } // TODO real error handler
 		});
 	});
 
