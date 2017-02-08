@@ -101,7 +101,7 @@ const isAuthenticated = (req, res, next) => {
 router.get('/', isAuthenticated, (req, res) => {
 	logger.log('info',`GET /refs/apa ${req}`);
  	References
-		.find()
+		.find({'user':req.user._doc.username})
 		.exec() 
 		.then( (refs) => {
 			res.json({refs: refs.map((ref)=>{return generateReference(ref);})});
