@@ -20,12 +20,11 @@ const isAuthenticated = (req, res, next) => {
     }
 }
 
+// TODO is this ever used? 
 router.get('/', isAuthenticated, jsonParser, (req, res) => {
-	if(!req.body.user) {
-        return res400Err(`Missing "user" in request body`, res);
-    }
+	logger.info('GET /refs');
 	References
-		.find()
+		.find({'user':req.user._doc.username})
 		.exec()
 		.then(refs => {
 			res.json({refs: refs.map(ref=>ref.json())});
@@ -44,9 +43,6 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
     if(!req.body.type) {
         return res400Err(`Missing "type" in request body`, res);
     }
-	if(!req.user || !req.user._doc.username) {
-		return res400Err('Missing "user" in request body', res);
-	}
 
     switch(req.body.type) {
         case 'Article': {
