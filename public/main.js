@@ -1,12 +1,12 @@
 let format = 'apa';
 let user = '';
 
-const formError = (msg) => {
+const formError = msg => {
 	console.log(msg);
 	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
 }
 
-const buildJSON = (fields) => {
+const buildJSON = fields => {
 	let post = {};
 	for(let i=0; i<fields.length;i++) {
 		switch(fields[i].name) {
@@ -32,7 +32,7 @@ const buildJSON = (fields) => {
 				if(tags.length<1) break;
 				if(!('tags' in Object.keys(post))) post['tags'] = [];
 				const tagList = [];
-				tags.forEach((tag) => {
+				tags.forEach(tag => {
 					tagList.push( { 'tag':tag.trim() } );
 				});
 				post['tags'] = tagList;
@@ -46,15 +46,15 @@ const buildJSON = (fields) => {
 	return post;
 }
 
-const buildHTML = (ref) => {
+const buildHTML = ref => {
 	let type = '';
 	switch(ref.data.type) {
 		case 'Article': type = '<span class="label label-primary">Article</span>'; break;
 		case 'Book': type ='<span class="label label-danger">Book</span>'; break;
 		case 'Website': type = '<span class="label label-success">Website</span>'
 	}
-	let html = '<div class="ref" data-id="' + ref.data._id + '">'
-				+	'<div class="ref-text green col-xs-9">' + type + ' ' + ref.html + '</div>'
+	let html = `<div class="ref" data-id="${ref.data._id}">`
+				+	`<div class="ref-text green col-xs-9">${type} ${ref.html}</div>`
 				+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
 				+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
 			+ '</div>';
@@ -63,12 +63,13 @@ const buildHTML = (ref) => {
 
 const refreshList = () => {
 	$('.ref-container').empty();
-	References.getAll().then( (data) => {
+	References.getAll().then(data => {
+		console.log('getall',data);
 		if(!data.refs) return; // TODO something more serious
-		data.refs.forEach((ref) => {
+		data.refs.forEach(ref => {
 			$('.ref-container').append(buildHTML(ref));
 		});
-	}, (msg) => { console.log('refreshList() error', msg); });
+	}, msg => { console.log('refreshList() error', msg); });
 }
 
 const newModalSubmit = () => {
@@ -79,7 +80,7 @@ const newModalSubmit = () => {
 			$("#refModal").modal('toggle');
 			$('#refModal .modal-form').off('submit');
 			refreshList();
-		}, (msg) => { console.log('newModalSubmit() error', msg); });
+		}, msg => { console.log('newModalSubmit() error', msg); });
 	});
 }
 
@@ -90,22 +91,22 @@ const newModal = () => {
 	newModalSubmit();
 }
 
-const editModalClick = (id) => {
-	$('#refModal .modal-form').on('submit', 'form', (e) => {
+const editModalClick = id => {
+	$('#refModal .modal-form').on('submit', 'form', e => {
 		e.preventDefault();
 		let post = buildJSON($('.modal-form :input').serializeArray());
 		post.id = id;
-		References.update(id, post).then( (data) => {
+		References.update(id, post).then(data => {
 			$("#refModal").modal('toggle');
 			$('.modal-form').off('submit');
 			refreshList();
-		}, (msg) => { console.log('editModalClick() error', msg); });
+		}, msg => { console.log('editModalClick() error', msg); });
 	});
 }
 
-const editModal = (id) => {
-	References.getByID(id).then( (ref) => {
-		$.get('./views/' + ref.data.type.toLowerCase() + '.html', (partial) => {
+const editModal = id => {
+	References.getByID(id).then(ref => {
+		$.get('./views/' + ref.data.type.toLowerCase() + '.html', partial => {
 			$('#refModal').modal('show');
 			$('.modal-form').html(partial);
 			$('.submit button').html('Update');
@@ -123,7 +124,7 @@ const editModal = (id) => {
 						break;
 					}
 					case 'tags': {
-						const tags = ref.data[field].map((t) => { return t.tag; });
+						const tags = ref.data[field].map(t => { return t.tag; });
 						$('#' + field).attr("value", tags.join(", "));
 						break;
 					}
@@ -139,7 +140,7 @@ const editModal = (id) => {
 			}
 		});
 		editModalClick(id);
-	}, (msg) => { console.log('editModal() error', msg); });
+	}, msg => { console.log('editModal() error', msg); });
 }
 
 const closeDeleteModal = () => {
@@ -147,19 +148,19 @@ const closeDeleteModal = () => {
 	$('#yesDelete').off('click');
 }
 
-const deleteRef = (id) => {
-	References.delete(id).then( (data) => {
+const deleteRef = id => {
+	References.delete(id).then(data => {
 		closeDeleteModal();
-	}, (msg) => { 
+	}, msg => { 
 		console.log('deleteRef() error', msg); 
 		closeDeleteModal();
 	});
 	refreshList();
 }
 
-const deleteModal = (id) => {
+const deleteModal = id => {
 	$('#deleteModal').show('modal');
-	$('#yesDelete').on('click', (e) => {
+	$('#yesDelete').on('click', e => {
 		deleteRef(id);
 	});
 }
@@ -167,17 +168,17 @@ const deleteModal = (id) => {
 const copyToClipboard = () => {
 	const collection = References.getAllLocal();
 	let text = '';
-	collection.forEach((ref) => {
+	collection.forEach(ref => {
 		text += ref.html + '<br><br>';
 	});
 	clipboard.copy( {'text/html':text} ).then(
 					() => {},
-					(err) => {console.log("failure", err);}
+					err => {console.log("failure", err);}
 				);
 }
 
 const signoutHandler = () => {
-	$('#signout').off('click').on('click', (e) => {
+	$('#signout').off('click').on('click', e => {
 		$.ajax({
 			url: 'auth/logout',
 			type: 'GET',
@@ -187,7 +188,7 @@ const signoutHandler = () => {
 				$('#logout').hide();
 				refreshList();
 			},
-			error: (msg) => { console.log('error logging out',msg); } // TODO real error handler
+			error: msg => { console.log('error logging out',msg); } // TODO real error handler
 		});
 		
 	});
@@ -205,7 +206,7 @@ $(() => {
 	});
 
 	$('#newArticle').on('click', () => {
-		$.get('./views/article.html', (html) => {
+		$.get('./views/article.html', html => {
 			$('.modal-form').html(html);
 			const today = new Date();
 			$('#year').attr('max', today.getFullYear());
@@ -213,7 +214,7 @@ $(() => {
 	});
 
 	$('#newBook').on('click', () => {
-		$.get('./views/book.html', (html) => {
+		$.get('./views/book.html', html => {
 			$('.modal-form').html(html);
 			const today = new Date();
 			$('#year').attr('max', today.getFullYear());
@@ -221,7 +222,7 @@ $(() => {
 	});
 
 	$('#newWebsite').on('click', () => {
-		$.get('./views/website.html', (html) => {
+		$.get('./views/website.html', html => {
 			$('.modal-form').html(html);
 		});
 	});
@@ -253,26 +254,26 @@ $(() => {
 		closeDeleteModal();
 	});
 
-	$('#noDelete').on('click', (e) => {
+	$('#noDelete').on('click', e => {
 		closeDeleteModal();
 	});
 	
 	// Edit button event handler
-	$('.ref-container').on('click','.ref-edit', (e) => {
+	$('.ref-container').on('click','.ref-edit', e => {
 		e.preventDefault();
 		const id = $(event.target).closest('.ref').attr('data-id');
 		editModal(id);
 	});
 
 	// Delete button event handler
-	$('.ref-container').on('click', '.ref-del', (e) => {
+	$('.ref-container').on('click', '.ref-del', e => {
 		e.preventDefault();
 		const id = $(event.target).closest('.ref').attr('data-id');
 		deleteModal(id);
 	});
 
 	// Login event handler
-	$('#login-nav').on('submit', (e) => {
+	$('#login-nav').on('submit', e => {
 		e.preventDefault();
 		$('.dropdown.open .dropdown-toggle').dropdown('toggle'); // might not want to do this yet in case there's a message needs displayed
 		$.ajax({
@@ -288,11 +289,11 @@ $(() => {
 				signoutHandler();
 				refreshList();
 			},
-			error: (msg) => { console.log('error logging in',msg); } // TODO real error handler
+			error: msg => { console.log('error logging in',msg); } // TODO real error handler
 		});
 	});
 
-	$('#signup').on('click', (e) => {
+	$('#signup').on('click', e => {
 		e.preventDefault();
 		$('.dropdown.open .dropdown-toggle').dropdown('toggle'); // might not want to do this yet in case there's a message needs displayed
 		$.ajax({
@@ -308,7 +309,7 @@ $(() => {
 				signoutHandler();
 				refreshList();
 			},
-			error: (msg) => { console.log('error signing up',msg); } // TODO real error handler
+			error: msg => { console.log('error signing up',msg); } // TODO real error handler
 		});
 	});
 
@@ -316,8 +317,12 @@ $(() => {
 })
 
 const References = (() => {
-	let collection = [];
-	const dbCreate = (ref) => {
+	let collection;
+	if(user) collection = JSON.parse(localStorage.getItem(user));
+	else collection = JSON.parse(localStorage.getItem('local'));
+	if(!collection) collection = [];
+
+	const dbCreate = ref => {
 		return $.ajax({
 			url: 'refs/',
 			type: 'POST',
@@ -326,7 +331,7 @@ const References = (() => {
 			data: JSON.stringify(ref)
 		});
 	}
-	const dbGet = (id) => {
+	const dbGet = id => {
 		let url = '';
 		if(id) url = 'ref/' + id;
 		else url = 'refs/' + format;
@@ -345,7 +350,7 @@ const References = (() => {
 			data: JSON.stringify(ref)
 		});
 	}	
-	const dbDelete = (id) => {
+	const dbDelete = id => {
 		return $.ajax({
 			url: 'refs/' + id,
 			type: 'DELETE'
@@ -353,67 +358,71 @@ const References = (() => {
 	}
 
 	return {
-		create: (ref) => {
+		create: ref => {
 			collection.push(ref);
-			localStorage.setItem('refs',JSON.stringify(collection));
+			if(user) localStorage.setItem(user,JSON.stringify(collection));
+			else localStorage.setItem('local',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				if(user) {
 					dbCreate(ref)
 						.done(() => { resolve(); })
-						.fail((msg) => { reject(); });
+						.fail(msg => { reject(msg); });
 				}
-				
+				else resolve();
 			});
 		},
-		// If we are getting the whole set, assume we mean the server
-		// TODO this may not be true in all cases
 		getAll: () => {
 			return new Promise( (resolve,reject) => {
-				dbGet()
-					.done((data) => { 
-						collection = data.refs;
-						localStorage.setItem('refs',JSON.stringify(collection));
-						resolve(data);
-					})
-					.fail((msg) => { reject(); });
+				if(user) {
+					dbGet()
+						.done(data => { 
+							collection = data.refs;
+							localStorage.setItem(user,JSON.stringify(collection));
+							resolve(data);
+						})
+						.fail(msg => { reject(); });
+				}
+				else {
+					resolve(collection);
+				}
 			});
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
 		getAllLocal: () => {
 			return collection;
 		},
-		getByID: (id) => {	
+		getByID: id => {	
 			return new Promise( (resolve,reject) => {
 				// if it's in local storage, return that
-				const index = collection.findIndex( (r) => { return r.data._id===id; } );
+				const index = collection.findIndex(r => { return r.data._id===id; } );
 				if(index!==-1) {
 					resolve(collection[index]);
 				}
 				dbGet(id)
-					.done((data) => { resolve(data); })
-					.fail((msg) => { reject();	});
+					.done(data => { resolve(data); })
+					.fail(msg => { reject();	});
 			});
 		},
 		update: (id, ref) => {
-			const index = collection.findIndex( (r) => { return r.data._id===id; } );
+			const index = collection.findIndex(r => { return r.data._id===id; } );
 			collection[index] = ref;
-			localStorage.setItem('refs',JSON.stringify(collection));
+			localStorage.setItem(user,JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				dbUpdate(id, ref)
-					.done((data) => { resolve(data); })
-					.fail((msg) => { reject();	});
+					.done(data => { resolve(data); })
+					.fail(msg => { reject();	});
 			});
 		},
-		delete: (id) => {
-			collection = collection.filter((ref) => {
+		delete: id => {
+			collection = collection.filter(ref => {
 				if(ref.data._id===id) return false;
 				return true;
 			});
-			localStorage.setItem('refs',JSON.stringify(collection));
+			localStorage.setItem(user,JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				dbDelete(id)
 					.done(() => { resolve(); })
-					.fail((msg) => { reject();	});
+					.fail(msg => { reject();	});
 			});
 		}
 	};
