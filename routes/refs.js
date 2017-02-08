@@ -93,13 +93,12 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
 router.delete('/:id', isAuthenticated, (req, res) => {
 	logger.log('info',`DELETE ${req.params.id}`);
 	References
-	    .findOneAndRemove({'_id':req.params.id, 'user':req.user._doc.username })
+	    .findOneAndRemove({ '_id':req.params.id, 'user':req.user._doc.username })
 	    .exec()
 	    .then(post => res.status(204).end())
 	    .catch(err => res.status(500).json({message: `Internal server error: ${err}`}));
 });
 
-// TODO must match user somehow? Or else users could modify other user's references if they guess the id?
 router.put('/:id', isAuthenticated, jsonParser, (req, res) => {
 	logger.log('info',`PUT ${req.body}`);
 	if (req.params.id !== req.body.id) {
@@ -126,7 +125,7 @@ router.put('/:id', isAuthenticated, jsonParser, (req, res) => {
 
 	References
     	// all key/value pairs in toUpdate will be updated -- that's what `$set` does
-	    .findByIdAndUpdate(req.params.id, {$set: toUpdate})
+	    .findOneAndUpdate({ '_id':req.params.id, 'user':req.user._doc.username }, {$set: toUpdate})
 	    .exec()
 	    .then(post => res.status(204).end())
 	    .catch(err => res.status(500).json({message: 'Internal server error'}));
