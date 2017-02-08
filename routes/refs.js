@@ -80,7 +80,7 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
 	// Add 'user' to body
 	req.body.user = req.user._doc.username;
 
-	 References
+	References
 	    .create(req.body)
 	    .then(
 	      ref => res.status(201).json(ref.json()))
@@ -93,7 +93,7 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
 router.delete('/:id', isAuthenticated, (req, res) => {
 	logger.log('info',`DELETE ${req.params.id}`);
 	References
-	    .findByIdAndRemove(req.params.id)
+	    .findOneAndRemove({'_id':req.params.id, 'user':req.user._doc.username })
 	    .exec()
 	    .then(post => res.status(204).end())
 	    .catch(err => res.status(500).json({message: `Internal server error: ${err}`}));
