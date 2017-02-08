@@ -44,18 +44,21 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
     if(!req.body.type) {
         return res400Err(`Missing "type" in request body`, res);
     }
+	if(!req.user || !req.user._doc.username) {
+		return res400Err('Missing "user" in request body', res);
+	}
 
     switch(req.body.type) {
         case 'Article': {
-            requiredFields = ['user', 'title','authors','year','journal','volume','issue','pages'];
+            requiredFields = ['title','authors','year','journal','volume','issue','pages'];
             break;
         };
         case 'Book': {
-            requiredFields = ['user', 'title','authors','city','publisher','year']; 
+            requiredFields = ['title','authors','city','publisher','year']; 
             break;
         }; 
         case 'Website': {
-            requiredFields = ['user', 'title','siteTitle','accessDate','url'];
+            requiredFields = ['title','siteTitle','accessDate','url'];
             break;
         };
         default: {
@@ -73,6 +76,9 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
     if(req.body.authors && req.body.authors.length < 1) {
         return res400Err(`"authors" must contain at least one author`, res);
     }
+
+	// Add 'user' to body
+	req.body.user = req.user._doc.username;
 
 	 References
 	    .create(req.body)

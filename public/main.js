@@ -351,16 +351,18 @@ const References = (() => {
 			type: 'DELETE'
 		});
 	}
-	// Throughout, assuming we want to manipulate local storage even if server is not available
-	// This would mean that once the server is available, work might be lost
+
 	return {
 		create: (ref) => {
 			collection.push(ref);
 			localStorage.setItem('refs',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
-				dbCreate(ref)
-					.done(() => { resolve(); })
-					.fail((msg) => { reject(); });
+				if(user) {
+					dbCreate(ref)
+						.done(() => { resolve(); })
+						.fail((msg) => { reject(); });
+				}
+				
 			});
 		},
 		// If we are getting the whole set, assume we mean the server
