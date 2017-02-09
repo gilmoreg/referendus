@@ -13,39 +13,21 @@
     font-size: 20px;
 }
 
-.right-header {
-    text-align: right;
-    padding-right: 0px;
-    padding-top: 5px;
-}
-
 .ref-container {
     margin: 10px auto 10px auto;
     padding-bottom: 10px;
 }
 
-.ref {
-    width: 80%;
-    margin: 5px 10% 5px 10%;
-    padding: 10px;
-}
 
-.ref-text, .ref-edit, .ref-del {
-    background-color: #b9f3c7;
-}
 
-.ref-edit, .ref-del {
-    text-align: right;
-}
-
-.ref-text {
+/*.ref-text {
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis; 
     min-width: 150px; 
     max-width: 1000px; 
     line-height: 20px;
-}
+}*/
 
 footer {
     font-size: 9px;
