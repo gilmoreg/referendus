@@ -54,9 +54,9 @@ const buildHTML = ref => {
 		case 'Website': type = '<span class="label label-success">Website</span>'
 	}
 	let html = `<div class="ref" data-id="${ref.data._id}">`
-				+	`<div class="ref-text green col-xs-9">${type} ${ref.html}</div>`
-				+	'<div class="ref-edit green col-xs-1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
-				+ 	'<div class="ref-del green col-xs-1"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
+				+	`<div class="ref-text">${type} ${ref.html}</div>`
+				+	'<div class="ref-edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
+				+ 	'<div class="ref-del"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
 			+ '</div>';
 	return html;
 }

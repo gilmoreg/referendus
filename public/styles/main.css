@@ -7,15 +7,29 @@
     padding-bottom: 10px;
 }
 
+.list-group .ref-label {
+    float: left;
+    width: 55px;
+}
 
+.ref-edit, .ref-del {
+    width: 30px;
+    float: right;
+    text-align: center;
+    line-height: 14px;
+}
 
-/*.ref-text {
+.ref-text {
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis; 
-    min-width: 150px; 
-    max-width: 1000px; 
-    line-height: 20px;
+    line-height: 14px;
+    padding-left: 10px;
+}
+
+
+/*.ref-text {
+    
 }*/
 
 footer {
