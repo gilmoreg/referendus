@@ -69,7 +69,7 @@ const refreshList = () => {
 		data.refs.forEach(ref => {
 			$('.ref-container').append(buildHTML(ref));
 		});
-	}, msg => { console.log('refreshList() error', msg); });
+	}, msg => { console.log('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
 }
 
 const newModalSubmit = () => {
@@ -85,6 +85,7 @@ const newModalSubmit = () => {
 }
 
 const newModal = () => {
+	if(!user) return; // todo message
 	$("#refModal").modal('toggle');
 	$('.new-button-row').show();
 	$('.submit button').html('Add');
@@ -92,6 +93,7 @@ const newModal = () => {
 }
 
 const editModalClick = id => {
+	if(!user) return; // todo message
 	$('#refModal .modal-form').on('submit', 'form', e => {
 		e.preventDefault();
 		let post = buildJSON($('.modal-form :input').serializeArray());
@@ -105,6 +107,7 @@ const editModalClick = id => {
 }
 
 const editModal = id => {
+	if(!user) return; // todo message
 	References.getByID(id).then(ref => {
 		$.get('./views/' + ref.data.type.toLowerCase() + '.html', partial => {
 			$('#refModal').modal('show');
@@ -149,6 +152,7 @@ const closeDeleteModal = () => {
 }
 
 const deleteRef = id => {
+	if(!user) return; // todo message
 	References.delete(id).then(data => {
 		closeDeleteModal();
 	}, msg => { 
@@ -159,6 +163,7 @@ const deleteRef = id => {
 }
 
 const deleteModal = id => {
+	if(!user) return; // todo message
 	$('#deleteModal').show('modal');
 	$('#yesDelete').on('click', e => {
 		deleteRef(id);
@@ -312,8 +317,6 @@ $(() => {
 			error: msg => { console.log('error signing up',msg); } // TODO real error handler
 		});
 	});
-
-	refreshList();	
 })
 
 const References = (() => {
