@@ -49,15 +49,16 @@ const buildJSON = fields => {
 const buildHTML = ref => {
 	let type = '';
 	switch(ref.data.type) {
-		case 'Article': type = '<span class="label label-primary">Article</span>'; break;
-		case 'Book': type ='<span class="label label-danger">Book</span>'; break;
-		case 'Website': type = '<span class="label label-success">Website</span>'
+		case 'Article': type = '<div class="label label-primary ref-label">Article</div>'; break;
+		case 'Book': type ='<div class="label label-danger ref-label">Book</div>'; break;
+		case 'Website': type = '<div class="label label-success ref-label">Website</div>'
 	}
-	let html = `<div class="ref" data-id="${ref.data._id}">`
-				+	`<div class="ref-text">${type} ${ref.html}</div>`
+	let html = `<li class="ref list-group-item" data-id="${ref.data._id}">`
+				+   type
+				+	'<div class="ref-del"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
 				+	'<div class="ref-edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>'
-				+ 	'<div class="ref-del"><i class="fa fa-trash-o" aria-hidden="true"></i></div>'
-			+ '</div>';
+				+	`<div class="ref-text">${ref.html}</div>`
+			+ '</li>';
 	return html;
 }
 
