@@ -363,36 +363,32 @@ const References = (() => {
 			if(user) localStorage.setItem(user,JSON.stringify(collection));
 			else localStorage.setItem('local',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
-				if(user) {
-					dbCreate(ref)
-						.done(() => { resolve(); })
-						.fail(msg => { reject(msg); });
-				}
-				else resolve();
+				if(!user) reject('Must be logged in.');
+				dbCreate(ref)
+					.done(() => { resolve(); })
+					.fail(msg => { reject(msg); });
 			});
 		},
 		getAll: () => {
 			return new Promise( (resolve,reject) => {
-				if(user) {
-					dbGet()
-						.done(data => { 
-							collection = data.refs;
-							localStorage.setItem(user,JSON.stringify(collection));
-							resolve(data);
-						})
-						.fail(msg => { reject(); });
-				}
-				else {
-					resolve(collection);
-				}
+				if(!user) reject('Must be logged in.');
+				dbGet()
+					.done(data => { 
+						collection = data.refs;
+						localStorage.setItem(user,JSON.stringify(collection));
+						resolve(data);
+					})
+					.fail(msg => { reject(); });
 			});
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
 		getAllLocal: () => {
 			return collection;
 		},
+		// This is the one case in which pulling from localStorage is safe and will increase speed
 		getByID: id => {	
 			return new Promise( (resolve,reject) => {
+				if(!user) reject('Must be logged in.');
 				// if it's in local storage, return that
 				const index = collection.findIndex(r => { return r.data._id===id; } );
 				if(index!==-1) {
@@ -400,29 +396,35 @@ const References = (() => {
 				}
 				dbGet(id)
 					.done(data => { resolve(data); })
-					.fail(msg => { reject();	});
+					.fail(msg => { reject(); });
 			});
 		},
 		update: (id, ref) => {
-			const index = collection.findIndex(r => { return r.data._id===id; } );
-			collection[index] = ref;
-			localStorage.setItem(user,JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
+				if(!user) reject('Must be logged in.');
 				dbUpdate(id, ref)
-					.done(data => { resolve(data); })
-					.fail(msg => { reject();	});
+					.done(data => { 
+						const index = collection.findIndex(r => { return r.data._id===id; } );
+						collection[index] = ref;
+						localStorage.setItem(user,JSON.stringify(collection));
+						resolve(data); 
+					})
+					.fail(msg => { reject(); });
 			});
 		},
 		delete: id => {
-			collection = collection.filter(ref => {
-				if(ref.data._id===id) return false;
-				return true;
-			});
 			localStorage.setItem(user,JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
+				if(!user) reject('Must be logged in.');
 				dbDelete(id)
-					.done(() => { resolve(); })
-					.fail(msg => { reject();	});
+					.done(() => { 
+						collection = collection.filter(ref => {
+							if(ref.data._id===id) return false;
+							return true;
+						});
+						resolve(); 
+					})
+					.fail(msg => { reject(); });
 			});
 		}
 	};
