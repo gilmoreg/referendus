@@ -77,53 +77,40 @@ function generateWebsiteData() {
     }
 }
 
-function tearDownDb() {
-    console.warn('Deleting database');
-    mongoose.connection.db.dropCollection('references', function(err, result) {
-        if(err) return err;
-        return result;
-    });
-    //return mongoose.connection.dropDatabase();
-}
-
-describe('Reference API', function() {
+describe('Reference API', () => {
 
     let sid;
 
-    before(function(done) {
-        runServer(TEST_DATABASE_URL)
+    before(() => {
+        return runServer(TEST_DATABASE_URL);
+    });
+
+    beforeEach(done => {  
+        chai.request.agent(app)
+            .post('/auth/signup')
+            .send({username:'test', password:faker.internet.color() })
             .then(res => {
-                chai.request.agent(app)
-                    .post('/auth/signup')
-                    .send({username:'test', password:faker.internet.color() })
-                    .then(res => {
-                        sid = res.headers['set-cookie'].pop().split(';')[0];
-                        console.log('SID',sid);
+                sid = res.headers['set-cookie'].pop().split(';')[0];
+                seedRefData()
+                    .then(() => {
                         done();
                     })
-                    .catch(err =>{
-                        console.error(err);
-                        res.status(500).json({message: 'Internal server error'});
-                    })
             })
-        
+            .catch(err =>{
+                console.error(err);
+                res.status(500).json({message: 'Internal server error'});
+            })
     });
 
-    beforeEach(function() {
-        console.log('beforeach');
-        return seedRefData();
+    afterEach(() => {
+        return mongoose.connection.dropDatabase();
     });
 
-    afterEach(function() {
-        console.warn('tearing down db');
-        return tearDownDb();
-    });
-
-    after(function() {
+    after(() => {
         return closeServer();
     });
 
-    describe('something basic', () => {
+    /*describe('something basic', () => {
         // This should actually fail because there is no session id ????
         it('should prove that tests are working', () => {
             return chai.request.agent(app)
@@ -131,14 +118,13 @@ describe('Reference API', function() {
                 .set('Cookie',sid)
                 .then(res => {
                     res.should.have.status(200);
-                    console.log('we did it!');
                     return;
                 })
         });
-    });
+    });*/
 
     describe('POST', () => {
-        it('should try to post', () => {
+        it('should add a new article', () => {
             const newArticle = generateArticleData();
             return chai.request.agent(app)
                 .post('/refs')
@@ -154,8 +140,43 @@ describe('Reference API', function() {
                     res.body.id.should.not.be.null;
                     return References.findById(res.body.id);
                 })
+                .then(function(ref) {
+                    ref.title.should.equal(newArticle.title);
+                    ref.year.should.equal(newArticle.year);
+                    ref.volume.should.equal(newArticle.volume);
+                    ref.pages.should.equal(newArticle.pages);
+                    ref.issue.should.equal(newArticle.issue);
+                });
         });
+
+        it('should add a new book', function() {
+            const newBook = generateBookData();
+            return chai.request(app)
+                .post('/refs')
+                .set('Cookie',sid)
+                .send(newBook)
+                .then(function(res) {
+                    res.should.have.status(201);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.include.keys(
+                        'id', 'authors','publisher','year','city');
+                    res.body.title.should.equal(newBook.title);
+                    // because Mongo should have created id on insertion
+                    res.body.id.should.not.be.null;
+                    return References.findById(res.body.id);
+                })
+                .then(function(ref) {
+                    ref.title.should.equal(newBook.title);
+                    ref.year.should.equal(newBook.year);
+                    ref.publisher.should.equal(newBook.publisher);
+                    ref.city.should.equal(newBook.city);
+                });
+        });
+
+
     });
+});
     /*
     describe('GET endpoint', function() {
         it('should return refs with the right fields', function() {
@@ -343,4 +364,3 @@ describe('Reference API', function() {
         });
     });
     */
-});
