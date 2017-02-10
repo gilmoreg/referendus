@@ -4,7 +4,8 @@
   "description": "A lightweight reference manager",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --inline-diffs ./test"
+    "test": "mocha --inline-diffs ./test",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
