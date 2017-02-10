@@ -115,7 +115,7 @@ describe('Reference API', function() {
             return chai.request(app)
                 .get('/refs')
                 .send(token)
-                .then((res) => {
+                .then(res => {
                     console.log('we did it!');
                 })
         });
