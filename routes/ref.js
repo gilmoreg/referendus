@@ -19,10 +19,10 @@ router.get('/:id', isAuthenticated, (req, res) => {
 	References
 		.findOne({'_id':req.params.id, 'user':req.user._doc.username})
 		.exec() 
-		.then( (ref) => {
+		.then(ref => {
 			res.json(ref);
 		})
-		.catch( err => {
+		.catch(err => {
 			logger.log('error',err);
 			res.status(500).json({message:'Internal server error'});
 		})
