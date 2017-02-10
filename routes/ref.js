@@ -15,7 +15,7 @@ const isAuthenticated = (req, res, next) => {
 }
 
 router.get('/:id', isAuthenticated, (req, res) => {
-	logger.log('info',`GET /refs ${req.params.id}`);
+	logger.log('info',`GET /ref ${req.params.id}`);
 	References
 		.findOne({'_id':req.params.id, 'user':req.user._doc.username})
 		.exec() 
