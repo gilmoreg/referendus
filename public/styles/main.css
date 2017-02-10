@@ -9,6 +9,8 @@
 
 .ref {
     line-height: 20px;
+    max-width: 768px;
+    margin: 0 auto;
 }
 
 .list-group .ref-label {
