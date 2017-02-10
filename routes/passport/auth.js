@@ -49,7 +49,6 @@ router.post('/signup', (req, res) => {
         .then(count => {
             if (count > 0) {
                 console.log('username already taken');
-                //res.status(422).json({message: 'username already taken'});
                 throw new Error('username already taken');
                 return null;
             }
