@@ -1,9 +1,28 @@
-let format = 'apa';
+let format;
 let user = '';
 
 const formError = msg => {
 	console.log(msg);
 	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
+}
+
+const setFormat = (f) => {
+	format = f;
+	$('#apa-check, #chi-check, #mla-check').hide();
+	switch(format) {
+		case 'apa': {
+			$('#apa-check').show();
+			break;
+		}
+		case 'chicago': {
+			$('#chi-check').show();
+			break;
+		}
+		case 'mla': {
+			$('#mla-check').show();
+		}
+	}
+	refreshList();
 }
 
 const buildJSON = fields => {
@@ -201,6 +220,8 @@ const signoutHandler = () => {
 }
 
 $(() => {
+	setFormat('apa'); // todo: localStorage (per user?)
+
 	$('#logout').hide();
 
 	$('#newRef').on('click', () => {
@@ -234,21 +255,15 @@ $(() => {
 	});
 
 	$('#APA').on('click', () => {
-		format = 'apa';
-		$("#formatModal").modal('toggle');
-		refreshList();
+		setFormat('apa');
 	});
 
 	$('#Chicago').on('click', () => {
-		format = 'chicago';
-		$("#formatModal").modal('toggle');
-		refreshList();
+		setFormat('chicago');
 	});
 
 	$('#MLA').on('click', () => {
-		format = 'mla';
-		$("#formatModal").modal('toggle');
-		refreshList();
+		setFormat('mla');
 	});
 
 	$('#refModal').on('hide.bs.modal', () => {

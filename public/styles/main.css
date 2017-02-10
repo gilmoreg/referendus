@@ -2,6 +2,12 @@
     box-sizing: border-box;
 }
 
+/* Check marks in format dropdown */
+a i {
+    position: absolute;
+    left: 5px;
+}
+
 .ref-container {
     margin: 10px auto 10px auto;
     padding-bottom: 10px;
