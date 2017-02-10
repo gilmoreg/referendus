@@ -10,12 +10,10 @@ router.post('/login',
     (req, res) => {
     // If this function gets called, authentication was successful.
     // `req.user` contains the authenticated user.
-    console.log('login successful');
     res.status(200).json({message: 'Login successful'});
 });
 
 router.post('/signup', (req, res) => {
-    console.log('creating user');
     if (!req.body) {
         return res.status(400).json({message: 'No request body'});
     }
@@ -41,7 +39,6 @@ router.post('/signup', (req, res) => {
         return res.status(422).json({message: 'Incorrect field length: password'});
     }
     // check for existing user
-    console.log('checking for existing user');
     return User
         .find({username})
         .count()
