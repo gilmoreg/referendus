@@ -81,24 +81,23 @@ function tearDownDb() {
 
 describe('Reference API', function() {
 
+    let token;
+
     before(function() {
-        chai.passport.use(strategy)
-            .success(()=> {
-                console.log('logged in');
-            })
         return runServer(TEST_DATABASE_URL);
     });
 
     beforeEach(function() {
         chai.request(app)
             .post('/auth/signup')
-            .send({'username':'test', 'password':'test' })
+            .send({username:'test', password:faker.internet.color() })
             .then(res => {
                 res.should.have.status(201);
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.username.should.equal('test');
-                // Need to grab the token
+                res.body.token.should.be.a('object');
+                token = { access_token: res.body.token };
                 return seedRefData();
             })
     });
@@ -115,6 +114,7 @@ describe('Reference API', function() {
         it('should prove that tests are working', () => {
             return chai.request(app)
                 .get('/refs')
+                .send(token)
                 .then((res) => {
                     console.log('we did it!');
                 })
