@@ -1,6 +1,5 @@
 const chai = require('chai');
 chai.use(require('chai-http'));
-chai.use(require('chai-passport-strategy'));
 const should = chai.should();
 const faker = require('faker');
 const mongoose = require('mongoose');
@@ -8,33 +7,6 @@ const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
 const {User} = require('../models/user');
-const LocalStrategy = require('passport-local').Strategy
-
-const strategy = new LocalStrategy(
-  (username, password, callback) => {
-    User.findOne({ username: username }, (err, user) => {
-      if (err) { 
-        return callback(err); 
-      }
-      // No user found with that username
-      if (!user) { 
-        return callback(null, false); 
-      }
-      // Make sure the password is correct
-      user.validatePassword(password, (err, isMatch) => {
-        if (err) { 
-          return callback(err); 
-        }
-        // Password did not match
-        if (!isMatch) { 
-          return callback(null, false); 
-        }
-        // Success
-        return callback(null, user);
-      });
-    });
-  }
-);
 
 function seedRefData() {
     console.info('seeding ref post data');
@@ -118,7 +90,17 @@ describe('Reference API', function() {
     });
 
     beforeEach(function() {
-        return seedRefData();
+        chai.request(app)
+            .post('/auth/signup')
+            .send({'username':'test', 'password':'test' })
+            .then(res => {
+                res.should.have.status(201);
+                res.should.be.json;
+                res.body.should.be.a('object');
+                res.body.username.should.equal('test');
+                // Need to grab the token
+                return seedRefData();
+            })
     });
 
     afterEach(function() {
