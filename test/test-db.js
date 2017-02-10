@@ -1,22 +1,43 @@
 const chai = require('chai');
-const chaiHttp = require('chai-http');
+chai.use(require('chai-http'));
+chai.use(require('chai-passport-strategy'));
+const should = chai.should();
 const faker = require('faker');
 const mongoose = require('mongoose');
-const morgan = require('morgan');
-const {logger} = require('../logger');
-
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
-
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
+const {User} = require('../models/user');
+const LocalStrategy = require('passport-local').Strategy
 
-chai.use(chaiHttp);
-const should = chai.should();
-
-app.use(morgan('common', {stream: logger.stream}));
+const strategy = new LocalStrategy(
+  (username, password, callback) => {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) { 
+        return callback(err); 
+      }
+      // No user found with that username
+      if (!user) { 
+        return callback(null, false); 
+      }
+      // Make sure the password is correct
+      user.validatePassword(password, (err, isMatch) => {
+        if (err) { 
+          return callback(err); 
+        }
+        // Password did not match
+        if (!isMatch) { 
+          return callback(null, false); 
+        }
+        // Success
+        return callback(null, user);
+      });
+    });
+  }
+);
 
 function seedRefData() {
-    logger.info('seeding ref post data');
+    console.info('seeding ref post data');
     const seedData = [];
 
     for (let i = 1; i <= 3; i++) {
@@ -82,13 +103,17 @@ function generateWebsiteData() {
 }
 
 function tearDownDb() {
-    logger.warn('Deleting database');
+    console.warn('Deleting database');
     return mongoose.connection.dropDatabase();
 }
 
 describe('Reference API', function() {
 
     before(function() {
+        chai.passport.use(strategy)
+            .success(()=> {
+                console.log('logged in');
+            })
         return runServer(TEST_DATABASE_URL);
     });
 
@@ -102,6 +127,16 @@ describe('Reference API', function() {
 
     after(function() {
         return closeServer();
+    });
+
+    describe('something basic', () => {
+        it('should prove that tests are working', () => {
+            return chai.request(app)
+                .get('/refs')
+                .then((res) => {
+                    console.log('we did it!');
+                })
+        });
     });
     /*
     describe('GET endpoint', function() {

@@ -53,11 +53,9 @@ router.post('/signup', (req, res) => {
                 return null;
             }
             // if no existing user, hash password
-            console.log('no existing user found, hashing password');
             return User.hashPassword(password)
     })
     .then(hash => {
-        console.log('password hashed, updating db');
         return User
         .create({
             username: username,
@@ -65,7 +63,6 @@ router.post('/signup', (req, res) => {
         })
     })
     .then(user => {
-        console.log('created user, logging in');
         req.login(user, (err) => {
             if(!err) {
                 return res.status(201).json(user.json());
