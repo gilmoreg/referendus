@@ -110,19 +110,6 @@ describe('Reference API', () => {
         return closeServer();
     });
 
-    /*describe('something basic', () => {
-        // This should actually fail because there is no session id ????
-        it('should prove that tests are working', () => {
-            return chai.request.agent(app)
-                .get('/refs')
-                .set('Cookie',sid)
-                .then(res => {
-                    res.should.have.status(200);
-                    return;
-                })
-        });
-    });*/
-
     describe('POST', () => {
         it('should add a new article', () => {
             const newArticle = generateArticleData();
@@ -151,7 +138,7 @@ describe('Reference API', () => {
 
         it('should add a new book', function() {
             const newBook = generateBookData();
-            return chai.request(app)
+            return chai.request.agent(app)
                 .post('/refs')
                 .set('Cookie',sid)
                 .send(newBook)
@@ -174,7 +161,83 @@ describe('Reference API', () => {
                 });
         });
 
+        it('should add a new website', function() {
+            const newSite = generateWebsiteData();
+            return chai.request.agent(app)
+                .post('/refs')
+                .set('Cookie',sid)
+                .send(newSite)
+                .then(function(res) {
+                    res.should.have.status(201);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.include.keys(
+                        'id', 'siteTitle','accessDate','url');
+                    res.body.title.should.equal(newSite.title);
+                    // cause Mongo should have created id on insertion
+                    res.body.id.should.not.be.null;
+                    return References.findById(res.body.id);
+                })
+                .then(function(ref) {
+                    ref.title.should.equal(newSite.title);
+                    ref.siteTitle.should.equal(newSite.siteTitle);
+                    // These dates are stored in different formats; convert both to Unix time for comparison
+                    const resRefAccess = new Date(ref.accessDate).getTime() / 1000;
+                    const refAccess = new Date(newSite.accessDate).getTime() / 1000;
+                    resRefAccess.should.equal(refAccess);
+                    ref.url.should.equal(newSite.url);
+                });
+        });
+    });
 
+    describe('DELETE endpoint', function() {
+        it('should delete a post by id', function() {
+            let ref;
+            return References
+                .findOne()
+                .exec()
+                .then(function(_ref) {
+                    ref = _ref;
+                    return chai.request.agent(app)
+                        .delete(`/refs/${ref.id}`)
+                        .set('Cookie',sid);
+                })
+                .then(function(res) {
+                    res.should.have.status(204);
+                    return References.findById(ref.id).exec();
+                })
+                .then(function(_ref) {
+                    should.not.exist(_ref);
+                });
+        });
+    });
+
+    describe('PUT endpoint', function() {
+        it('should update fields sent over', function() {
+            const updateData = {
+                title: 'magic',
+                notes: 'lasers and fireworks'
+            };
+
+            return References
+                .findOne()
+                .exec()
+                .then(function(ref) {
+                    updateData.id = ref.id;
+                    return chai.request.agent(app)
+                        .put(`/refs/${ref.id}`)
+                        .set('Cookie',sid)
+                        .send(updateData);        
+                })
+                .then(function(res) {
+                    res.should.have.status(204);
+                    return References.findById(updateData.id).exec();
+                })
+                .then(function(ref) {
+                    ref.title.should.equal(updateData.title);
+                    ref.notes.should.equal(updateData.notes);
+                });
+        });
     });
 });
     /*
