@@ -9,7 +9,6 @@ const {References/*, Articles, Books, Websites*/} = require('../models/reference
 const {User} = require('../models/user');
 
 function seedRefData() {
-    console.info('seeding ref post data');
     const seedData = [];
 
     for (let i = 1; i <= 3; i++) {
@@ -123,7 +122,6 @@ describe('Reference API', () => {
                     res.body.should.be.a('object');
                     res.body.should.include.keys(
                         'id', 'authors','year','volume','issue','pages');
-                    console.log('posted?');
                     res.body.id.should.not.be.null;
                     return References.findById(res.body.id);
                 })
