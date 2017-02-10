@@ -20,7 +20,7 @@ router.post('/signup', (req, res) => {
     if (!('username' in req.body)) {
         return res.status(422).json({message: 'Missing field: username'});
     }
-    let {username, password, firstName, lastName} = req.body;
+    let {username, password} = req.body;
     if (typeof username !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: username'});
     }
@@ -39,8 +39,9 @@ router.post('/signup', (req, res) => {
         return res.status(422).json({message: 'Incorrect field length: password'});
     }
     // check for existing user
+    console.log('checking for existing user');
     return User
-        .find({username})
+        .find({username: username})
         .count()
         .exec()
         .then(count => {
@@ -60,7 +61,7 @@ router.post('/signup', (req, res) => {
         })
     })
     .then(user => {
-        req.login(user, (err) => {
+        req.login(user, err => {
             if(!err) {
                 return res.status(201).json(user.json());
             }

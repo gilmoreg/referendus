@@ -34,6 +34,7 @@ function generateAuthorName() {
 // or request.body data
 function generateArticleData() {
     return {
+        'user': 'test',
         'type': 'Article',
         'title': faker.company.catchPhrase(),
         'authors': [
@@ -51,6 +52,7 @@ function generateArticleData() {
 
 function generateBookData() {
     return {
+        'user': 'test',
         'type': 'Book',
         'title': faker.company.catchPhrase(),
         'authors': [
@@ -65,6 +67,7 @@ function generateBookData() {
 
 function generateWebsiteData() {
     return {
+        'user': 'test',
         'type': 'Website',
         'title': faker.company.catchPhrase(),
         'siteTitle': faker.company.companyName(),
@@ -76,33 +79,43 @@ function generateWebsiteData() {
 
 function tearDownDb() {
     console.warn('Deleting database');
-    return mongoose.connection.dropDatabase();
+    mongoose.connection.db.dropCollection('references', function(err, result) {
+        if(err) return err;
+        return result;
+    });
+    //return mongoose.connection.dropDatabase();
 }
 
 describe('Reference API', function() {
 
-    let token;
+    let sid;
 
-    before(function() {
-        return runServer(TEST_DATABASE_URL);
+    before(function(done) {
+        runServer(TEST_DATABASE_URL)
+            .then(res => {
+                chai.request.agent(app)
+                    .post('/auth/signup')
+                    .send({username:'test', password:faker.internet.color() })
+                    .then(res => {
+                        sid = res.headers['set-cookie'].pop().split(';')[0];
+                        console.log('SID',sid);
+                        done();
+                    })
+                    .catch(err =>{
+                        console.error(err);
+                        res.status(500).json({message: 'Internal server error'});
+                    })
+            })
+        
     });
 
     beforeEach(function() {
-        chai.request(app)
-            .post('/auth/signup')
-            .send({username:'test', password:faker.internet.color() })
-            .then(res => {
-                res.should.have.status(201);
-                res.should.be.json;
-                res.body.should.be.a('object');
-                res.body.username.should.equal('test');
-                res.body.token.should.be.a('object');
-                token = { access_token: res.body.token };
-                return seedRefData();
-            })
+        console.log('beforeach');
+        return seedRefData();
     });
 
     afterEach(function() {
+        console.warn('tearing down db');
         return tearDownDb();
     });
 
@@ -111,12 +124,35 @@ describe('Reference API', function() {
     });
 
     describe('something basic', () => {
+        // This should actually fail because there is no session id ????
         it('should prove that tests are working', () => {
-            return chai.request(app)
+            return chai.request.agent(app)
                 .get('/refs')
-                .send(token)
+                .set('Cookie',sid)
                 .then(res => {
+                    res.should.have.status(200);
                     console.log('we did it!');
+                    return;
+                })
+        });
+    });
+
+    describe('POST', () => {
+        it('should try to post', () => {
+            const newArticle = generateArticleData();
+            return chai.request.agent(app)
+                .post('/refs')
+                .set('Cookie',sid)
+                .send(newArticle)
+                .then(res => {
+                    res.should.have.status(201);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.include.keys(
+                        'id', 'authors','year','volume','issue','pages');
+                    console.log('posted?');
+                    res.body.id.should.not.be.null;
+                    return References.findById(res.body.id);
                 })
         });
     });
@@ -305,5 +341,6 @@ describe('Reference API', function() {
                     ref.notes.should.equal(updateData.notes);
                 });
         });
-    });*/
+    });
+    */
 });
