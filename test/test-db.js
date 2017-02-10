@@ -127,7 +127,7 @@ describe('Reference API', () => {
                     res.body.id.should.not.be.null;
                     return References.findById(res.body.id);
                 })
-                .then(function(ref) {
+                .then(ref => {
                     ref.title.should.equal(newArticle.title);
                     ref.year.should.equal(newArticle.year);
                     ref.volume.should.equal(newArticle.volume);
@@ -136,13 +136,13 @@ describe('Reference API', () => {
                 });
         });
 
-        it('should add a new book', function() {
+        it('should add a new book', () => {
             const newBook = generateBookData();
             return chai.request.agent(app)
                 .post('/refs')
                 .set('Cookie',sid)
                 .send(newBook)
-                .then(function(res) {
+                .then(res => {
                     res.should.have.status(201);
                     res.should.be.json;
                     res.body.should.be.a('object');
@@ -153,7 +153,7 @@ describe('Reference API', () => {
                     res.body.id.should.not.be.null;
                     return References.findById(res.body.id);
                 })
-                .then(function(ref) {
+                .then(ref => {
                     ref.title.should.equal(newBook.title);
                     ref.year.should.equal(newBook.year);
                     ref.publisher.should.equal(newBook.publisher);
@@ -161,13 +161,13 @@ describe('Reference API', () => {
                 });
         });
 
-        it('should add a new website', function() {
+        it('should add a new website', () => {
             const newSite = generateWebsiteData();
             return chai.request.agent(app)
                 .post('/refs')
                 .set('Cookie',sid)
                 .send(newSite)
-                .then(function(res) {
+                .then(res => {
                     res.should.have.status(201);
                     res.should.be.json;
                     res.body.should.be.a('object');
@@ -178,7 +178,7 @@ describe('Reference API', () => {
                     res.body.id.should.not.be.null;
                     return References.findById(res.body.id);
                 })
-                .then(function(ref) {
+                .then(ref => {
                     ref.title.should.equal(newSite.title);
                     ref.siteTitle.should.equal(newSite.siteTitle);
                     // These dates are stored in different formats; convert both to Unix time for comparison
@@ -190,30 +190,30 @@ describe('Reference API', () => {
         });
     });
 
-    describe('DELETE endpoint', function() {
-        it('should delete a post by id', function() {
+    describe('DELETE endpoint', () => {
+        it('should delete a post by id', () => {
             let ref;
             return References
                 .findOne()
                 .exec()
-                .then(function(_ref) {
+                .then(_ref => {
                     ref = _ref;
                     return chai.request.agent(app)
                         .delete(`/refs/${ref.id}`)
                         .set('Cookie',sid);
                 })
-                .then(function(res) {
+                .then(res => {
                     res.should.have.status(204);
                     return References.findById(ref.id).exec();
                 })
-                .then(function(_ref) {
+                .then(_ref => {
                     should.not.exist(_ref);
                 });
         });
     });
 
-    describe('PUT endpoint', function() {
-        it('should update fields sent over', function() {
+    describe('PUT endpoint', () => {
+        it('should update fields sent over', () => {
             const updateData = {
                 title: 'magic',
                 notes: 'lasers and fireworks'
@@ -222,208 +222,21 @@ describe('Reference API', () => {
             return References
                 .findOne()
                 .exec()
-                .then(function(ref) {
+                .then(ref => {
                     updateData.id = ref.id;
                     return chai.request.agent(app)
                         .put(`/refs/${ref.id}`)
                         .set('Cookie',sid)
                         .send(updateData);        
                 })
-                .then(function(res) {
+                .then(res => {
                     res.should.have.status(204);
                     return References.findById(updateData.id).exec();
                 })
-                .then(function(ref) {
+                .then(ref  => {
                     ref.title.should.equal(updateData.title);
                     ref.notes.should.equal(updateData.notes);
                 });
         });
     });
 });
-    /*
-    describe('GET endpoint', function() {
-        it('should return refs with the right fields', function() {
-            let refPost;
-            return chai.request(app)
-                .get('/refs')
-                .then(function(res) {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    res.body.refs.should.be.a('array');
-                    res.body.refs.should.have.length.of.at.least(1);
-                    res.body.refs.forEach(function(ref) {
-                        ref.should.be.a('object');
-                        ref.should.include.keys('id','title','type');
-                        switch(ref.type) {
-                            case 'Article': {
-                                ref.should.include.keys('authors','year','journal','volume','issue','pages');
-                                break;
-                            };
-                            case 'Book': {
-                                ref.should.include.keys('authors','publisher','year','city'); 
-                                break;
-                            }; 
-                            case 'Website': {
-                                ref.should.include.keys('siteTitle','accessDate','url');
-                                break;
-                            };
-                        }
-                    });
-                    refPost = res.body.refs[0];
-                    return References.findById(refPost.id);
-                })
-                .then(function(ref) {
-                    refPost.id.should.equal(ref.id);
-                    refPost.title.should.equal(ref.title);
-                    refPost.type.should.equal(ref.type);
-                    switch(ref.type) {
-                        case 'Article': {
-                            refPost.year.should.equal(ref.year);
-                            refPost.volume.should.equal(ref.volume);
-                            refPost.journal.should.equal(ref.journal);
-                            refPost.issue.should.equal(ref.issue);
-                            refPost.pages.should.equal(ref.pages);
-                            break;
-                        }
-                        case 'Book': {
-                            refPost.city.should.equal(ref.city);
-                            refPost.publisher.should.equal(ref.publisher);
-                            refPost.year.should.equal(ref.year);
-                            break;
-                        }
-                        case 'Website': {
-                            refPost.siteTitle.should.equal(ref.siteTitle);
-                            refPost.accessDate.should.equal(ref.accessDate);
-                            refPost.url.should.equal(ref.url);
-                            break;
-                        }
-                    }
-                });
-            })
-    });
-
-    describe('POST endpoint', function() {
-        it('should add a new article', function() {
-            const newArticle = generateArticleData();
-            return chai.request(app)
-                .post('/refs')
-                .send(newArticle)
-                .then(function(res) {
-                    res.should.have.status(201);
-                    res.should.be.json;
-                    res.body.should.be.a('object');
-                    res.body.should.include.keys(
-                        'id', 'authors','year','volume','issue','pages');
-                    res.body.title.should.equal(newArticle.title);
-                    // cause Mongo should have created id on insertion
-                    res.body.id.should.not.be.null;
-                    return References.findById(res.body.id);
-                })
-                .then(function(ref) {
-                    ref.title.should.equal(newArticle.title);
-                    ref.year.should.equal(newArticle.year);
-                    ref.volume.should.equal(newArticle.volume);
-                    ref.pages.should.equal(newArticle.pages);
-                    ref.issue.should.equal(newArticle.issue);
-                });
-        });
-
-        it('should add a new book', function() {
-            const newBook = generateBookData();
-            return chai.request(app)
-                .post('/refs')
-                .send(newBook)
-                .then(function(res) {
-                    res.should.have.status(201);
-                    res.should.be.json;
-                    res.body.should.be.a('object');
-                    res.body.should.include.keys(
-                        'id', 'authors','publisher','year','city');
-                    res.body.title.should.equal(newBook.title);
-                    // cause Mongo should have created id on insertion
-                    res.body.id.should.not.be.null;
-                    return References.findById(res.body.id);
-                })
-                .then(function(ref) {
-                    ref.title.should.equal(newBook.title);
-                    ref.year.should.equal(newBook.year);
-                    ref.publisher.should.equal(newBook.publisher);
-                    ref.city.should.equal(newBook.city);
-                });
-        });
-
-        it('should add a new website', function() {
-            const newSite = generateWebsiteData();
-            return chai.request(app)
-                .post('/refs')
-                .send(newSite)
-                .then(function(res) {
-                    res.should.have.status(201);
-                    res.should.be.json;
-                    res.body.should.be.a('object');
-                    res.body.should.include.keys(
-                        'id', 'siteTitle','accessDate','url');
-                    res.body.title.should.equal(newSite.title);
-                    // cause Mongo should have created id on insertion
-                    res.body.id.should.not.be.null;
-                    return References.findById(res.body.id);
-                })
-                .then(function(ref) {
-                    ref.title.should.equal(newSite.title);
-                    ref.siteTitle.should.equal(newSite.siteTitle);
-                    // These dates are stored in different formats; convert both to Unix time for comparison
-                    const resRefAccess = new Date(ref.accessDate).getTime() / 1000;
-                    const refAccess = new Date(newSite.accessDate).getTime() / 1000;
-                    resRefAccess.should.equal(refAccess);
-                    ref.url.should.equal(newSite.url);
-                });
-        });
-    });
-
-    describe('DELETE endpoint', function() {
-        it('should delete a post by id', function() {
-            let ref;
-            return References
-                .findOne()
-                .exec()
-                .then(function(_ref) {
-                    ref = _ref;
-                    return chai.request(app).delete(`/refs/${ref.id}`);
-                })
-                .then(function(res) {
-                    res.should.have.status(204);
-                    return References.findById(ref.id).exec();
-                })
-                .then(function(_ref) {
-                    should.not.exist(_ref);
-                });
-        });
-    });
-
-    describe('PUT endpoint', function() {
-        it('should update fields sent over', function() {
-            const updateData = {
-                title: 'magic',
-                notes: 'lasers and fireworks'
-            };
-
-            return References
-                .findOne()
-                .exec()
-                .then(function(ref) {
-                    updateData.id = ref.id;
-                    return chai.request(app)
-                        .put(`/refs/${ref.id}`)
-                        .send(updateData);        
-                })
-                .then(function(res) {
-                    res.should.have.status(204);
-                    return References.findById(updateData.id).exec();
-                })
-                .then(function(ref) {
-                    ref.title.should.equal(updateData.title);
-                    ref.notes.should.equal(updateData.notes);
-                });
-        });
-    });
-    */
