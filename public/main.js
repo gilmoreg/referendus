@@ -7,7 +7,7 @@ const formError = msg => {
 		.hide()
 		.html(msg)
 		.slideDown(100)
-		.delay(5000)
+		.delay(2000)
 		.fadeOut(100);
 };
 
@@ -332,6 +332,11 @@ $(() => {
 
 	$('#noDelete').on('click', () => {
 		closeDeleteModal();
+	});
+
+	$('#refModal').on('click', '.doi-search', e => {
+		e.preventDefault();
+		formError('Sorry, search is disabled.');
 	});
 
 	// Login event handler
