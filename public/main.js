@@ -12,6 +12,9 @@ const formError = (form, msg) => {
 
 const setFormat = f => {
 	format = f;
+	if(user) {
+		localStorage.setItem(user,format);
+	}
 	$('#apa-check, #chi-check, #mla-check').hide();
 	switch(format) {
 		case 'apa': {
@@ -283,19 +286,18 @@ const showSignedOut = () => {
 };
 
 $(() => {
+	setFormat('apa');
 	// Check if user is logged in - this will get called every refresh
 	$.get('auth/check', res => {
 		if(res.username) {
 			user = res.username;
 			showSignedIn();
-			// TODO load format setting from localstorage	
-			setFormat('apa');
+			if(localStorage.getItem(user)!==null) setFormat(localStorage.getItem(user));
 			signoutHandler();
 		}
 		else {
 			user = '';
 			showSignedOut();
-			setFormat('apa');
 		}
 		refreshList();
 	});
@@ -376,6 +378,7 @@ $(() => {
 				user = $('#username').val();
 				showSignedIn();
 				signoutHandler();
+				if(localStorage.getItem(user)!==null) setFormat(localStorage.getItem(user));
 				refreshList();
 			},
 			error: msg => { 
