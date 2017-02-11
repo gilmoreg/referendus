@@ -84,7 +84,6 @@ const buildHTML = ref => {
 const refreshList = () => {
 	$('.ref-container').empty();
 	References.getAll().then(data => {
-		console.log('getall',data);
 		if(!data.refs) return; // TODO something more serious
 		data.refs.forEach(ref => {
 			$('.ref-container').append(buildHTML(ref));
