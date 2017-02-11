@@ -107,16 +107,16 @@ const refreshList = () => {
 			data.refs.forEach(ref => {
 				const html = buildHTML(ref);
 				$('.ref-container').append(html);
-				switch(ref.data.type) {
-					case 'Article': {
+				switch(ref.data.type.toLowerCase()) {
+					case 'article': {
 						$('.article-container').append(html);
 						break;
 					}
-					case 'Book': {
+					case 'book': {
 						$('.book-container').append(html);
 						break;
 					}
-					case 'Website': {
+					case 'website': {
 						$('.website-container').append(html);
 						break;
 					}
