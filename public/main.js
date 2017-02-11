@@ -2,7 +2,6 @@ let format;
 let user;
 
 const formError = msg => {
-	console.log(msg);
 	$('.modal-message')
 		.hide()
 		.html(msg)
