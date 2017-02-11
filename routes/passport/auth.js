@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const {User} = require('../../models/user');
-const {logger} = require('../../logger');
 
 router.post('/login',
     passport.authenticate('local'),
@@ -10,6 +9,15 @@ router.post('/login',
     // If this function gets called, authentication was successful.
     // `req.user` contains the authenticated user.
     res.status(200).json({message: 'Login successful'});
+});
+
+router.get('/check', (req, res) => {
+    if(req.user) {
+        res.json({username:req.user.username});
+    }
+    else {
+        res.json({username:null});
+    }
 });
 
 router.post('/signup', (req, res) => {
@@ -47,7 +55,6 @@ router.post('/signup', (req, res) => {
             if (count > 0) {
                 console.log('username already taken');
                 throw new Error('username already taken');
-                return null;
             }
             // if no existing user, hash password
             return User.hashPassword(password)
@@ -57,15 +64,15 @@ router.post('/signup', (req, res) => {
         .create({
             username: username,
             password: hash
-        })
+        });
     })
     .then(user => {
         req.login(user, err => {
             if(!err) {
                 return res.status(201).json(user.json());
             }
-            else { throw new Error(`${err}`) }
-        })
+            else { throw new Error(`${err}`); }
+        });
     })
     .catch(err => {
         console.log('error creating user', err);

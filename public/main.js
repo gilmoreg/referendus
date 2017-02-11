@@ -97,7 +97,6 @@ const addRefClickListeners = () => {
 		editModal(id);
 	});
 
-	// Delete button event handler
 	$('.container').on('click', '.ref-del', e => {
 		e.preventDefault();
 		const id = $(event.target).closest('.ref').attr('data-id');
@@ -275,7 +274,10 @@ const signoutHandler = () => {
 };
 
 $(() => {
-	setFormat('apa'); // todo: localStorage (per user?)
+	setFormat('apa'); // todo: localStorage per user
+
+	// Figure out whether user is logged in - this will get called every refresh
+	
 
 	$('#logout').hide();
 

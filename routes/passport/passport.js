@@ -3,9 +3,9 @@ const router = express.Router();
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy
+const LocalStrategy = require('passport-local').Strategy;
 const {User} = require('../../models/user');
-const {DATABASE_URL} = require('./config');
+const {DATABASE_URL} = require('../../config');
 
 passport.use(new LocalStrategy(
   (username, password, callback) => {
