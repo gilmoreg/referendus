@@ -1,5 +1,5 @@
 let format;
-let user = '';
+let user;
 
 const formError = msg => {
 	console.log(msg);
@@ -262,9 +262,7 @@ const signoutHandler = () => {
 			type: 'GET',
 			success: () => {
 				user = '';
-				$('#login-nav').show();
-				$('#logout').hide();
-				$('.logged-in').hide();
+				showSignedOut();
 				refreshList();
 			},
 			error: msg => { console.log('error logging out',msg); } // TODO real error handler
@@ -273,11 +271,35 @@ const signoutHandler = () => {
 	});
 };
 
-$(() => {
-	setFormat('apa'); // todo: localStorage per user
+const showSignedIn = () => {
+	$('#login-nav').hide();
+	$('#logout').show();
+	$('.logged-in').show();
+};
 
+const showSignedOut = () => {
+	$('#login-nav').show();
+	$('#logout').hide();
+	$('.logged-in').hide();
+};
+
+$(() => {
 	// Figure out whether user is logged in - this will get called every refresh
-	
+	$.get('auth/check', res => {
+		if(res.username) {
+			user = res.username;
+			showSignedIn();
+			// TODO load format setting from localstorage	
+			setFormat('apa');
+			signoutHandler();
+		}
+		else {
+			user = '';
+			showSignedOut();
+			setFormat('apa');
+		}
+		refreshList();
+	});
 
 	$('#logout').hide();
 
@@ -353,9 +375,7 @@ $(() => {
 			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
 			success: () => {
 				user = $('#username').val();
-				$('#login-nav').hide();
-				$('#logout').show();
-				$('.logged-in').show();
+				showSignedIn();
 				signoutHandler();
 				refreshList();
 			},
