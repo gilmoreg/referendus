@@ -16,6 +16,11 @@
     padding: 0px 6px;
 }
 
+.nav-tabs {
+    max-width: 768px;
+    margin: 0 auto;
+}
+
 .ref-container, .article-container, .book-container, .website-container {
     margin: 10px auto 10px auto;
     padding-bottom: 10px;
