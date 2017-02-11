@@ -18,7 +18,7 @@ UserSchema.methods.json = function() {
   return {
     username: this.username || ''
   };
-}
+};
 
 UserSchema.methods.validatePassword = function(password, cb) {
   bcrypt.compare(password, this.password, (err, res) => {
@@ -31,12 +31,12 @@ UserSchema.methods.validatePassword = function(password, cb) {
     else {
       cb(err, false);
     }
-  }) 
-}
+  });
+};
 
 UserSchema.statics.hashPassword = function(password) {
   return bcrypt.hash(password, 10);
-}
+};
 
 const User = mongoose.model('User', UserSchema);
 

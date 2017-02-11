@@ -6,6 +6,7 @@ mongoose.Promise = global.Promise;
 const morgan = require('morgan');
 const {logger} = require('./logger');
 const {PORT, DATABASE_URL} = require('./config');
+let server;
 
 // Middleware
 app.use(bodyParser.json());
@@ -16,7 +17,7 @@ app.use(morgan('common', {stream: logger.stream}));
 const {router} = require('./routes');
 app.use(router);
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   logger.error(err);
   res.status(500).json({error: 'Something went wrong'}).end();
 });
@@ -55,6 +56,6 @@ function closeServer() {
 
 if (require.main === module) {
   runServer().catch(err => console.error(err));
-};
+}
 
 module.exports = {app, runServer, closeServer};

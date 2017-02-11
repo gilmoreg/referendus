@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const session = require('express-session')
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy
 const {User} = require('../../models/user');
+const {DATABASE_URL} = require('./config');
 
 passport.use(new LocalStrategy(
   (username, password, callback) => {
@@ -31,10 +33,14 @@ passport.use(new LocalStrategy(
   }
 ));
 
-router.use(session({  secret: 'keyboard puma',
-                      resave: true,
-                      saveUninitialized: true }
-                    ));
+router.use(session(
+    {  
+      secret: 'keyboard puma',
+      resave: true,
+      saveUninitialized: true,
+      store: new MongoStore({ url: DATABASE_URL })
+    }
+));
 router.use(passport.initialize());
 router.use(passport.session());
 
