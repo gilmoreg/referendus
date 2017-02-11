@@ -326,17 +326,17 @@ $(() => {
 		$('.modal-form').empty();
 	});
 
+	$('#refModal').on('click', '.doi-search', e => {
+		e.preventDefault();
+		formError('Sorry, search is disabled.');
+	});
+
 	$('#deleteModal .close').on('click', () => {
 		closeDeleteModal();
 	});
 
 	$('#noDelete').on('click', () => {
 		closeDeleteModal();
-	});
-
-	$('#refModal').on('click', '.doi-search', e => {
-		e.preventDefault();
-		formError('Sorry, search is disabled.');
 	});
 
 	// Login event handler
