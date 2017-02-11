@@ -400,11 +400,10 @@ const References = (() => {
 		getAllLocal: () => {
 			return collection;
 		},
-		// This is the one case in which pulling from localStorage is safe and will increase speed
 		getByID: id => {	
 			return new Promise( (resolve,reject) => {
 				if(!user) reject('Must be logged in.');
-				// if it's in local storage, return that
+				// If it in local memory, return that
 				const index = collection.findIndex(r => { return r.data._id===id; } );
 				if(index!==-1) {
 					resolve(collection[index]);
