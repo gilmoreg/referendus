@@ -378,8 +378,6 @@ const References = (() => {
 	return {
 		create: ref => {
 			collection.push(ref);
-			if(user) localStorage.setItem(user,JSON.stringify(collection));
-			else localStorage.setItem('local',JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				if(!user) reject('Must be logged in.');
 				dbCreate(ref)
@@ -393,7 +391,6 @@ const References = (() => {
 				dbGet()
 					.done(data => { 
 						collection = data.refs;
-						localStorage.setItem(user,JSON.stringify(collection));
 						resolve(data);
 					})
 					.fail(msg => { reject(); });
@@ -424,14 +421,12 @@ const References = (() => {
 					.done(data => { 
 						const index = collection.findIndex(r => { return r.data._id===id; } );
 						collection[index] = ref;
-						localStorage.setItem(user,JSON.stringify(collection));
 						resolve(data); 
 					})
 					.fail(msg => { reject(); });
 			});
 		},
 		delete: id => {
-			localStorage.setItem(user,JSON.stringify(collection));
 			return new Promise( (resolve,reject) => {
 				if(!user) reject('Must be logged in.');
 				dbDelete(id)
