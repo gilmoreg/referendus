@@ -85,9 +85,26 @@ const refreshList = () => {
 	$('.ref-container').empty();
 	References.getAll().then(data => {
 		if(!data.refs) return; // TODO something more serious
-		data.refs.forEach(ref => {
-			$('.ref-container').append(buildHTML(ref));
-		});
+		$.get('./views/tabs.html', partial => {
+			$('.container').html(partial);
+			data.refs.forEach(ref => {
+				const html = buildHTML(ref);
+				$('.ref-container').append(html);
+				switch(ref.type) {
+					case 'Article': {
+						$('.article-container').append(html);
+						break;
+					}
+					case 'Book': {
+						$('.book-container').append(html);
+						break;
+					}
+					case 'Website': {
+						$('.website-container').append(html);
+					}
+				}
+			});
+		});	
 	}, msg => { console.log('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
 }
 
