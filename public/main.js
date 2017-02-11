@@ -117,7 +117,7 @@ const newModalSubmit = () => {
 		e.preventDefault();
 		const post = buildJSON($('.modal-form :input').serializeArray());
 		References.create(post).then( (data) => {
-			$("#refModal").modal('toggle');
+			$('#refModal').modal('toggle');
 			$('#refModal .modal-form').off('submit');
 			refreshList();
 		}, msg => { console.log('newModalSubmit() error', msg); });
@@ -126,7 +126,7 @@ const newModalSubmit = () => {
 
 const newModal = () => {
 	if(!user) return; // todo message
-	$("#refModal").modal('toggle');
+	$('#refModal').modal('toggle');
 	$('.new-button-row').show();
 	$('.submit button').html('Add');
 	newModalSubmit();
@@ -139,7 +139,7 @@ const editModalClick = id => {
 		let post = buildJSON($('.modal-form :input').serializeArray());
 		post.id = id;
 		References.update(id, post).then(data => {
-			$("#refModal").modal('toggle');
+			$('#refModal').modal('toggle');
 			$('.modal-form').off('submit');
 			refreshList();
 		}, msg => { console.log('editModalClick() error', msg); });
@@ -168,7 +168,7 @@ const editModal = id => {
 					}
 					case 'tags': {
 						const tags = ref.data[field].map(t => { return t.tag; });
-						$('#' + field).attr("value", tags.join(", "));
+						$('#' + field).attr('value', tags.join(', '));
 						break;
 					}
 					case 'accessDate': 
@@ -177,7 +177,7 @@ const editModal = id => {
 						break;
 					}
 					default: {
-						$('#' + field).attr("value", ref.data[field]);
+						$('#' + field).attr('value', ref.data[field]);
 					}
 				}
 			}
