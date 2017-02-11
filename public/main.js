@@ -1,8 +1,8 @@
 let format;
 let user;
 
-const formError = msg => {
-	$('.modal-message')
+const formError = (form, msg) => {
+	form
 		.hide()
 		.html(msg)
 		.slideDown(100)
@@ -42,7 +42,7 @@ const buildJSON = fields => {
 				if(!('authors' in Object.keys(post))) post['authors'] = [];
 				const nameField = fields[i].value.split(',');
 				if(nameField.length<2) {
-					formError('<p>Author name must include last and first name separated by commas</p>');
+					formError($('.modal-message)'),'<p>Author name must include last and first name separated by commas</p>');
 					$('#authors').focus();
 					return undefined;
 				}
@@ -205,7 +205,7 @@ const editModal = id => {
 					}
 					case 'accessDate': 
 					case 'pubDate': {
-						document.getElementById(field).valueAsDate = new Date(ref.data[field]);
+						if(ref.data[field]) document.getElementById(field).valueAsDate = new Date(ref.data[field]);
 						break;
 					}
 					default: {
@@ -283,7 +283,7 @@ const showSignedOut = () => {
 };
 
 $(() => {
-	// Figure out whether user is logged in - this will get called every refresh
+	// Check if user is logged in - this will get called every refresh
 	$.get('auth/check', res => {
 		if(res.username) {
 			user = res.username;
@@ -351,7 +351,7 @@ $(() => {
 
 	$('#refModal').on('click', '.doi-search', e => {
 		e.preventDefault();
-		formError('Sorry, search is disabled.');
+		formError($('.modal-message)'),'Sorry, search is disabled.');
 	});
 
 	$('#deleteModal .close').on('click', () => {
@@ -365,7 +365,6 @@ $(() => {
 	// Login event handler
 	$('#login-nav').on('submit', e => {
 		e.preventDefault();
-		$('.dropdown.open .dropdown-toggle').dropdown('toggle'); // might not want to do this yet in case there's a message needs displayed
 		$.ajax({
 			url: 'auth/login',
 			type: 'POST',
@@ -373,18 +372,21 @@ $(() => {
 			dataType: 'json',
 			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
 			success: () => {
+				$('.dropdown.open .dropdown-toggle').dropdown('toggle');
 				user = $('#username').val();
 				showSignedIn();
 				signoutHandler();
 				refreshList();
 			},
-			error: msg => { console.log('error logging in',msg); } // TODO real error handler
+			error: msg => { 
+				console.log('Error signing in: ',msg);
+				formError($('.signin-message'), 'Error logging in.');
+			}
 		});
 	});
 
 	$('#signup').on('click', e => {
 		e.preventDefault();
-		$('.dropdown.open .dropdown-toggle').dropdown('toggle'); // might not want to do this yet in case there's a message needs displayed
 		$.ajax({
 			url: 'auth/signup',
 			type: 'POST',
@@ -392,6 +394,7 @@ $(() => {
 			dataType: 'json',
 			data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
 			success: () => {
+				$('.dropdown.open .dropdown-toggle').dropdown('toggle'); 
 				user = $('#username').val();
 				$('#login-nav').hide();
 				$('#logout').show();
@@ -399,7 +402,10 @@ $(() => {
 				signoutHandler();
 				refreshList();
 			},
-			error: msg => { console.log('error signing up',msg); } // TODO real error handler
+			error: msg => {
+				console.log('Error signing up: ',msg);
+				formError($('.signin-message'), 'Error signing up.');
+			}
 		});
 	});
 });
