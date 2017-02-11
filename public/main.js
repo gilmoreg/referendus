@@ -90,7 +90,23 @@ const buildHTML = ref => {
 	return html;
 };
 
+const addRefClickListeners = () => {
+	$('.container').on('click','.ref-edit', e => {
+		e.preventDefault();
+		const id = $(event.target).closest('.ref').attr('data-id');
+		editModal(id);
+	});
+
+	// Delete button event handler
+	$('.container').on('click', '.ref-del', e => {
+		e.preventDefault();
+		const id = $(event.target).closest('.ref').attr('data-id');
+		deleteModal(id);
+	});
+};
+
 const refreshList = () => {
+	$('.container').off('click');
 	$('.container').empty();
 	if(!user) {
 		$('.container').html('<ul class="list-group ref-container">'
@@ -125,6 +141,7 @@ const refreshList = () => {
 					}
 				}
 			});
+			addRefClickListeners();
 		});	
 	}, msg => { console.log('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
 };
@@ -315,20 +332,6 @@ $(() => {
 
 	$('#noDelete').on('click', () => {
 		closeDeleteModal();
-	});
-	
-	// Edit button event handler
-	$('.ref-container').on('click','.ref-edit', e => {
-		e.preventDefault();
-		const id = $(event.target).closest('.ref').attr('data-id');
-		editModal(id);
-	});
-
-	// Delete button event handler
-	$('.ref-container').on('click', '.ref-del', e => {
-		e.preventDefault();
-		const id = $(event.target).closest('.ref').attr('data-id');
-		deleteModal(id);
 	});
 
 	// Login event handler
