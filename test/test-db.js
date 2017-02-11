@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 const {References/*, Articles, Books, Websites*/} = require('../models/reference');
-const {User} = require('../models/user');
 
 function seedRefData() {
     const seedData = [];
@@ -77,7 +76,6 @@ function generateWebsiteData() {
 }
 
 describe('Reference API', () => {
-
     let sid;
 
     before(() => {

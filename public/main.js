@@ -90,7 +90,7 @@ const refreshList = () => {
 			data.refs.forEach(ref => {
 				const html = buildHTML(ref);
 				$('.ref-container').append(html);
-				switch(ref.type) {
+				switch(ref.data.type) {
 					case 'Article': {
 						$('.article-container').append(html);
 						break;
@@ -101,6 +101,10 @@ const refreshList = () => {
 					}
 					case 'Website': {
 						$('.website-container').append(html);
+						break;
+					}
+					default: {
+						console.log('refreshList invalid reference type', ref.data.type);
 					}
 				}
 			});
