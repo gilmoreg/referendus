@@ -11,7 +11,7 @@ const formError = msg => {
 		.fadeOut(100);
 };
 
-const setFormat = (f) => {
+const setFormat = f => {
 	format = f;
 	$('#apa-check, #chi-check, #mla-check').hide();
 	switch(format) {
