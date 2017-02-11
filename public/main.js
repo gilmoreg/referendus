@@ -91,7 +91,15 @@ const buildHTML = ref => {
 };
 
 const refreshList = () => {
-	$('.ref-container').empty();
+	$('.container').empty();
+	if(!user) {
+		$('.container').html('<ul class="list-group ref-container">'
+				+ '<p>Please log in or create an account to start creating references!</p>'
+			+ '</ul>'
+		);
+		return;
+	}
+      
 	References.getAll().then(data => {
 		if(!data.refs) return; // TODO something more serious
 		$.get('./views/tabs.html', partial => {
@@ -240,6 +248,7 @@ const signoutHandler = () => {
 				user = '';
 				$('#login-nav').show();
 				$('#logout').hide();
+				$('.logged-in').hide();
 				refreshList();
 			},
 			error: msg => { console.log('error logging out',msg); } // TODO real error handler
@@ -336,6 +345,7 @@ $(() => {
 				user = $('#username').val();
 				$('#login-nav').hide();
 				$('#logout').show();
+				$('.logged-in').show();
 				signoutHandler();
 				refreshList();
 			},
@@ -356,6 +366,7 @@ $(() => {
 				user = $('#username').val();
 				$('#login-nav').hide();
 				$('#logout').show();
+				$('.logged-in').show();
 				signoutHandler();
 				refreshList();
 			},
