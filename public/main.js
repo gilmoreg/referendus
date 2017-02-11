@@ -3,8 +3,13 @@ let user = '';
 
 const formError = msg => {
 	console.log(msg);
-	$('.modal-message').hide().html(msg).slideDown(100).delay(5000).fadeOut(100);
-}
+	$('.modal-message')
+		.hide()
+		.html(msg)
+		.slideDown(100)
+		.delay(5000)
+		.fadeOut(100);
+};
 
 const setFormat = (f) => {
 	format = f;
@@ -20,10 +25,14 @@ const setFormat = (f) => {
 		}
 		case 'mla': {
 			$('#mla-check').show();
+			break;
+		}
+		default: {
+			console.log('setFormat invalid format');
 		}
 	}
 	refreshList();
-}
+};
 
 const buildJSON = fields => {
 	let post = {};
@@ -41,7 +50,7 @@ const buildJSON = fields => {
 				const name = {
 					'firstName': nameField[1].trim(),
 					'lastName': nameField[0].trim()
-				}
+				};
 				if(nameField.length>=3) name['middleName'] = nameField[2].trim();
 				post['authors'].push({'author': name });
 				break;
@@ -61,9 +70,9 @@ const buildJSON = fields => {
 				post[fields[i].name] = fields[i].value;
 			}
 		}
-	};
+	}
 	return post;
-}
+};
 
 const buildHTML = ref => {
 	let type = '';
@@ -79,7 +88,7 @@ const buildHTML = ref => {
 				+	`<div class="ref-text">${ref.html}</div>`
 			+ '</li>';
 	return html;
-}
+};
 
 const refreshList = () => {
 	$('.ref-container').empty();
@@ -110,19 +119,19 @@ const refreshList = () => {
 			});
 		});	
 	}, msg => { console.log('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
-}
+};
 
 const newModalSubmit = () => {
 	$('#refModal .modal-form').on('submit', 'form', (e) => {
 		e.preventDefault();
 		const post = buildJSON($('.modal-form :input').serializeArray());
-		References.create(post).then( (data) => {
+		References.create(post).then(() => {
 			$('#refModal').modal('toggle');
 			$('#refModal .modal-form').off('submit');
 			refreshList();
 		}, msg => { console.log('newModalSubmit() error', msg); });
 	});
-}
+};
 
 const newModal = () => {
 	if(!user) return; // todo message
@@ -130,7 +139,7 @@ const newModal = () => {
 	$('.new-button-row').show();
 	$('.submit button').html('Add');
 	newModalSubmit();
-}
+};
 
 const editModalClick = id => {
 	if(!user) return; // todo message
@@ -138,13 +147,13 @@ const editModalClick = id => {
 		e.preventDefault();
 		let post = buildJSON($('.modal-form :input').serializeArray());
 		post.id = id;
-		References.update(id, post).then(data => {
+		References.update(id, post).then(() => {
 			$('#refModal').modal('toggle');
 			$('.modal-form').off('submit');
 			refreshList();
 		}, msg => { console.log('editModalClick() error', msg); });
 	});
-}
+};
 
 const editModal = id => {
 	if(!user) return; // todo message
@@ -162,7 +171,7 @@ const editModal = id => {
 						if(ref.data[field].length>0) {
 							let author = ref.data[field][0].author.lastName + ', ' + ref.data[field][0].author.firstName;
 							if(ref.data[field][0].author.middleName) author += ', ' + ref.data[field][0].author.middleName;
-							$('#' + field).attr("value", author);
+							$('#' + field).attr('value', author);
 						}
 						break;
 					}
@@ -184,31 +193,31 @@ const editModal = id => {
 		});
 		editModalClick(id);
 	}, msg => { console.log('editModal() error', msg); });
-}
+};
 
 const closeDeleteModal = () => {
 	$('#deleteModal').hide('modal');
 	$('#yesDelete').off('click');
-}
+};
 
 const deleteRef = id => {
 	if(!user) return; // todo message
-	References.delete(id).then(data => {
+	References.delete(id).then(() => {
 		closeDeleteModal();
 	}, msg => { 
 		console.log('deleteRef() error', msg); 
 		closeDeleteModal();
 	});
 	refreshList();
-}
+};
 
 const deleteModal = id => {
 	if(!user) return; // todo message
 	$('#deleteModal').show('modal');
-	$('#yesDelete').on('click', e => {
+	$('#yesDelete').on('click', () => {
 		deleteRef(id);
 	});
-}
+};
 
 const copyToClipboard = () => {
 	const collection = References.getAllLocal();
@@ -218,12 +227,12 @@ const copyToClipboard = () => {
 	});
 	clipboard.copy( {'text/html':text} ).then(
 					() => {},
-					err => {console.log("failure", err);}
+					err => {console.log('failure', err);}
 				);
 }
 
 const signoutHandler = () => {
-	$('#signout').off('click').on('click', e => {
+	$('#signout').off('click').on('click', () => {
 		$.ajax({
 			url: 'auth/logout',
 			type: 'GET',
@@ -237,7 +246,7 @@ const signoutHandler = () => {
 		});
 		
 	});
-}
+};
 
 $(() => {
 	setFormat('apa'); // todo: localStorage (per user?)
@@ -295,7 +304,7 @@ $(() => {
 		closeDeleteModal();
 	});
 
-	$('#noDelete').on('click', e => {
+	$('#noDelete').on('click', () => {
 		closeDeleteModal();
 	});
 	
@@ -353,7 +362,7 @@ $(() => {
 			error: msg => { console.log('error signing up',msg); } // TODO real error handler
 		});
 	});
-})
+});
 
 const References = (() => {
 	let collection;
@@ -369,7 +378,7 @@ const References = (() => {
 			dataType: 'json',
 			data: JSON.stringify(ref)
 		});
-	}
+	};
 	const dbGet = id => {
 		let url = '';
 		if(id) url = 'ref/' + id;
@@ -379,7 +388,7 @@ const References = (() => {
 			type: 'GET',
 			contentType: 'application/json'
 		});
-	}
+	};
 	const dbUpdate = (id, ref) => {
 		return $.ajax({
 			url: 'refs/' + id,
@@ -388,13 +397,13 @@ const References = (() => {
 			dataType: 'json',
 			data: JSON.stringify(ref)
 		});
-	}	
+	};	
 	const dbDelete = id => {
 		return $.ajax({
 			url: 'refs/' + id,
 			type: 'DELETE'
 		});
-	}
+	};
 
 	return {
 		create: ref => {
@@ -414,7 +423,7 @@ const References = (() => {
 						collection = data.refs;
 						resolve(data);
 					})
-					.fail(msg => { reject(); });
+					.fail(() => { reject(); });
 			});
 		},
 		// Clipboard will not allow copying after an AJAX call, so just get what we have
@@ -431,7 +440,7 @@ const References = (() => {
 				}
 				dbGet(id)
 					.done(data => { resolve(data); })
-					.fail(msg => { reject(); });
+					.fail(() => { reject(); });
 			});
 		},
 		update: (id, ref) => {
@@ -443,7 +452,7 @@ const References = (() => {
 						collection[index] = ref;
 						resolve(data); 
 					})
-					.fail(msg => { reject(); });
+					.fail(() => { reject(); });
 			});
 		},
 		delete: id => {
@@ -457,7 +466,7 @@ const References = (() => {
 						});
 						resolve(); 
 					})
-					.fail(msg => { reject(); });
+					.fail(() => { reject(); });
 			});
 		}
 	};
