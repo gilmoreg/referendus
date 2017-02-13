@@ -160,7 +160,7 @@ const newModalSubmit = () => {
 };
 
 const newModal = () => {
-	if(!user) return; // todo message
+	if(!user) return;
 	$('#refModal').modal('toggle');
 	$('.new-button-row').show();
 	$('.submit button').html('Add');
@@ -168,7 +168,7 @@ const newModal = () => {
 };
 
 const editModalClick = id => {
-	if(!user) return; // todo message
+	if(!user) return;
 	$('#refModal .modal-form').on('submit', 'form', e => {
 		e.preventDefault();
 		let post = buildJSON($('.modal-form :input').serializeArray());
@@ -182,7 +182,7 @@ const editModalClick = id => {
 };
 
 const editModal = id => {
-	if(!user) return; // todo message
+	if(!user) return;
 	References.getByID(id).then(ref => {
 		$.get('./views/' + ref.data.type.toLowerCase() + '.html', partial => {
 			$('#refModal').modal('show');
@@ -227,7 +227,7 @@ const closeDeleteModal = () => {
 };
 
 const deleteRef = id => {
-	if(!user) return; // todo message
+	if(!user) return;
 	References.delete(id).then(() => {
 		closeDeleteModal();
 	}, msg => { 
@@ -238,7 +238,7 @@ const deleteRef = id => {
 };
 
 const deleteModal = id => {
-	if(!user) return; // todo message
+	if(!user) return;
 	$('#deleteModal').show('modal');
 	$('#yesDelete').on('click', () => {
 		deleteRef(id);
@@ -252,9 +252,30 @@ const copyToClipboard = () => {
 		text += ref.html + '<br><br>';
 	});
 	clipboard.copy( {'text/html':text} ).then(
-					() => {},
+					() => {
+						// TODO display success message
+					},
 					err => {console.log('failure', err);}
 				);
+};
+
+const tagSearch = () => {
+	const searchTag = $('#tag-search').val();
+		if(searchTag==='') return;
+		References.search(searchTag)
+			.then(results => {
+				console.log(results);
+				$('.nav-tabs a[href="#results"]')
+					.tab('show')
+					.html(searchTag);
+			})
+			.catch(() => {
+				// Display error for one second
+				$('#tag-search').val('No results.');
+				setTimeout(() => {
+					$('#tag-search').val('');
+				},1000);
+			});
 };
 
 const signoutHandler = () => {
@@ -314,21 +335,7 @@ $(() => {
 
 	$('#nav-search').on('submit', e => {
 		e.preventDefault();
-		const searchTag = $('#tag-search').val();
-		if(searchTag==='') return;
-		References.search(searchTag)
-			.then(results => {
-				console.log(results);
-				$('.nav-tabs a[href="#results"]')
-					.tab('show')
-					.html(searchTag);
-			})
-			.catch(() => { 
-				$('#tag-search').val('No results.');
-				setTimeout(() => {
-					$('#tag-search').val('');
-				},1000);
-			});
+		tagSearch();
 	});
 
 	$('#newArticle').on('click', () => {
