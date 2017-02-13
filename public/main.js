@@ -1,5 +1,6 @@
 let format;
 let user;
+let activeTab = 'All';
 
 const formError = (form, msg) => {
 	form
@@ -103,6 +104,11 @@ const addRefClickListeners = () => {
 		e.preventDefault();
 		const id = $(event.target).closest('.ref').attr('data-id');
 		deleteModal(id);
+	});
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		activeTab = e.target.innerHTML;
+		console.log(activeTab);
 	});
 };
 
@@ -251,6 +257,7 @@ const copyToClipboard = () => {
 	collection.forEach(ref => {
 		text += ref.html + '<br><br>';
 	});
+	console.log(References.getAllVisible());
 	clipboard.copy( {'text/html':text} ).then(
 					() => {
 						// TODO display success message
@@ -268,6 +275,7 @@ const tagSearch = () => {
 				$('.nav-tabs a[href="#results"]')
 					.tab('show')
 					.html(searchTag);
+				activeTab = searchTag;
 			})
 			.catch(() => {
 				// Display error for one second
@@ -468,13 +476,6 @@ const References = (() => {
 			contentType: 'application/json'
 		});
 	};
-	const dbSearch = tag => {
-		return $.ajax({
-			url: `/refs/${format}/search/${tag}`,
-			type: 'GET',
-			contentType: 'application/json'
-		});
-	};
 	const dbUpdate = (id, ref) => {
 		return $.ajax({
 			url: 'refs/' + id,
@@ -489,6 +490,19 @@ const References = (() => {
 			url: 'refs/' + id,
 			type: 'DELETE'
 		});
+	};
+
+	const getAllByType = type => {
+		return collection.filter(item => { return item.data.type===type; } );
+	};
+
+	const getAllByTag = tag => {
+		let results = [];
+		collection.forEach(item => {
+			const index = item.data.tags.findIndex(r => { return r.tag===tag; } );
+			if(index!==-1) results.push(item);
+		});
+		return results;
 	};
 
 	return {
@@ -516,6 +530,16 @@ const References = (() => {
 		getAllLocal: () => {
 			return collection;
 		},
+		getAllVisible: () => {
+			switch(activeTab) {
+				case 'All': return collection;
+				case 'Articles': return getAllByType('Article');
+				case 'Books': return getAllByType('Book');
+				case 'Websites': return getAllByType('Website');
+				// Assuming search results active if it doesn't match the above
+				default: return getAllByTag(activeTab);
+			}
+		},
 		getByID: id => {	
 			return new Promise( (resolve,reject) => {
 				if(!user) reject('Must be logged in.');
@@ -532,11 +556,7 @@ const References = (() => {
 		search: tag => {
 			return new Promise( (resolve,reject) => {
 				if(!user) reject('Must be logged in.');
-				let results = [];
-				collection.forEach(item => {
-					const index = item.data.tags.findIndex(r => { return r.tag===tag; } );
-					if(index!==-1) results.push(item);
-				});
+				let results = getAllByTag(tag);
 				if(results.length>0) resolve(results);
 				else reject();
 			});
