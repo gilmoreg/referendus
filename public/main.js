@@ -318,8 +318,9 @@ $(() => {
 		References.search(searchTag)
 			.then(results => {
 				console.log(results);
-				$('.nav-tabs a[href="#results"]').tab('show');
-				$('.nav-tabs a[href="#results"]').html(searchTag);
+				$('.nav-tabs a[href="#results"]')
+					.tab('show')
+					.html(searchTag);
 			})
 			.catch(() => { 
 				$('#tag-search').val('No results.');
