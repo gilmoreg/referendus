@@ -315,7 +315,18 @@ $(() => {
 	$('#tag-search-btn').on('click', e => {
 		e.preventDefault();
 		const searchTag = $('#tag-search').val();
-		References.search(searchTag);
+		References.search(searchTag)
+			.then(results => {
+				console.log(results);
+				$('.nav-tabs a[href="#results"]').tab('show');
+				$('.nav-tabs a[href="#results"]').html(searchTag);
+			})
+			.catch(() => { 
+				$('#tag-search').val('No results.');
+				setTimeout(() => {
+					$('#tag-search').val('');
+				},1000);
+			});
 	});
 
 	$('#newArticle').on('click', () => {
