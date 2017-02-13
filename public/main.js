@@ -312,9 +312,10 @@ $(() => {
 		copyToClipboard();
 	});
 
-	$('#tag-search-btn').on('click', e => {
+	$('#nav-search').on('submit', e => {
 		e.preventDefault();
 		const searchTag = $('#tag-search').val();
+		if(searchTag==='') return;
 		References.search(searchTag)
 			.then(results => {
 				console.log(results);

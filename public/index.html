@@ -60,6 +60,7 @@
             </ul>
             </li>
         </ul>
+        <!-- Format -->
         <ul class="nav navbar-nav navbar-right logged-in" style="display: none;">
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Format <span class="caret"></span></a>
@@ -70,15 +71,18 @@
             </ul>
             </li>
         </ul>
+        <!-- Copy -->
         <ul class="navbar-form navbar-right logged-in" style="display: none;">
             <button type="button" class="btn btn-warning" id="copy"><i class="fa fa-clipboard" aria-hidden="true" title="Copy to Clipboard"></i></button> 
         </ul>
-        <ul class="navbar-form navbar-right logged-in" style="display: none;" role="search">
+        <!-- Search -->
+        <form class="navbar-form navbar-right logged-in" style="display: none;" role="search" id="nav-search">
             <div class="form-group">
                  <input type="text" class="form-control" id="tag-search" placeholder="Tag Search" title="Tag Search">
             </div>
-            <button type="button" class="btn btn-secondary" id="tag-search-btn"><i class="fa fa-search" aria-hidden="true" title ="search"></i></button>
-        </ul>
+            <button type="submit" class="btn btn-secondary" id="tag-search-btn"><i class="fa fa-search" aria-hidden="true" title ="search"></i></button>
+        </form>
+        <!-- New -->
         <ul class="navbar-form navbar-right logged-in" style="display: none;">
                 <button type="button" class="btn btn-success" id="newRef" title="new reference"><i class="fa fa-plus" aria-hidden="true" title="add"></i></button> 
         </ul>
