@@ -104,19 +104,4 @@ router.get('/', isAuthenticated, (req, res) => {
 		});
 });
 
-router.get('/search/:tag', isAuthenticated, (req, res) => {
-	logger.log('info',`GET /refs/chicago/search ${req}`);
-	if(!req.params.tag) return res400Err('Missing "tag" in params');
-	References
-		.find({'user':req.user._doc.username, 'tag':req.params.tag})
-		.exec() 
-		.then( (refs) => {
-			res.json({refs: refs.map((ref)=>{return generateReference(ref);})});
-		})
-		.catch( err => {
-			logger.log('error',err);
-			res.status(500).json({message:'Internal server error'});
-		});
-});
-
 module.exports = router;
