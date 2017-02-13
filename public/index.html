@@ -73,8 +73,11 @@
         <ul class="navbar-form navbar-right logged-in" style="display: none;">
             <button type="button" class="btn btn-warning" id="copy"><i class="fa fa-clipboard" aria-hidden="true" title="Copy to Clipboard"></i></button> 
         </ul>
-        <ul class="navbar-form navbar-right" style="display: none;">
-                <button type="button" class="btn btn-secondary"><i class="fa fa-search" aria-hidden="true" title ="search"></i></button>
+        <ul class="navbar-form navbar-right logged-in" style="display: none;" role="search">
+            <div class="form-group">
+                 <input type="text" class="form-control" id="tag-search" placeholder="Tag Search" title="Tag Search">
+            </div>
+            <button type="button" class="btn btn-secondary" id="tag-search-btn"><i class="fa fa-search" aria-hidden="true" title ="search"></i></button>
         </ul>
         <ul class="navbar-form navbar-right logged-in" style="display: none;">
                 <button type="button" class="btn btn-success" id="newRef" title="new reference"><i class="fa fa-plus" aria-hidden="true" title="add"></i></button> 
@@ -85,7 +88,7 @@
     <section>
         <div class="container col-xs-12">
             <ul class="list-group ref-container">
-                <p>Please log in or create an account to start creating references!</p>
+                <p>Please log in or create an account to start creating references! Use the clipboard button to copy your references to the clipboard.</p>
             </ul>
         </div>
     </section>

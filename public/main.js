@@ -312,6 +312,12 @@ $(() => {
 		copyToClipboard();
 	});
 
+	$('#tag-search-btn').on('click', e => {
+		e.preventDefault();
+		const searchTag = $('#tag-search').val();
+
+	});
+
 	$('#newArticle').on('click', () => {
 		$.get('./views/article.html', html => {
 			$('.modal-form').html(html);
@@ -434,6 +440,13 @@ const References = (() => {
 		else url = 'refs/' + format;
 		return $.ajax({
 			url: url,
+			type: 'GET',
+			contentType: 'application/json'
+		});
+	};
+	const dbSearch = tag => {
+		return $.ajax({
+			url: '/refs/search/' + tag,
 			type: 'GET',
 			contentType: 'application/json'
 		});

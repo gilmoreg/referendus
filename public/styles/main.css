@@ -90,9 +90,9 @@ footer p {
     margin-bottom: 5px;
 }
 
-.form-control {
-    height: 24px;
-}
+#tag-search {
+    width: 100px;
+};
 
 label {
     margin-bottom: 0px;
