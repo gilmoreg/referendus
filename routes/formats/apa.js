@@ -109,4 +109,8 @@ router.get('/', isAuthenticated, (req, res) => {
 		});
 });
 
+router.get('/search/:tag', isAuthenticated, (req, res) => {
+	logger.log('info',`GET /refs/apa/search ${req}`);
+});
+
 module.exports = router;
