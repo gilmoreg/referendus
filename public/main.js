@@ -315,7 +315,7 @@ $(() => {
 	$('#tag-search-btn').on('click', e => {
 		e.preventDefault();
 		const searchTag = $('#tag-search').val();
-
+		References.search(searchTag);
 	});
 
 	$('#newArticle').on('click', () => {
@@ -446,7 +446,7 @@ const References = (() => {
 	};
 	const dbSearch = tag => {
 		return $.ajax({
-			url: '/refs/search/' + tag,
+			url: `/refs/${format}/search/${tag}`,
 			type: 'GET',
 			contentType: 'application/json'
 		});
@@ -503,6 +503,18 @@ const References = (() => {
 				dbGet(id)
 					.done(data => { resolve(data); })
 					.fail(() => { reject(); });
+			});
+		},
+		search: tag => {
+			return new Promise( (resolve,reject) => {
+				if(!user) reject('Must be logged in.');
+				let results = [];
+				collection.forEach(item => {
+					const index = item.data.tags.findIndex(r => { return r.tag===tag; } );
+					if(index!==-1) results.push(item);
+				});
+				if(results.length>0) resolve(results);
+				else reject();
 			});
 		},
 		update: (id, ref) => {
