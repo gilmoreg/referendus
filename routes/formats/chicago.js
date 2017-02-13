@@ -105,7 +105,7 @@ router.get('/', isAuthenticated, (req, res) => {
 });
 
 router.get('/search/:tag', isAuthenticated, (req, res) => {
-	logger.log('info',`GET /refs/apa/search ${req}`);
+	logger.log('info',`GET /refs/chicago/search ${req}`);
 	if(!req.params.tag) return res400Err('Missing "tag" in params');
 	References
 		.find({'user':req.user._doc.username, 'tag':req.params.tag})
