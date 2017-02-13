@@ -1,6 +1,7 @@
 let format;
 let user;
 let activeTab = 'All';
+let currentSearch = '';
 
 const formError = (form, msg) => {
 	form
@@ -34,7 +35,6 @@ const setFormat = f => {
 			console.log('setFormat invalid format');
 		}
 	}
-	refreshList();
 };
 
 const buildJSON = fields => {
@@ -113,8 +113,7 @@ const addRefClickListeners = () => {
 };
 
 const refreshList = () => {
-	$('.container').off('click');
-	$('.container').empty();
+	$('.container').off('click').empty();
 	if(!user) {
 		$('.container').html('<ul class="list-group ref-container">'
 				+ '<p>Please log in or create an account to start creating references!</p>'
@@ -122,7 +121,6 @@ const refreshList = () => {
 		);
 		return;
 	}
-      
 	References.getAll().then(data => {
 		if(!data.refs) return; // TODO something more serious
 		$.get('./views/tabs.html', partial => {
@@ -149,6 +147,17 @@ const refreshList = () => {
 				}
 			});
 			addRefClickListeners();
+			// Populate search results, if any
+			if(currentSearch!=='') {
+				References.search(currentSearch).then(results => {
+					results.forEach(sr => {
+						$('.results-container').append(buildHTML(sr));
+					});
+					$('.nav-tabs a[href="#results"]')
+						.tab('show')
+						.html(currentSearch);
+				});
+			}
 		});	
 	}, msg => { console.log('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
 };
@@ -267,23 +276,24 @@ const copyToClipboard = () => {
 };
 
 const tagSearch = () => {
-	const searchTag = $('#tag-search').val();
-		if(searchTag==='') return;
-		References.search(searchTag)
-			.then(results => {
-				console.log(results);
-				$('.nav-tabs a[href="#results"]')
-					.tab('show')
-					.html(searchTag);
-				activeTab = searchTag;
-			})
-			.catch(() => {
-				// Display error for one second
-				$('#tag-search').val('No results.');
-				setTimeout(() => {
-					$('#tag-search').val('');
-				},1000);
-			});
+	currentSearch = $('#tag-search').val();
+	if(currentSearch==='') return;
+	References.search(currentSearch)
+		.then(results => {
+			console.log('tagSearch results',results);
+			$('.nav-tabs a[href="#results"]')
+				.tab('show')
+				.html(currentSearch);
+			activeTab = currentSearch;
+			refreshList();
+		})
+		.catch(() => {
+			// Display error for one second
+			$('#tag-search').val('No results.');
+			setTimeout(() => {
+				$('#tag-search').val('');
+			},1000);
+		});
 };
 
 const signoutHandler = () => {
@@ -323,12 +333,13 @@ $(() => {
 			showSignedIn();
 			if(localStorage.getItem(user)!==null) setFormat(localStorage.getItem(user));
 			signoutHandler();
+			References.getAll().then(() => { refreshList(); });
 		}
 		else {
 			user = '';
 			showSignedOut();
+			refreshList();
 		}
-		refreshList();
 	});
 
 	$('#logout').hide();
@@ -452,11 +463,8 @@ $(() => {
 });
 
 const References = (() => {
-	let collection;
-	if(user) collection = JSON.parse(localStorage.getItem(user));
-	else collection = JSON.parse(localStorage.getItem('local'));
-	if(!collection) collection = [];
-
+	let collection = [];
+	
 	const dbCreate = ref => {
 		return $.ajax({
 			url: 'refs/',
@@ -531,6 +539,7 @@ const References = (() => {
 			return collection;
 		},
 		getAllVisible: () => {
+			console.log(activeTab);
 			switch(activeTab) {
 				case 'All': return collection;
 				case 'Articles': return getAllByType('Article');
