@@ -108,7 +108,6 @@ const addRefClickListeners = () => {
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		activeTab = e.target.innerHTML;
-		console.log(activeTab);
 	});
 };
 
@@ -279,8 +278,7 @@ const tagSearch = () => {
 	currentSearch = $('#tag-search').val();
 	if(currentSearch==='') return;
 	References.search(currentSearch)
-		.then(results => {
-			console.log('tagSearch results',results);
+		.then(() => {
 			$('.nav-tabs a[href="#results"]')
 				.tab('show')
 				.html(currentSearch);
