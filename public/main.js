@@ -325,6 +325,20 @@ $(() => {
 
 	$('#logout').hide();
 
+	// Format dropdown
+	$('#APA').on('click', () => {
+		setFormat('apa');
+	});
+
+	$('#Chicago').on('click', () => {
+		setFormat('chicago');
+	});
+
+	$('#MLA').on('click', () => {
+		setFormat('mla');
+	});
+
+	// Navbar event handlers
 	$('#newRef').on('click', () => {
 		newModal();
 	});
@@ -338,6 +352,7 @@ $(() => {
 		tagSearch();
 	});
 
+	// new/edit modal event handlers
 	$('#newArticle').on('click', () => {
 		$.get('./views/article.html', html => {
 			$('.modal-form').html(html);
@@ -360,18 +375,6 @@ $(() => {
 		});
 	});
 
-	$('#APA').on('click', () => {
-		setFormat('apa');
-	});
-
-	$('#Chicago').on('click', () => {
-		setFormat('chicago');
-	});
-
-	$('#MLA').on('click', () => {
-		setFormat('mla');
-	});
-
 	$('#refModal').on('hide.bs.modal', () => {
 		$('#refModal .modal-form').off('submit');
 		$('.modal-form').empty();
@@ -382,6 +385,7 @@ $(() => {
 		formError($('.modal-message)'),'Sorry, search is disabled.');
 	});
 
+	// Delete yes/no modal
 	$('#deleteModal .close').on('click', () => {
 		closeDeleteModal();
 	});
@@ -390,7 +394,7 @@ $(() => {
 		closeDeleteModal();
 	});
 
-	// Login event handler
+	// Login event handlers
 	$('#login-nav').on('submit', e => {
 		e.preventDefault();
 		$.ajax({
