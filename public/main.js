@@ -265,7 +265,6 @@ const copyToClipboard = () => {
 	collection.forEach(ref => {
 		text += ref.html + '<br><br>';
 	});
-	console.log(References.getAllVisible());
 	clipboard.copy( {'text/html':text} ).then(
 					() => {
 						// TODO display success message
@@ -538,7 +537,6 @@ const References = (() => {
 			return collection;
 		},
 		getAllVisible: () => {
-			console.log(activeTab);
 			switch(activeTab) {
 				case 'All': return collection;
 				case 'Articles': return getAllByType('Article');
