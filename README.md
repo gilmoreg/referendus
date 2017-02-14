@@ -23,7 +23,7 @@ Creating accounts and signing in and out is quick and easy.
     * The user's format choice is stored in LocalStorage.
 * Additionally, the site uses:
     * [Clipboard.js](https://www.npmjs.com/package/clipboard-js) for clipboard support
-    * [Bootstrap](http://getbootstrap.com/) for CSS
+    * [Bootstrap](http://getbootstrap.com/) for CSS and front end components.
     * [Bootswatch Spacelab](https://bootswatch.com/spacelab/) as a theme
 
 ## Development Roadmap
