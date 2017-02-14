@@ -260,7 +260,7 @@ const deleteModal = id => {
 };
 
 const copyToClipboard = () => {
-	const collection = References.getAllLocal();
+	const collection = References.getAllVisible();
 	let text = '';
 	collection.forEach(ref => {
 		text += ref.html + '<br><br>';
