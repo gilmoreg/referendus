@@ -503,12 +503,10 @@ const References = (() => {
 	};
 
 	const getAllByTag = tag => {
-		let results = [];
-		collection.forEach(item => {
+		return collection.filter(item => {
 			const index = item.data.tags.findIndex(r => { return r.tag===tag; } );
-			if(index!==-1) results.push(item);
+			return index!==-1;
 		});
-		return results;
 	};
 
 	return {
