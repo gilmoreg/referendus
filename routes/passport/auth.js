@@ -46,14 +46,12 @@ router.post('/signup', (req, res) => {
         return res.status(422).json({message: 'Incorrect field length: password'});
     }
     // check for existing user
-    console.log('checking for existing user');
     return User
         .find({username: username})
         .count()
         .exec()
         .then(count => {
             if (count > 0) {
-                console.log('username already taken');
                 throw new Error('username already taken');
             }
             // if no existing user, hash password
@@ -75,7 +73,6 @@ router.post('/signup', (req, res) => {
         });
     })
     .catch(err => {
-        console.log('error creating user', err);
         res.status(500).json({message: 'Internal server error', details:`${err}`})
     });
 });

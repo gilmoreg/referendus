@@ -32,7 +32,7 @@ const setFormat = f => {
 			break;
 		}
 		default: {
-			console.log('setFormat invalid format');
+			console.error('setFormat invalid format');
 		}
 	}
 };
@@ -141,7 +141,7 @@ const refreshList = () => {
 						break;
 					}
 					default: {
-						console.log('refreshList invalid reference type', ref.data.type);
+						console.error('refreshList invalid reference type', ref.data.type);
 					}
 				}
 			});
@@ -158,7 +158,7 @@ const refreshList = () => {
 				});
 			}
 		});	
-	}, msg => { console.log('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
+	}, msg => { console.error('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
 };
 
 const newModalSubmit = () => {
@@ -169,7 +169,7 @@ const newModalSubmit = () => {
 			$('#refModal').modal('toggle');
 			$('#refModal .modal-form').off('submit');
 			refreshList();
-		}, msg => { console.log('newModalSubmit() error', msg); });
+		}, msg => { console.error('newModalSubmit() error', msg); });
 	});
 };
 
@@ -191,7 +191,7 @@ const editModalClick = id => {
 			$('#refModal').modal('toggle');
 			$('.modal-form').off('submit');
 			refreshList();
-		}, msg => { console.log('editModalClick() error', msg); });
+		}, msg => { console.error('editModalClick() error', msg); });
 	});
 };
 
@@ -232,7 +232,7 @@ const editModal = id => {
 			}
 		});
 		editModalClick(id);
-	}, msg => { console.log('editModal() error', msg); });
+	}, msg => { console.error('editModal() error', msg); });
 };
 
 const closeDeleteModal = () => {
@@ -245,7 +245,7 @@ const deleteRef = id => {
 	References.delete(id).then(() => {
 		closeDeleteModal();
 	}, msg => { 
-		console.log('deleteRef() error', msg); 
+		console.error('deleteRef() error', msg); 
 		closeDeleteModal();
 	});
 	refreshList();
@@ -269,7 +269,7 @@ const copyToClipboard = () => {
 					() => {
 						// TODO display success message
 					},
-					err => {console.log('failure', err);}
+					err => {console.error('clipboard failure', err);}
 				);
 };
 
@@ -303,7 +303,7 @@ const signoutHandler = () => {
 				showSignedOut();
 				refreshList();
 			},
-			error: msg => { console.log('error logging out',msg); } // TODO real error handler
+			error: msg => { console.error('error logging out',msg); } // TODO real error handler
 		});
 		
 	});
@@ -431,7 +431,7 @@ $(() => {
 				refreshList();
 			},
 			error: msg => { 
-				console.log('Error signing in: ',msg);
+				console.error('Error signing in: ',msg);
 				formError($('.signin-message'), 'Error logging in.');
 			}
 		});
