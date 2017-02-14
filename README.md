@@ -22,9 +22,9 @@ Creating accounts and signing in and out is quick and easy.
 * The browser side uses HTML5, ES6 Javascript, and JQuery.
     * The user's format choice is stored in LocalStorage.
 * Additionally, the site uses:
-    * [Clipboard.js](https://www.npmjs.com/package/clipboard-js) for clipboard support
+    * [Clipboard.js](https://www.npmjs.com/package/clipboard-js) for clipboard support.
     * [Bootstrap](http://getbootstrap.com/) for CSS and front end components.
-    * [Bootswatch Spacelab](https://bootswatch.com/spacelab/) as a theme
+    * [Bootswatch Spacelab](https://bootswatch.com/spacelab/) as a theme.
 
 ## Development Roadmap
 * Implement the ability to autofill fields for a new reference given an ISBN or DOI.
