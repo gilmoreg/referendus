@@ -455,7 +455,6 @@ $(() => {
 				refreshList();
 			},
 			error: msg => {
-				console.log('Error signing up: ',msg);
 				formError($('.signin-message'), 'Error signing up.');
 			}
 		});
