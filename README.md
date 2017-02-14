@@ -18,6 +18,7 @@ Creating accounts and signing in and out is quick and easy.
 * The server side uses Node, Express, MongoDB and Passport.
     * API functions are tested with Mocha and Chai.
     * Authentiction is session-based and persistence stored.
+    * Passwords are encrypted with bcrypt.
 * The browser side uses HTML5, ES6 Javascript, and JQuery.
     * The user's format choice is stored in LocalStorage.
 * Additionally, the site uses:
