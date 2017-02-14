@@ -19,8 +19,8 @@ Creating accounts and signing in and out is quick and easy.
     * API functions are tested with Mocha and Chai.
     * Authentiction is session-based and persistence stored.
     * Passwords are encrypted with bcrypt.
-* The browser side uses HTML5, ES6 Javascript, and JQuery.
     * The user's format choice is stored in LocalStorage.
+* The browser side uses HTML5, ES6 Javascript, and JQuery.
 * Additionally, the site uses:
     * [Clipboard.js](https://www.npmjs.com/package/clipboard-js) for clipboard support.
     * [Bootstrap](http://getbootstrap.com/) for CSS and front end components.
@@ -28,3 +28,4 @@ Creating accounts and signing in and out is quick and easy.
 
 ## Development Roadmap
 * Implement the ability to autofill fields for a new reference given an ISBN or DOI.
+* Sorting reference lists
