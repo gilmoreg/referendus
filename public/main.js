@@ -345,14 +345,17 @@ $(() => {
 	// Format dropdown
 	$('#APA').on('click', () => {
 		setFormat('apa');
+		refreshList();
 	});
 
 	$('#Chicago').on('click', () => {
 		setFormat('chicago');
+		refreshList();
 	});
 
 	$('#MLA').on('click', () => {
 		setFormat('mla');
+		refreshList();
 	});
 
 	// Navbar event handlers
