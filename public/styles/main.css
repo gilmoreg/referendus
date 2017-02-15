@@ -60,6 +60,26 @@ footer p {
     margin-bottom: 0px;
 }
 
+.panel p {
+    text-align: center;
+}
+
+.panel-heading {
+    margin-bottom: 5px;
+}
+
+.panel-success .panel-title {
+    color: black;
+}
+
+.panel-info .panel-title {
+    color: black;
+}
+
+.panel-warning .panel-title {
+    color: black;
+}
+
 .modal-header {
     padding: 0px;
     border: none;

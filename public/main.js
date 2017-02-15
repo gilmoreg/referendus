@@ -114,11 +114,10 @@ const addRefClickListeners = () => {
 const refreshList = () => {
 	$('.container').off('click').empty();
 	if(!user) {
-		$('.container').html('<ul class="list-group ref-container">'
-				+ '<p>Please log in or create an account to start creating references!</p>'
-			+ '</ul>'
-		);
-		return;
+		$.get('./views/instructions.html', partial => {
+			$('.container').html(partial);
+			return;
+		});
 	}
 	References.getAll().then(data => {
 		if(!data.refs) return; // TODO something more serious
