@@ -30,9 +30,9 @@ const authorList = authors => {
     }
     else {
         // Format: Last, First M., and First M. Last.
-        let str = lastFirst(authors[0].author);
+        let str = lastFirst(authors[0].author) + ',';
         // Last author has to be preceded by 'and', so count up to penultimate only
-        for(let i=0;i<authors.length-1;i++) {
+        for(let i=1;i<authors.length-1;i++) {
             str += `${firstLast(authors[i].author)}, `;
         }
         str += `and ${firstLast(authors[authors.length].author)}.`;
