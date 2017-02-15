@@ -50,7 +50,7 @@ const article = ref => {
 
 const book = ref => {
 	var str = authorList(ref.authors);
-    str += `, <i>${ref.title}</i> (${ref.city}: ${ref.publisher}, ${ref.year})`;
+    str += ` <i>${ref.title}</i> (${ref.city}: ${ref.publisher}, ${ref.year})`;
     if(ref.pages) str += `, ${ref.pages}`;
     str += '.';
 	return { data:ref, html:str };
@@ -59,7 +59,7 @@ const book = ref => {
 const website = ref => {
 	const authors = authorList(ref.authors);
     let str = '';
-    if(authors) str += `${authors}. `;
+    if(authors) str += `${authors} `;
     str += `"${ref.title}." ${ref.siteTitle}. `;
     if(ref.pubDate) {
         const pubDate = moment(ref.pubDate).format('MMMM D, YYYY');
