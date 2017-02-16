@@ -6,9 +6,11 @@ mongoose.Promise = global.Promise;
 const morgan = require('morgan');
 const {logger} = require('./logger');
 const {PORT, DATABASE_URL} = require('./config');
+const compression = require('compression');
 let server;
 
 // Middleware
+app.use(compression({ level: 9, threshold: 0 }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common', {stream: logger.stream}));
