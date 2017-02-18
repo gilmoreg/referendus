@@ -167,6 +167,13 @@ const refreshList = () => {
 			// Add instructions at the bottom
 			$.get('./views/instructions.html', instructions => {
 				$('.container').append(instructions);
+				$('#hide-instructions').off('click').on('click', e => {
+					e.preventDefault();
+					const inst = $('#hide-instructions');
+					if(inst[0].innerHTML==='Click to hide') inst.html('Click to show help');
+					else inst.html('Click to hide');
+					$('.instructions').toggle();
+				});
 			});
 		});	
 	}, msg => { console.error('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)

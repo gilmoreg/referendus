@@ -88,6 +88,11 @@ footer p {
     margin-bottom: 0px;
 }
 
+#hide-instructions {
+    font-size: 12px;
+    text-align: center;
+}
+
 .panel p {
     text-align: center;
 }
