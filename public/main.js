@@ -112,17 +112,25 @@ const addRefClickListeners = () => {
 };
 
 const refreshList = () => {
-	$('.container').off('click');//.empty();
 	if(!user) {
-		/*$.get('./views/instructions.html', partial => {
-			$('.container').html(partial);
+		$.get('./views/landing.html', partial => {
+			$('.container')
+				.off('click')
+				.empty()
+				.html(partial);
+			$('#demologin').on('click', e => {
+				demoHandler(e);
+			});
 			return;
-		});*/
+		});
 	}
 	References.getAll().then(data => {
 		if(!data.refs) return; // TODO something more serious
 		$.get('./views/tabs.html', partial => {
-			$('.container').html(partial);
+			$('.container')
+				.off('click')
+				.empty()
+				.html(partial);
 			data.refs.forEach(ref => {
 				const html = buildHTML(ref);
 				$('.ref-container').append(html);
@@ -308,6 +316,27 @@ const signoutHandler = () => {
 	});
 };
 
+const demoHandler = e => {
+	e.preventDefault();
+		$.ajax({
+			url: 'auth/login',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify({ username: 'demo', password: 'demo' } ),
+			success: () => {
+				user = 'demo';
+				showSignedIn();
+				signoutHandler();
+				if(localStorage.getItem(user)!==null) setFormat(localStorage.getItem(user));
+				refreshList();
+			},
+			error: msg => { 
+				console.error('Error signing in demo: ',msg);
+			}
+		});
+};
+
 const showSignedIn = () => {
 	$('#login-nav').hide();
 	$('#logout').show();
@@ -438,25 +467,8 @@ $(() => {
 		});
 	});
 
-	$('#demo-login').on('submit', e => {
-		e.preventDefault();
-		$.ajax({
-			url: 'auth/login',
-			type: 'POST',
-			contentType: 'application/json',
-			dataType: 'json',
-			data: JSON.stringify({ username: 'demo', password: 'demo' } ),
-			success: () => {
-				user = 'demo';
-				showSignedIn();
-				signoutHandler();
-				if(localStorage.getItem(user)!==null) setFormat(localStorage.getItem(user));
-				refreshList();
-			},
-			error: msg => { 
-				console.error('Error signing in demo: ',msg);
-			}
-		});
+	$('#demologin').on('click', e => {
+		demoHandler(e);
 	});
 
 	$('#signup').on('click', e => {
@@ -476,7 +488,7 @@ $(() => {
 				signoutHandler();
 				refreshList();
 			},
-			error: msg => {
+			error: () => {
 				formError($('.signin-message'), 'Error signing up.');
 			}
 		});
