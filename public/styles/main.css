@@ -97,6 +97,10 @@ footer p {
     text-align: center;
 }
 
+.searchtagex {
+    width: 100%;
+}
+
 .panel-heading {
     margin-bottom: 5px;
 }
