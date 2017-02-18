@@ -21,8 +21,32 @@
     margin: 0 auto;
 }
 
+.landing  {
+    margin: 0 auto;
+    text-align: center;
+    float: none;
+}
+
+.landing ul {
+    list-style: none;
+    list-style-position: outside;
+    text-indent: -8px;
+    max-width: 500px;
+    margin: 0 auto 25px auto;
+}
+
+.landing li {
+    text-align: left;
+}
+
+.landing li:before {
+    content: '\f0da';
+    font-family: FontAwesome;
+    padding-right: 4px;
+}
+
 .ref-container, .article-container, .book-container, .website-container {
-    margin: 10px auto 10px auto;
+    margin: 10px auto;
     padding-bottom: 10px;
 }
 

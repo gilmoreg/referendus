@@ -112,12 +112,12 @@ const addRefClickListeners = () => {
 };
 
 const refreshList = () => {
-	$('.container').off('click').empty();
+	$('.container').off('click');//.empty();
 	if(!user) {
-		$.get('./views/instructions.html', partial => {
+		/*$.get('./views/instructions.html', partial => {
 			$('.container').html(partial);
 			return;
-		});
+		});*/
 	}
 	References.getAll().then(data => {
 		if(!data.refs) return; // TODO something more serious
@@ -434,6 +434,27 @@ $(() => {
 			error: msg => { 
 				console.error('Error signing in: ',msg);
 				formError($('.signin-message'), 'Error logging in.');
+			}
+		});
+	});
+
+	$('#demo-login').on('submit', e => {
+		e.preventDefault();
+		$.ajax({
+			url: 'auth/login',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify({ username: 'demo', password: 'demo' } ),
+			success: () => {
+				user = 'demo';
+				showSignedIn();
+				signoutHandler();
+				if(localStorage.getItem(user)!==null) setFormat(localStorage.getItem(user));
+				refreshList();
+			},
+			error: msg => { 
+				console.error('Error signing in demo: ',msg);
 			}
 		});
 	});
