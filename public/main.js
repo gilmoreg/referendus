@@ -164,6 +164,10 @@ const refreshList = () => {
 						.html(currentSearch);
 				});
 			}
+			// Add instructions at the bottom
+			$.get('./views/instructions.html', instructions => {
+				$('.container').append(instructions);
+			});
 		});	
 	}, msg => { console.error('refreshList() error', msg); }); // this might actually happen for legit reasons (refresh to clear list after logout)
 };
