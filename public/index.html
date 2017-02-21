@@ -28,7 +28,7 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right" title="Sign in or out">
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-o" aria-hidden="true"></i><span class="caret"></span></a>
             <ul class="dropdown-menu">
@@ -61,7 +61,7 @@
         </ul>
         <!-- Format -->
         <ul class="nav navbar-nav navbar-right logged-in" style="display: none;">
-            <li class="dropdown">
+            <li class="dropdown" title="Select Format">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Format <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li id="APA"><a href="#"><i class="fa fa-check" id="apa-check" aria-hidden="true"></i>APA</a></li>
@@ -72,18 +72,18 @@
         </ul>
         <!-- Copy -->
         <ul class="navbar-form navbar-right logged-in" style="display: none;">
-            <button type="button" class="btn btn-warning" id="copy"><i class="fa fa-clipboard" aria-hidden="true" title="Copy to Clipboard"></i></button> 
+            <button type="button" class="btn btn-warning" id="copy" title="Copy to Clipboard"><i class="fa fa-clipboard" aria-hidden="true"></i></button> 
         </ul>
         <!-- Search -->
         <form class="navbar-form navbar-right logged-in" style="display: none;" role="search" id="nav-search">
             <div class="form-group">
                  <input type="text" class="form-control" id="tag-search" placeholder="Tag Search" title="Tag Search">
             </div>
-            <button type="submit" class="btn btn-secondary" id="tag-search-btn"><i class="fa fa-search" aria-hidden="true" title ="search"></i></button>
+            <button type="submit" class="btn btn-secondary" id="tag-search-btn" title="Search Tags"><i class="fa fa-search" aria-hidden="true"></i></button>
         </form>
         <!-- New -->
         <ul class="navbar-form navbar-right logged-in" style="display: none;">
-                <button type="button" class="btn btn-success" id="newRef" title="new reference"><i class="fa fa-plus" aria-hidden="true" title="add"></i></button> 
+                <button type="button" class="btn btn-success" id="newRef" title="Add New Reference"><i class="fa fa-plus" aria-hidden="true"></i></button> 
         </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
