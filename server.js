@@ -19,7 +19,7 @@ app.use(morgan('common', {stream: logger.stream}));
 const {router} = require('./routes');
 app.use(router);
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   logger.error(err);
   res.status(500).json({error: 'Something went wrong'}).end();
 });
