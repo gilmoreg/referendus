@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --inline-diffs ./test",
-    "start": "node server.js",
+    "start": "forever start server.js",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect"
   },
