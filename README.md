@@ -25,6 +25,7 @@ Creating accounts and signing in and out is quick and easy.
     * [Clipboard.js](https://www.npmjs.com/package/clipboard-js) for clipboard support.
     * [Bootstrap](http://getbootstrap.com/) for CSS and front end components.
     * [Bootswatch Spacelab](https://bootswatch.com/spacelab/) as a theme.
+* Demo is hosted on [Amazon Lightsail](https://amazonlightsail.com/).
 
 ## Development Roadmap
 * Implement the ability to autofill fields for a new reference given an ISBN or DOI.
