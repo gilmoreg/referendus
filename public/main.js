@@ -82,7 +82,7 @@ const Referendus = (() => {
 		let type = '';
 		switch(ref.data.type) {
 			case 'Article': type = '<div class="label label-primary ref-label">Article</div>'; break;
-			case 'Book': type ='<div class="label label-danger ref-label">Book</div>'; break;
+			case 'Book': type ='<div class="label label-warning ref-label">Book</div>'; break;
 			case 'Website': type = '<div class="label label-success ref-label">Website</div>';
 		}
 		let html = `<li class="ref list-group-item" data-id="${ref.data._id}">`
