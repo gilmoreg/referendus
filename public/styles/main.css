@@ -25,6 +25,14 @@
     margin: 0 auto;
     text-align: center;
     float: none;
+    opacity: 0.93;
+}
+
+.landing-background {
+    background-image: url(http://res.cloudinary.com/dk85nueap/image/upload/v1496896335/patrik-gothe-444_lhb0z0.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: 50px;
 }
 
 .landing ul {

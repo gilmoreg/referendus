@@ -353,12 +353,14 @@ const Referendus = (() => {
 		$('#login-nav').hide();
 		$('#logout').show();
 		$('.logged-in').show();
+		$('body').removeClass('landing-background');
 	};
 
 	const showSignedOut = () => {
 		$('#login-nav').show();
 		$('#logout').hide();
 		$('.logged-in').hide();
+		$('body').addClass('landing-background');
 	};
 
 	const login = () => {
