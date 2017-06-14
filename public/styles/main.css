@@ -98,7 +98,8 @@ footer p {
 
 #hide-instructions {
     font-size: 12px;
-    text-align: center;
+    display: block;
+    margin: 0px auto 20px auto;
 }
 
 .panel p {

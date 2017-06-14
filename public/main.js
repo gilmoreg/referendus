@@ -165,14 +165,15 @@ const Referendus = (() => {
 							.html(currentSearch);
 					});
 				}
-				// Add instructions at the bottom
+				// Add instructions
 				$.get('./views/instructions.html', instructions => {
-					$('.container').append(instructions);
+					$('#instructions').append(instructions);
+					$('.instructions').toggle();
 					$('#hide-instructions').off('click').on('click', e => {
 						e.preventDefault();
 						const inst = $('#hide-instructions');
-						if(inst[0].innerHTML==='Click to hide') inst.html('Click to show help');
-						else inst.html('Click to hide');
+						if(inst[0].innerHTML==='hide') inst.html('need help?');
+						else inst.html('hide');
 						$('.instructions').toggle();
 					});
 				});
