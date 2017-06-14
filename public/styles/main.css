@@ -102,6 +102,11 @@ footer p {
     margin: 0px auto 20px auto;
 }
 
+#instructions {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
 .panel p {
     text-align: center;
 }
