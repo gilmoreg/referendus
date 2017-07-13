@@ -1,63 +1,58 @@
 const bodyParser = require('body-parser');
-let express = require('express');
-let app = express();
+const express = require('express');
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
 const morgan = require('morgan');
-const {logger} = require('./logger');
-const {PORT, DATABASE_URL} = require('./config');
 const compression = require('compression');
+const { logger } = require('./logger');
+const { PORT, DATABASE_URL } = require('./config');
+const { router } = require('./routes');
+
+const app = express();
+mongoose.Promise = global.Promise;
 let server;
 
 // Middleware
 app.use(compression({ level: 9, threshold: 0 }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
-app.use(morgan('common', {stream: logger.stream}));
-
-// Router
-const {router} = require('./routes');
+app.use(morgan('common', { stream: logger.stream }));
 app.use(router);
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   logger.error(err);
-  res.status(500).json({error: 'Something went wrong'}).end();
+  res.status(500).json({ error: 'Something went wrong' }).end();
 });
 
-function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+function runServer(databaseUrl = DATABASE_URL, port = PORT) {
   return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl, err => {
-      if (err) {
-        return reject(err);
-      }
+    mongoose.connect(databaseUrl, (err) => {
+      if (err) return reject(err);
       server = app.listen(port, () => {
         logger.log(`Your app is listening on port ${port}`);
-        resolve();
+        return resolve();
       })
-      .on('error', err => {
+      .on('error', (mongooseError) => {
         mongoose.disconnect();
-        reject(err);
+        return reject(mongooseError);
       });
+      return server;
     });
   });
 }
 
 function closeServer() {
-  return mongoose.disconnect().then(() => {
-     return new Promise((resolve, reject) => {
-       logger.log('Closing server');
-       server.close(err => {
-           if (err) {
-               return reject(err);
-           }
-           resolve();
-       });
-     });
-  });
+  return mongoose.disconnect().then(() =>
+    new Promise((resolve, reject) => {
+      logger.log('Closing server');
+      server.close((err) => {
+        if (err) return reject(err);
+        return resolve();
+      });
+    }));
 }
 
 if (require.main === module) {
   runServer().catch(err => console.error(err));
 }
 
-module.exports = {app, runServer, closeServer};
+module.exports = { app, runServer, closeServer };
