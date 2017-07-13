@@ -23,8 +23,8 @@ app.use((err, req, res) => {
   res.status(500).json({ error: 'Something went wrong' }).end();
 });
 
-function runServer(databaseUrl = DATABASE_URL, port = PORT) {
-  return new Promise((resolve, reject) => {
+const runServer = (databaseUrl = DATABASE_URL, port = PORT) =>
+  new Promise((resolve, reject) => {
     mongoose.connect(databaseUrl, (err) => {
       if (err) return reject(err);
       server = app.listen(port, () => {
@@ -38,10 +38,9 @@ function runServer(databaseUrl = DATABASE_URL, port = PORT) {
       return server;
     });
   });
-}
 
-function closeServer() {
-  return mongoose.disconnect().then(() =>
+const closeServer = () =>
+  mongoose.disconnect().then(() =>
     new Promise((resolve, reject) => {
       logger.log('Closing server');
       server.close((err) => {
@@ -49,7 +48,6 @@ function closeServer() {
         return resolve();
       });
     }));
-}
 
 if (require.main === module) {
   runServer().catch(err => console.error(err));
