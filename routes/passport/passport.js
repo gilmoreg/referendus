@@ -19,9 +19,9 @@ passport.use(new LocalStrategy(
         return callback(null, false);
       }
       // Make sure the password is correct
-      user.validatePassword(password, (err, isMatch) => {
-        if (err) {
-          return callback(err);
+      return user.validatePassword(password, (validateErr, isMatch) => {
+        if (validateErr) {
+          return callback(validateErr);
         }
         // Password did not match
         if (!isMatch) {

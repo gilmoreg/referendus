@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const express = require('express');
 
 const router = express.Router();
@@ -16,28 +17,26 @@ const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/');
+  return res.redirect('/');
 };
 
 // TODO is this ever used?
 router.get('/', isAuthenticated, jsonParser, (req, res) => {
   logger.info('GET /refs');
   References
-		.find({ user: req.user._doc.username })
-		.exec()
-		.then((refs) => {
-  res.json({ refs: refs.map(ref => ref.json()) });
-})
-		.catch(
-			(err) => {
-  console.error(err);
-  res.status(500).json({ message: 'Internal server error' });
-});
+    .find({ user: req.user._doc.username })
+    .exec()
+    .then((refs) => {
+      res.json({ refs: refs.map(ref => ref.json()) });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    });
 });
 
 router.post('/', isAuthenticated, jsonParser, (req, res) => {
   logger.log('info', `POST ${JSON.stringify(req.body)}`);
-	// validate
   let requiredFields;
   if (!req.body.type) {
     return res400Err('Missing "type" in request body', res);
@@ -61,7 +60,7 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
     }
   }
 
-  for (let i = 0; i < requiredFields.length; i++) {
+  for (let i = 0; i < requiredFields.length; i += 1) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
       return res400Err(`Missing \`${field}\` in request body`, res);
@@ -72,34 +71,34 @@ router.post('/', isAuthenticated, jsonParser, (req, res) => {
     return res400Err('"authors" must contain at least one author', res);
   }
 
-	// Add 'user' to body
+  // Add 'user' to body
   req.body.user = req.user._doc.username;
 
-  References
-		.create(req.body)
-		.then(
-			ref => res.status(201).json(ref.json()))
-		.catch((err) => {
-  logger.log('error', err);
-  res.status(500).json({ message: 'Internal server error' });
-});
+  return References
+    .create(req.body)
+    .then(
+      ref => res.status(201).json(ref.json()))
+    .catch((err) => {
+      logger.log('error', err);
+      res.status(500).json({ message: 'Internal server error' });
+    });
 });
 
 router.delete('/:id', isAuthenticated, (req, res) => {
   logger.log('info', `DELETE ${req.params.id}`);
   References
-		.findOneAndRemove({ _id: req.params.id, user: req.user._doc.username })
-		.exec()
-		.then(() => res.status(204).end())
-		.catch(err => res.status(500).json({ message: `Internal server error: ${err}` }));
+    .findOneAndRemove({ _id: req.params.id, user: req.user._doc.username })
+    .exec()
+    .then(() => res.status(204).end())
+    .catch(err => res.status(500).json({ message: `Internal server error: ${err}` }));
 });
 
 router.put('/:id', isAuthenticated, jsonParser, (req, res) => {
   logger.log('info', `PUT ${req.body}`);
   if (req.params.id !== req.body.id) {
-    const message = (
-			`Request path id (${req.params.id}) and request body id ` +
-			`(${req.body.id}) must match`);
+    const message = `
+      Request path id (${req.params.id}) and request body id 
+      (${req.body.id}) must match`;
     logger.log('error', message);
     return res.status(400).send(message);
   }
@@ -107,7 +106,6 @@ router.put('/:id', isAuthenticated, jsonParser, (req, res) => {
 
   const toUpdate = {};
   const updateableFields = [
-		// TODO discriminators would change how this works
     'type', 'title', 'tags', 'identifier', 'notes', 'authors', 'year', 'volume',
     'issue', 'pages', 'url', 'journal', 'city', 'publisher', 'edition', 'siteTitle',
     'accessDate', 'pubDate',
@@ -119,11 +117,11 @@ router.put('/:id', isAuthenticated, jsonParser, (req, res) => {
   });
 
   References
-		// all key/value pairs in toUpdate will be updated -- that's what `$set` does
-		.findOneAndUpdate({ _id: req.params.id, user: req.user._doc.username }, { $set: toUpdate })
-		.exec()
-		.then(() => res.status(204).end())
-		.catch(err => res.status(500).json({ message: `Internal server error${err}` }));
+    // all key/value pairs in toUpdate will be updated -- that's what `$set` does
+    .findOneAndUpdate({ _id: req.params.id, user: req.user._doc.username }, { $set: toUpdate })
+    .exec()
+    .then(() => res.status(204).end())
+    .catch(err => res.status(500).json({ message: `Internal server error${err}` }));
 });
 
 module.exports = router;
