@@ -354,7 +354,7 @@ const Referendus = (() => {
       type: 'POST',
       contentType: 'application/json',
       dataType: 'json',
-      data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
+      data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() }),
       success: () => {
         $('.dropdown.open .dropdown-toggle').dropdown('toggle');
         user = $('#username').val();
@@ -376,9 +376,9 @@ const Referendus = (() => {
       type: 'POST',
       contentType: 'application/json',
       dataType: 'json',
-      data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() } ),
+      data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() }),
       success: () => {
-        $('.dropdown.open .dropdown-toggle').dropdown('toggle'); 
+        $('.dropdown.open .dropdown-toggle').dropdown('toggle');
         user = $('#username').val();
         $('#login-nav').hide();
         $('#logout').show();
