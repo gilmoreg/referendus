@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions, no-underscore-dangle */
+/* global describe, it, before, beforeEach, after, afterEach */
 const chai = require('chai');
 chai.use(require('chai-http'));
 
@@ -5,20 +7,9 @@ const should = chai.should();
 const faker = require('faker');
 const mongoose = require('mongoose');
 const { app, runServer, closeServer } = require('../server');
-const { TEST_DATABASE_URL } = require('../config');
-const { References/* , Articles, Books, Websites*/ } = require('../models/reference');
+const { References } = require('../models/reference');
 
-function seedRefData() {
-  const seedData = [];
-
-  for (let i = 1; i <= 3; i++) {
-    seedData.push(generateArticleData());
-    seedData.push(generateBookData());
-    seedData.push(generateWebsiteData());
-  }
-    // this will return a promise
-  return References.insertMany(seedData);
-}
+const TEST_DATABASE_URL = 'mongodb://localhost/test-referendus';
 
 // used to generate data to put in db
 function generateAuthorName() {
@@ -37,8 +28,8 @@ function generateArticleData() {
     type: 'Article',
     title: faker.company.catchPhrase(),
     authors: [
-            { author: generateAuthorName() },
-            { author: generateAuthorName() },
+      { author: generateAuthorName() },
+      { author: generateAuthorName() },
     ],
     year: 2017,
     journal: faker.company.companyName(),
@@ -55,8 +46,8 @@ function generateBookData() {
     type: 'Book',
     title: faker.company.catchPhrase(),
     authors: [
-            { author: generateAuthorName() },
-            { author: generateAuthorName() },
+      { author: generateAuthorName() },
+      { author: generateAuthorName() },
     ],
     city: faker.address.city(),
     publisher: faker.company.companyName(),
@@ -76,27 +67,31 @@ function generateWebsiteData() {
   };
 }
 
+function seedRefData() {
+  const seedData = [];
+
+  for (let i = 1; i <= 3; i += 1) {
+    seedData.push(generateArticleData());
+    seedData.push(generateBookData());
+    seedData.push(generateWebsiteData());
+  }
+    // this will return a promise
+  return References.insertMany(seedData);
+}
+
 describe('Reference API', () => {
   let sid;
 
   before(() => runServer(TEST_DATABASE_URL));
 
-  beforeEach((done) => {
+  beforeEach(() =>
     chai.request.agent(app)
-            .post('/auth/signup')
-            .send({ username: 'test', password: faker.internet.color() })
-            .then((res) => {
-              sid = res.headers['set-cookie'].pop().split(';')[0];
-              seedRefData()
-                    .then(() => {
-                      done();
-                    });
-            })
-            .catch((err) => {
-              console.error(err);
-              res.status(500).json({ message: 'Internal server error' });
-            });
-  });
+      .post('/auth/signup')
+      .send({ username: 'test', password: faker.internet.color() })
+      .then((res) => {
+        sid = res.headers['set-cookie'].pop().split(';')[0];
+        seedRefData().then(() => Promise.resolve());
+      }));
 
   afterEach(() => mongoose.connection.dropDatabase());
 
@@ -106,104 +101,119 @@ describe('Reference API', () => {
     it('should add a new article', () => {
       const newArticle = generateArticleData();
       return chai.request.agent(app)
-                .post('/refs')
-                .set('Cookie', sid)
-                .send(newArticle)
-                .then((res) => {
-                  res.should.have.status(201);
-                  res.should.be.json;
-                  res.body.should.be.a('object');
-                  res.body.should.include.keys(
-                        'id', 'authors', 'year', 'volume', 'issue', 'pages');
-                  res.body.id.should.not.be.null;
-                  return References.findById(res.body.id);
-                })
-                .then((ref) => {
-                  ref.title.should.equal(newArticle.title);
-                  ref.year.should.equal(newArticle.year);
-                  ref.volume.should.equal(newArticle.volume);
-                  ref.pages.should.equal(newArticle.pages);
-                  ref.issue.should.equal(newArticle.issue);
-                });
+        .post('/refs')
+        .set('Cookie', sid)
+        .send(newArticle)
+        .then((res) => {
+          res.should.have.status(201);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.include.keys('id', 'authors', 'year', 'volume', 'issue', 'pages');
+          res.body.id.should.not.be.null;
+          return References.findById(res.body.id);
+        })
+        .then((ref) => {
+          ref.title.should.equal(newArticle.title);
+          ref.year.should.equal(newArticle.year);
+          ref.volume.should.equal(newArticle.volume);
+          ref.pages.should.equal(newArticle.pages);
+          ref.issue.should.equal(newArticle.issue);
+        });
     });
 
     it('should add a new book', () => {
       const newBook = generateBookData();
       return chai.request.agent(app)
-                .post('/refs')
-                .set('Cookie', sid)
-                .send(newBook)
-                .then((res) => {
-                  res.should.have.status(201);
-                  res.should.be.json;
-                  res.body.should.be.a('object');
-                  res.body.should.include.keys(
-                        'id', 'authors', 'publisher', 'year', 'city');
-                  res.body.title.should.equal(newBook.title);
-                    // because Mongo should have created id on insertion
-                  res.body.id.should.not.be.null;
-                  return References.findById(res.body.id);
-                })
-                .then((ref) => {
-                  ref.title.should.equal(newBook.title);
-                  ref.year.should.equal(newBook.year);
-                  ref.publisher.should.equal(newBook.publisher);
-                  ref.city.should.equal(newBook.city);
-                });
+        .post('/refs')
+        .set('Cookie', sid)
+        .send(newBook)
+        .then((res) => {
+          res.should.have.status(201);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.include.keys('id', 'authors', 'publisher', 'year', 'city');
+          res.body.title.should.equal(newBook.title);
+          // because Mongo should have created id on insertion
+          res.body.id.should.not.be.null;
+          return References.findById(res.body.id);
+        })
+        .then((ref) => {
+          ref.title.should.equal(newBook.title);
+          ref.year.should.equal(newBook.year);
+          ref.publisher.should.equal(newBook.publisher);
+          ref.city.should.equal(newBook.city);
+        });
     });
 
     it('should add a new website', () => {
       const newSite = generateWebsiteData();
       return chai.request.agent(app)
-                .post('/refs')
-                .set('Cookie', sid)
-                .send(newSite)
-                .then((res) => {
-                  res.should.have.status(201);
-                  res.should.be.json;
-                  res.body.should.be.a('object');
-                  res.body.should.include.keys(
-                        'id', 'siteTitle', 'accessDate', 'url');
-                  res.body.title.should.equal(newSite.title);
-                    // cause Mongo should have created id on insertion
-                  res.body.id.should.not.be.null;
-                  return References.findById(res.body.id);
-                })
-                .then((ref) => {
-                  ref.title.should.equal(newSite.title);
-                  ref.siteTitle.should.equal(newSite.siteTitle);
-                    // These dates are stored in different formats; convert both to Unix time for comparison
-                  const resRefAccess = new Date(ref.accessDate).getTime() / 1000;
-                  const refAccess = new Date(newSite.accessDate).getTime() / 1000;
-                  resRefAccess.should.equal(refAccess);
-                  ref.url.should.equal(newSite.url);
-                });
+        .post('/refs')
+        .set('Cookie', sid)
+        .send(newSite)
+        .then((res) => {
+          res.should.have.status(201);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.include.keys('id', 'siteTitle', 'accessDate', 'url');
+          res.body.title.should.equal(newSite.title);
+          // cause Mongo should have created id on insertion
+          res.body.id.should.not.be.null;
+          return References.findById(res.body.id);
+        })
+        .then((ref) => {
+          ref.title.should.equal(newSite.title);
+          ref.siteTitle.should.equal(newSite.siteTitle);
+          // These dates are stored in different formats; convert both to Unix time for comparison
+          const resRefAccess = new Date(ref.accessDate).getTime() / 1000;
+          const refAccess = new Date(newSite.accessDate).getTime() / 1000;
+          resRefAccess.should.equal(refAccess);
+          ref.url.should.equal(newSite.url);
+        });
     });
   });
 
   describe('DELETE endpoint', () => {
-    it('should delete a post by id', () => {
+    beforeEach((done) => {
+      const newBook = generateBookData();
+      chai.request.agent(app)
+        .post('/refs')
+        .set('Cookie', sid)
+        .send(newBook)
+        .then(() => done());
+    });
+
+    it('should delete a ref by id', () => {
       let ref;
       return References
-                .findOne()
-                .exec()
-                .then((_ref) => {
-                  ref = _ref;
-                  return chai.request.agent(app)
-                        .delete(`/refs/${ref.id}`)
-                        .set('Cookie', sid);
-                })
-                .then((res) => {
-                  res.should.have.status(204);
-                  return References.findById(ref.id).exec();
-                })
-                .then((_ref) => {
-                  should.not.exist(_ref);
-                });
+        .findOne()
+        .exec()
+        .then((_ref) => {
+          ref = _ref;
+          return chai.request.agent(app)
+            .delete(`/refs/${ref.id}`)
+            .set('Cookie', sid);
+        })
+        .then((res) => {
+          res.should.have.status(204);
+          return References.findById(ref._id).exec();
+        })
+        .then((_ref) => {
+          should.not.exist(_ref);
+        });
     });
   });
 
   describe('PUT endpoint', () => {
+    beforeEach((done) => {
+      const newBook = generateBookData();
+      chai.request.agent(app)
+        .post('/refs')
+        .set('Cookie', sid)
+        .send(newBook)
+        .then(() => done());
+    });
+
     it('should update fields sent over', () => {
       const updateData = {
         title: 'magic',
@@ -211,23 +221,23 @@ describe('Reference API', () => {
       };
 
       return References
-                .findOne()
-                .exec()
-                .then((ref) => {
-                  updateData.id = ref.id;
-                  return chai.request.agent(app)
-                        .put(`/refs/${ref.id}`)
-                        .set('Cookie', sid)
-                        .send(updateData);
-                })
-                .then((res) => {
-                  res.should.have.status(204);
-                  return References.findById(updateData.id).exec();
-                })
-                .then((ref) => {
-                  ref.title.should.equal(updateData.title);
-                  ref.notes.should.equal(updateData.notes);
-                });
+        .findOne()
+        .exec()
+        .then((ref) => {
+          updateData.id = ref._id;
+          return chai.request.agent(app)
+            .put(`/refs/${ref.id}`)
+            .set('Cookie', sid)
+            .send(updateData);
+        })
+        .then((res) => {
+          res.should.have.status(204);
+          return References.findById(updateData.id).exec();
+        })
+        .then((ref) => {
+          ref.title.should.equal(updateData.title);
+          ref.notes.should.equal(updateData.notes);
+        });
     });
   });
 });
