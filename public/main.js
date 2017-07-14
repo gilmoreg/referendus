@@ -269,6 +269,14 @@ const Referendus = (() => {
     });
   };
 
+  const selectElementContents = (el) => {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  };
+
   // https://jsfiddle.net/fx6a6n6x/
   const copyToClipboard = () => {
     const collection = References.getAllVisible();
@@ -280,11 +288,12 @@ const Referendus = (() => {
       // IE specific code path to prevent textarea being shown while dialog is visible.
       return window.clipboardData.setData('Text', text);
     } else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
-      const textarea = document.createElement('textarea');
-      textarea.textContent = text;
+      const textarea = document.createElement('div');
+      textarea.contentEditable = true;
+      textarea.innerHTML = text;
       textarea.style.position = 'fixed';  // Prevent scrolling to bottom of page in MS Edge.
       document.body.appendChild(textarea);
-      textarea.select();
+      selectElementContents(textarea);
       try {
         return document.execCommand('copy');  // Security exception may be thrown by some browsers.
       } catch (ex) {
