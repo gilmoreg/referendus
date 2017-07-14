@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const express = require('express');
 
 const router = express.Router();
@@ -27,7 +28,7 @@ const authorList = (authors) => {
         // Format: Last, First M., and First M. Last.
   let str = `${lastFirst(authors[0].author)},`;
         // Last author has to be preceded by 'and', so count up to penultimate only
-  for (let i = 1; i < authors.length - 1; i++) {
+  for (let i = 1; i < authors.length - 1; i += 1) {
     str += `${firstLast(authors[i].author)}, `;
   }
   str += `and ${firstLast(authors[authors.length].author)}.`;
@@ -69,9 +70,10 @@ const website = (ref) => {
 
 const generateReference = (ref) => {
   switch (ref.type) {
-    case 'Article': { return article(ref); }
-    case 'Book': { return book(ref); }
-    case 'Website': { return website(ref); }
+    case 'Article': return article(ref);
+    case 'Book': return book(ref);
+    case 'Website': return website(ref);
+    default: return Error('Invalid type');
   }
 };
 
@@ -79,22 +81,22 @@ const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/');
+  return res.redirect('/');
 };
 
 router.get('/', isAuthenticated, (req, res) => {
   logger.log('info', `GET /refs/chicago ${req}`);
 
   References
-		.find({ user: req.user._doc.username })
-		.exec()
-		.then((refs) => {
-  res.json({ refs: refs.map(ref => generateReference(ref)) });
-})
-		.catch((err) => {
-  logger.log('error', err);
-  res.status(500).json({ message: 'Internal server error' });
-});
+    .find({ user: req.user._doc.username })
+    .exec()
+    .then((refs) => {
+      res.json({ refs: refs.map(ref => generateReference(ref)) });
+    })
+  .catch((err) => {
+    logger.log('error', err);
+    res.status(500).json({ message: 'Internal server error' });
+  });
 });
 
 module.exports = router;
