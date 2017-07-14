@@ -148,7 +148,7 @@ const Referendus = (() => {
         }
         // Add instructions
         $.get('./views/instructions.html', (instructions) => {
-          $('#instructions').append(instructions);
+          $('#instructions').html(instructions);
           $('.instructions').toggle();
           $('#hide-instructions').off('click').on('click', (e) => {
             e.preventDefault();
