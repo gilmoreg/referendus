@@ -1,5 +1,5 @@
-/* eslint-disable no-underscore-dangle */
-/* global References, localStorage, $, document */
+/* eslint-disable no-underscore-dangle, no-use-before-define */
+/* global localStorage, $, document, fetch, clipboard */
 const Referendus = (() => {
   let format;
   let user;
@@ -187,7 +187,7 @@ const Referendus = (() => {
 
   const editModalClick = (id) => {
     if (!user) return;
-    $('#refModal .modal-form').on('submit', 'form', e => {
+    $('#refModal .modal-form').on('submit', 'form', (e) => {
       e.preventDefault();
       const post = buildJSON($('.modal-form :input').serializeArray());
       post.id = id;
@@ -202,42 +202,46 @@ const Referendus = (() => {
   const editModal = (id) => {
     if (!user) return;
     References.getByID(id).then((ref) => {
-      $.get(`./views/${ref.data.type.toLowerCase()}.html`, (partial) => {
-        $('#refModal').modal('show');
-        $('.modal-form').html(partial);
-        $('.submit button').html('Update');
-        $('.new-button-row').hide();
-        const today = new Date();
-        $('#year').attr('max', today.getFullYear());
-        Object.keys(ref.data).forEach((field) => {
-          switch (field) {
-            case 'authors': {
-              if (ref.data[field].length > 0) {
-                let author = `${ref.data[field][0].author.lastName}, ${ref.data[field][0].author.firstName}`;
-                if (ref.data[field][0].author.middleName) author += `, ${ref.data[field][0].author.middleName}`;
-                $(`#${field}`).attr('value', author);
+      // Using fetch here because jQuery was throwing a strange error
+      fetch(`./views/${ref.data.type.toLowerCase()}.html`)
+        .then(res => res.text())
+        .then((partial) => {
+          $('#refModal').modal('show');
+          $('.modal-form').html(partial);
+          $('.submit button').html('Update');
+          $('.new-button-row').hide();
+          const today = new Date();
+          $('#year').attr('max', today.getFullYear());
+          Object.keys(ref.data).forEach((field) => {
+            switch (field) {
+              case 'authors': {
+                if (ref.data[field].length > 0) {
+                  let author = `${ref.data[field][0].author.lastName}, ${ref.data[field][0].author.firstName}`;
+                  if (ref.data[field][0].author.middleName) author += `, ${ref.data[field][0].author.middleName}`;
+                  $(`#${field}`).attr('value', author);
+                }
+                break;
               }
-              break;
-            }
-            case 'tags': {
-              const tags = ref.data[field].map(t => t.tag);
-              $(`#${field}`).attr('value', tags.join(', '));
-              break;
-            }
-            case 'accessDate':
-            case 'pubDate': {
-              if (ref.data[field]) {
-                document.getElementById(field).valueAsDate = new Date(ref.data[field]);
+              case 'tags': {
+                const tags = ref.data[field].map(t => t.tag);
+                $(`#${field}`).attr('value', tags.join(', '));
+                break;
               }
-              break;
+              case 'accessDate':
+              case 'pubDate': {
+                if (ref.data[field]) {
+                  document.getElementById(field).valueAsDate = new Date(ref.data[field]);
+                }
+                break;
+              }
+              default: {
+                $(`#${field}`).attr('value', ref.data[field]);
+              }
             }
-            default: {
-              $(`#${field}`).attr('value', ref.data[field]);
-            }
-          }
-        });
-        editModalClick(id);
-      }, (msg) => { console.error('editModal() error', msg); });
+          });
+          editModalClick(id);
+        })
+      .catch(err => console.error('editModal() error', err));
     });
   };
 
@@ -271,8 +275,8 @@ const Referendus = (() => {
     collection.forEach((ref) => {
       text += `${ref.html}<br><br>`;
     });
-    clipboard.copy( {'text/html':text} ).then(() => {},
-      err => {console.error('clipboard failure', err);}
+    clipboard.copy({ 'text/html': text }).then(() => {},
+      err => console.error('clipboard failure', err),
     );
   };
 
@@ -503,7 +507,129 @@ const Referendus = (() => {
   };
 })();
 
+const References = (() => {
+  let collection = [];
+
+  const dbCreate = ref =>
+    $.ajax({
+      url: 'refs/',
+      type: 'POST',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: JSON.stringify(ref),
+    });
+
+  const dbGet = (id) => {
+    let url = '';
+    if (id) url = `ref/${id}`;
+    else url = `refs/${Referendus.getFormat()}`;
+    return $.ajax({
+      url,
+      type: 'GET',
+      contentType: 'application/json',
+    });
+  };
+
+  const dbUpdate = (id, ref) =>
+    $.ajax({
+      url: `refs/${id}`,
+      type: 'PUT',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: JSON.stringify(ref),
+    });
+
+  const dbDelete = id =>
+    $.ajax({
+      url: `refs/${id}`,
+      type: 'DELETE',
+    });
+
+  const getAllByType = type =>
+    collection.filter(item => item.data.type === type);
+
+  const getAllByTag = tag =>
+    collection.filter((item) => {
+      const index = item.data.tags.findIndex(r => r.tag === tag);
+      return index !== -1;
+    });
+
+  return {
+    create: (ref) => {
+      collection.push(ref);
+      return new Promise((resolve, reject) => {
+        if (!Referendus.getUser()) reject('Must be logged in.');
+        dbCreate(ref)
+          .done(() => resolve())
+          .fail(msg => reject(msg));
+      });
+    },
+    getAll: () =>
+      new Promise((resolve, reject) => {
+        if (!Referendus.getUser()) reject('Must be logged in.');
+        dbGet()
+          .done((data) => {
+            collection = data.refs;
+            resolve(data);
+          })
+          .fail(() => reject());
+      }),
+    // Clipboard will not allow copying after an AJAX call, so just get what we have
+    getAllLocal: () => collection,
+    getAllVisible: () => {
+      switch (Referendus.getActiveTab()) {
+        case 'All': return collection;
+        case 'Articles': return getAllByType('Article');
+        case 'Books': return getAllByType('Book');
+        case 'Websites': return getAllByType('Website');
+        // Assuming search results active if it doesn't match the above
+        default: return getAllByTag(Referendus.getActiveTab());
+      }
+    },
+    getByID: id =>
+      new Promise((resolve, reject) => {
+        if (!Referendus.getUser()) reject('Must be logged in.');
+        // If it in local memory, return that
+        const index = collection.findIndex(r => r.data._id === id);
+        if (index !== -1) {
+          resolve(collection[index]);
+        }
+        dbGet(id)
+          .done(data => resolve(data))
+          .fail(() => reject());
+      }),
+    search: tag =>
+      new Promise((resolve, reject) => {
+        if (!Referendus.getUser()) reject('Must be logged in.');
+        const results = getAllByTag(tag);
+        if (results.length > 0) resolve(results);
+        else reject();
+      }),
+    update: (id, ref) =>
+      new Promise((resolve, reject) => {
+        if (!Referendus.getUser()) reject('Must be logged in.');
+        dbUpdate(id, ref)
+          .done((data) => {
+            const index = collection.findIndex(r => r.data._id === id);
+            collection[index] = ref;
+            resolve(data);
+          })
+          .fail(() => reject());
+      }),
+    delete: id =>
+      new Promise((resolve, reject) => {
+        if (!Referendus.getUser()) reject('Must be logged in.');
+        dbDelete(id)
+          .done(() => {
+            collection = collection.filter(ref => ref.data._id !== id);
+            resolve();
+          })
+          .fail(() => reject());
+      }),
+  };
+})();
+
 // Entry point
 $(() => {
-	Referendus.init();
+  Referendus.init();
 });
