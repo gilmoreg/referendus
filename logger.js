@@ -4,19 +4,19 @@ const consoleOptions = {
   level: 'debug',
   handleExceptions: true,
   json: true,
-  colorize: true
+  colorize: true,
 };
 
 const logger = new (winston.Logger)({
   transports: [
-    new (winston.transports.Console)(consoleOptions), 
-  ]
+    new (winston.transports.Console)(consoleOptions),
+  ],
 });
 
 logger.stream = {
   write: (message, encoding) => {
     logger.debug(message);
-  }
+  },
 };
 
-module.exports = {logger};
+module.exports = { logger };

@@ -1,27 +1,20 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
-const {app, runServer, closeServer} = require('../server');
-const {PORT, TEST_DATABASE_URL} = require('../config');
+const { app, runServer, closeServer } = require('../server');
+const { PORT, TEST_DATABASE_URL } = require('../config');
 
 const should = chai.should();
 chai.use(chaiHttp);
 
-describe('Server Status', function() {
+describe('Server Status', () => {
+  before(() => runServer());
 
-    before(function() {
-        return runServer();
-    });
+  after(() => closeServer());
 
-    after(function() {
-        return closeServer();
-    });
-
-    it('should give a 200 status', function() {
-        return chai.request(app)
+  it('should give a 200 status', () => chai.request(app)
         .get('/')
-        .then(function(res) {
-            res.should.have.status(200);
-        });
-    });
+        .then((res) => {
+          res.should.have.status(200);
+        }));
 });
