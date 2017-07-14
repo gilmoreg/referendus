@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-expressions */
+/* global describe, it, before, after, afterEach */
 const chai = require('chai');
-
-const should = chai.should();
 const mongoose = require('mongoose');
 const { app, runServer, closeServer } = require('../server');
 const { TEST_DATABASE_URL } = require('../config');
@@ -18,14 +18,14 @@ describe('Passport', () => {
 
   it('should create a new user and sign in', (done) => {
     chai.request(app)
-            .post('/auth/signup')
-            .send({ username: 'admin', password: 'test' })
-            .then((res) => {
-              res.should.have.status(201);
-              res.should.be.json;
-              res.body.should.be.a('object');
-              res.body.username.should.equal('admin');
-              done();
-            });
+      .post('/auth/signup')
+      .send({ username: 'admin', password: 'test' })
+      .then((res) => {
+        res.should.have.status(201);
+        res.should.be.json;
+        res.body.should.be.a('object');
+        res.body.username.should.equal('admin');
+        done();
+      });
   });
 });
