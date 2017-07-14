@@ -1,14 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 const express = require('express');
-
-const router = express.Router();
 const { logger } = require('../../logger');
 const moment = require('moment');
-const { References/* , Articles, Books, Websites*/ } = require('../../models/reference');
+const { References } = require('../../models/reference');
 
-const res400Err = (msg, res) => {
-  logger.log('error', msg);
-  return res.status(400).send(msg);
-};
+const router = express.Router();
 
 // https://owl.english.purdue.edu/owl/resource/560/06/
 const apaName = (author) => {
@@ -20,25 +16,22 @@ const apaName = (author) => {
 const authorList = (authors) => {
   if (authors.length < 1) return '';
   let str = '';
-	// Single author
+  // Single author
   if (authors.length === 1) {
     str += apaName(authors[0].author);
-  }
-	// Two authors
-  else if (authors.length === 2) {
+  } else if (authors.length === 2) {
+    // Two authors
     str += `${apaName(authors[0].author)} & ${apaName(authors[1].author)}`;
-  }
-	// Between 3 and 7 authors
-  else if (authors.length >= 3 && authors.length <= 7) {
-		// Last author has to be preceded by ampersand, so count up to penultimate only
-    for (let i = 0; i < authors.length - 1; i++) {
+  } else if (authors.length >= 3 && authors.length <= 7) {
+    // Two authors
+    // Last author has to be preceded by ampersand, so count up to penultimate only
+    for (let i = 0; i < authors.length - 1; i += 1) {
       str += `${apaName(authors[i].author)}, `;
     }
     str += `& ${apaName(authors[authors.length - 1].author)}. `;
-  }
-	// More than 7 authors
-  else if (authors.length > 7) {
-    for (let i = 0; i < 6; i++) {
+  } else if (authors.length > 7) {
+    // More than 7 authors
+    for (let i = 0; i < 6; i += 1) {
       str += `${apaName(authors[i].author)}, `;
     }
     str += `. . . ${apaName(authors[authors.length - 1].author)}`;
@@ -67,12 +60,11 @@ const website = (ref) => {
   if (ref.pubDate) pubDate = moment(ref.pubDate).format('YYYY, MMMM D');
   else pubDate = 'n.d.';
   const accessDate = moment(ref.accessDate).format('YYYY, MMMM D');
-	// Author, A. (date). Title of document. Retrieved from http://URL
+  // Author, A. (date). Title of document. Retrieved from http://URL
   if (authors) {
     str += `${authors} (${pubDate}). ${ref.title},`;
-  }
-	// If no author, title moves to the front
-  else {
+  } else {
+    // If no author, title moves to the front
     str += `${ref.title}. (${pubDate}).`;
   }
   str += ` <i>${ref.siteTitle}</i>. Retrieved ${accessDate} from ${ref.url}.`;
@@ -82,9 +74,10 @@ const website = (ref) => {
 
 const generateReference = (ref) => {
   switch (ref.type) {
-    case 'Article': { return article(ref); }
-    case 'Book': { return book(ref); }
-    case 'Website': { return website(ref); }
+    case 'Article': return article(ref);
+    case 'Book': return book(ref);
+    case 'Website': return website(ref);
+    default: return Error('Invalid Type');
   }
 };
 
@@ -92,21 +85,21 @@ const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/');
+  return res.redirect('/');
 };
 
 router.get('/', isAuthenticated, (req, res) => {
   logger.log('info', `GET /refs/apa ${req}`);
   References
-		.find({ user: req.user._doc.username })
-		.exec()
-		.then((refs) => {
-  res.json({ refs: refs.map(ref => generateReference(ref)) });
-})
-		.catch((err) => {
-  logger.log('error', err);
-  res.status(500).json({ message: 'Internal server error' });
-});
+    .find({ user: req.user._doc.username })
+    .exec()
+    .then((refs) => {
+      res.json({ refs: refs.map(ref => generateReference(ref)) });
+    })
+  .catch((err) => {
+    logger.log('error', err);
+    res.status(500).json({ message: 'Internal server error' });
+  });
 });
 
 module.exports = router;

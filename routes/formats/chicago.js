@@ -3,12 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { logger } = require('../../logger');
 const moment = require('moment');
-const { References/* , Articles, Books, Websites*/ } = require('../../models/reference');
-
-const res400Err = (msg, res) => {
-  logger.log('error', msg);
-  return res.status(400).send(msg);
-};
+const { References } = require('../../models/reference');
 
 // http://www.press.uchicago.edu/books/turabian/turabian_citationguide.html
 const lastFirst = (author) => {

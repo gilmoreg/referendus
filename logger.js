@@ -14,7 +14,7 @@ const logger = new (winston.Logger)({
 });
 
 logger.stream = {
-  write: (message, encoding) => {
+  write: (message) => {
     logger.debug(message);
   },
 };
