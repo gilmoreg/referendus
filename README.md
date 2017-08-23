@@ -27,6 +27,22 @@ Creating accounts and signing in and out is quick and easy.
     * [Bootswatch Spacelab](https://bootswatch.com/spacelab/) as a theme.
 * Demo is hosted on [Amazon Lightsail](https://amazonlightsail.com/).
 
+## Deployment
+* Follow instructions [here](https://medium.com/@sharmasha2nk/aws-lightsail-bitnami-nodejs-letsencrypt-cf653573b8a1) for AWS Lightsail deployment.
+* Create a file at project root called variables.js with the following content:
+````
+module.exports = {
+  DATABASE_URL: 'mongodb://<MONGO USERNAME>:<MONGO PASSWORD>@<MONGO URL>:<MONGO PORT>/referendus',
+  PORT: 3000,
+  TEST_PORT: 5000,
+};
+````
+* Globally install forever and nodemon:
+````
+    npm install -g forever nodemon
+````
+* Run npm start
+
 ## Development Roadmap
 * Implement the ability to autofill fields for a new reference given an ISBN or DOI.
 * Sorting reference lists
